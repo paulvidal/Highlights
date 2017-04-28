@@ -6,6 +6,7 @@ from datetime import datetime
 from datetime import timedelta
 
 ROOT_URL = 'http://footyroom.com/'
+PAGELET_EXTENSION = 'posts-pagelet?page='
 
 
 class Highlight:
@@ -22,10 +23,28 @@ class Highlight:
         return str((self.link, self.match_name, self.img_link, self.view_count, self.category, self.time_since_added))
 
 
-def fetch_highlights():
+def fetch_highlights(num_pagelet=3, max_days_ago=7):
+    """
+    Fetch all the possible highlights available on footyroom given a number of pagelet to look at
+    (24 highlights per pagelet)
+
+    :param num_pagelet:
+    :param max_days_ago: max age of a highlight (after this age, we don't consider the highlight)
+    :return: the latests highlights available on footyroom
+    """
+
     highlights = []
 
-    page = requests.get(ROOT_URL)
+    for pagelet_num in range(num_pagelet):
+        highlights += _fetch_pagelet_highlights(pagelet_num+1, max_days_ago)
+
+    return highlights
+
+
+def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
+    highlights = []
+
+    page = requests.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
     soup = BeautifulSoup(page.content, 'html.parser')
 
     for vid in soup.find_all(class_="vid"):
@@ -59,7 +78,7 @@ def fetch_highlights():
         vid_time_added = vid.find(class_="time_added")
         time_since_added = vid_time_added.get_text()
 
-        if not _is_recent(time_since_added):
+        if not _is_recent(time_since_added, max_days_ago):
             continue
 
         highlights.append(Highlight(link, match_name, img_link, view_count, category, time_since_added))
@@ -67,7 +86,7 @@ def fetch_highlights():
     return highlights
 
 
-def _is_recent(date):
+def _is_recent(date, max_days_ago):
     if not isinstance(date, str):
         return False
 
@@ -75,7 +94,7 @@ def _is_recent(date):
     date = dateparser.parse(date)
 
     # Return True if the video is less than a week old
-    return (today - date) < timedelta(days=7)
+    return (today - date) < timedelta(days=max_days_ago)
 
 
 def _is_valid_link(link):

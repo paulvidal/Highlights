@@ -27,8 +27,6 @@ class HighlightsBotView(generic.View):
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(self.request.body.decode('utf-8'))
 
-        print(self.request.body)
-
         # Facebook recommends going through every entry since they might send
         # multiple messages in a single call during high load
         for entry in incoming_message['entry']:
@@ -39,7 +37,7 @@ class HighlightsBotView(generic.View):
                 # This might be delivery, optin, postback for other events
                 if 'message' in message:
                     # Print the message to the terminal
-                    print(message)
+                    print("Message received: " + str(message))
 
                     # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
                     # are sent as attachments and must be handled accordingly.
@@ -52,12 +50,12 @@ def post_facebook_message(fb_id, received_message):
     post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msg = json.dumps({"recipient":
                                    {"id": fb_id},
-                                   "message": "j"
+                                   "message": get_highlights()
                                })
 
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    print(status.json())
+    print("Message sent: " + str(status.json()))
 
 
 def get_highlights():
@@ -76,19 +74,19 @@ def get_elements():
     elems = []
     highlights = highlights_fetcher.fetch_highlights()
 
-    # TODO: Get the 4 most popular highlight videos
-    # highlights.sort(key=lambda highlight: highlight.view_count)
+    # Order by most popular highlight videos
+    highlights.sort(key=lambda h: h.view_count, reverse=True)
 
     for i in range(4):
-        link, match_name, img_link, view_count, category, time_since_added = highlights[i]
+        highlight = highlights[i]
 
         elems.append({
-                  "title": match_name,
-                  "image_url": img_link,
-                  "subtitle": time_since_added,
+                  "title": highlight.match_name,
+                  "image_url": highlight.img_link,
+                  "subtitle": highlight.time_since_added,
                   "default_action":{
                      "type": "web_url",
-                     "url": link,
+                     "url": highlight.link,
                      "messenger_extensions": "false",
                      "webview_height_ratio": "full"
                   }

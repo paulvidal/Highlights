@@ -8,6 +8,20 @@ from datetime import timedelta
 ROOT_URL = 'http://footyroom.com/'
 
 
+class Highlight:
+
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
+        self.link = link
+        self.match_name = match_name
+        self.img_link = img_link
+        self.view_count = view_count
+        self.category = category
+        self.time_since_added = time_since_added
+
+    def __str__(self):
+        return str((self.link, self.match_name, self.img_link, self.view_count, self.category, self.time_since_added))
+
+
 def fetch_highlights():
     highlights = []
 
@@ -29,27 +43,36 @@ def fetch_highlights():
         # Get match name
         match_name = vid_top.find("a").get_text()
 
+        # Get match image link
+        vid_thumb = vid.find(class_="vidthumb")
+        img_link = str(vid_thumb.find("img").get("src"))
+
+        # Get video view count
+        vid_bot = vid.find(class_="vidBot")
+        view_count = int(vid_bot.find(class_="views-count").get_text())
+
         # Get category
         vid_category = vid.find(class_="vid_category")
         category = vid_category.find("a").get_text()
 
         # Get time since video added
         vid_time_added = vid.find(class_="time_added")
-        time_since_added = dateparser.parse(vid_time_added.get_text())
+        time_since_added = vid_time_added.get_text()
 
         if not _is_recent(time_since_added):
             continue
 
-        highlights.append((link, match_name, category, str(time_since_added)))
+        highlights.append(Highlight(link, match_name, img_link, view_count, category, time_since_added))
 
     return highlights
 
 
 def _is_recent(date):
-    if not isinstance(date, datetime):
+    if not isinstance(date, str):
         return False
 
     today = datetime.today()
+    date = dateparser.parse(date)
 
     # Return True if the video is less than a week old
     return (today - date) < timedelta(days=7)

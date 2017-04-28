@@ -1,0 +1,16 @@
+# requirements.txt
+
+beautifulsoup4==4.5.3
+bs4==0.0.1
+dateparser==0.6.0
+datetime==4.2
+python-dateutil==2.6.0
+pytz==2017.2
+regex==2017.4.23
+ruamel.yaml==0.14.10
+six==1.10.0
+tzlocal==1.4
+zope.interface==4.4.0
+django==1.10.5
+readline==6.2
+requests==2.13.0

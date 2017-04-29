@@ -76,7 +76,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         # Get time since video added
         vid_time_added = vid.find(class_="time_added")
-        time_since_added = vid_time_added.get_text()
+        time_since_added = str(vid_time_added.get_text())
 
         if not _is_recent(time_since_added, max_days_ago):
             continue

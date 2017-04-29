@@ -1,3 +1,5 @@
+import traceback
+
 import highlights_fetcher
 import json
 
@@ -39,23 +41,32 @@ class HighlightsBotView(generic.View):
                     # Print the message to the terminal
                     print("Message received: " + str(message))
 
-                    # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
-                    # are sent as attachments and must be handled accordingly.
-                    post_facebook_message(message['sender']['id'], message['message']['text'])
+                    try:
+                        # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
+                        # are sent as attachments and must be handled accordingly.
+                        send_highlight_message(message['sender']['id'], message['message']['text'])
+
+                    except Exception:
+                        print(traceback.format_exc())
+                        send_facebook_message(message['sender']['id'], {"text": 'Error occured -- ' + str(traceback.format_exc())[:600]})
 
         return HttpResponse()
 
 
-def post_facebook_message(fb_id, received_message):
+def send_facebook_message(fb_id, message):
     post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msg = json.dumps({"recipient":
                                    {"id": fb_id},
-                                   "message": get_highlights(received_message == 'recent')
+                                   "message": message
                                })
 
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
     print("Message sent: " + str(status.json()))
+
+
+def send_highlight_message(fb_id, received_message):
+    send_facebook_message(fb_id, get_highlights(received_message.lower() == 'recent'))
 
 
 def get_highlights(recent=False):
@@ -73,6 +84,8 @@ def get_highlights(recent=False):
 def get_elements(recent):
     elems = []
     highlights = highlights_fetcher.fetch_highlights()
+
+    print("Highlight number: " + str(len(highlights)))
 
     if not recent:
         # Order by most popular highlight videos

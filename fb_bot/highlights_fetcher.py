@@ -41,6 +41,7 @@ def fetch_highlights(num_pagelet=3, max_days_ago=7):
     return highlights
 
 
+# TODO: handle errors that can occur from parsing the page
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
@@ -68,6 +69,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         # Get video view count
         vid_bot = vid.find(class_="vidBot")
+        # TODO: handle when no views
         view_count = int(vid_bot.find(class_="views-count").get_text())
 
         # Get category

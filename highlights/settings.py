@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'fb_highlights'
+    'fb_highlights',
+    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'fb_highlights.middleware.messenger_middleware.MessengerMiddleware'
 ]
 
 ROOT_URLCONF = 'highlights.urls'
@@ -119,3 +121,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Raven config for sentry logging
+
+RAVEN_CONFIG = {
+    'dsn': 'https://f36f69a6c1144ff08577ada9e27dcf85:4cc732fc03fd44dea2beb78b23a72145@sentry.io/163242',
+}

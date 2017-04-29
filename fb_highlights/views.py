@@ -50,7 +50,7 @@ def post_facebook_message(fb_id, received_message):
     post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msg = json.dumps({"recipient":
                                    {"id": fb_id},
-                                   "message": get_highlights()
+                                   "message": get_highlights(received_message == 'recent')
                                })
 
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
@@ -58,24 +58,25 @@ def post_facebook_message(fb_id, received_message):
     print("Message sent: " + str(status.json()))
 
 
-def get_highlights():
+def get_highlights(recent=False):
     return { "attachment":{
          "type":"template",
          "payload": {
             "template_type": "list",
             "top_element_style": "compact",
-            "elements": get_elements()
+            "elements": get_elements(recent)
          }
       }
     }
 
 
-def get_elements():
+def get_elements(recent):
     elems = []
     highlights = highlights_fetcher.fetch_highlights()
 
-    # Order by most popular highlight videos
-    highlights.sort(key=lambda h: h.view_count, reverse=True)
+    if not recent:
+        # Order by most popular highlight videos
+        highlights.sort(key=lambda h: h.view_count, reverse=True)
 
     for i in range(4):
         highlight = highlights[i]

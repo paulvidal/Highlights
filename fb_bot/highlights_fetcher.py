@@ -52,7 +52,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         # Get link of video
         vid_top = vid.find(class_="vidTop")
 
-        if vid_top is None:
+        if vid_top is None or vid_top.find("a") is None:
             continue
 
         link = str(vid_top.find("a").get("href"))
@@ -65,19 +65,32 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         # Get match image link
         vid_thumb = vid.find(class_="vidthumb")
+
+        if vid_thumb is None or vid_thumb.find("img") is None:
+            continue
+
         img_link = str(vid_thumb.find("img").get("src"))
 
         # Get video view count
         vid_bot = vid.find(class_="vidBot")
-        # TODO: handle when no views
-        view_count = int(vid_bot.find(class_="views-count").get_text())
+        view_count = 0
+
+        if vid_bot and vid_bot.find(class_="views-count"):
+            view_count = int(vid_bot.find(class_="views-count").get_text())
 
         # Get category
         vid_category = vid.find(class_="vid_category")
-        category = vid_category.find("a").get_text()
+        category = ""
+
+        if vid_category and vid_category.find("a"):
+            category = vid_category.find("a").get_text()
 
         # Get time since video added
         vid_time_added = vid.find(class_="time_added")
+
+        if vid_time_added is None:
+            continue
+
         time_since_added = str(vid_time_added.get_text())
 
         if not _is_recent(time_since_added, max_days_ago):
@@ -113,5 +126,9 @@ def _is_valid_link(link):
 
 if __name__ == "__main__":
 
-    for highlight in fetch_highlights():
+    highlights = fetch_highlights()
+
+    for highlight in highlights:
         print(highlight)
+
+    print("Number of highlights: " + str(len(highlights)))

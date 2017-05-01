@@ -1,5 +1,6 @@
 import requests
 import dateparser
+import time
 
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -10,7 +11,6 @@ PAGELET_EXTENSION = 'posts-pagelet?page='
 
 
 class Highlight:
-
     def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
         self.link = link
         self.match_name = match_name
@@ -19,8 +19,38 @@ class Highlight:
         self.category = category
         self.time_since_added = time_since_added
 
+        # Match information
+        team1, score1, team2, score2 = self.get_match_info()
+        self.team1 = team1
+        self.score1 = score1
+        self.team2 = team2
+        self.score2 = score2
+
+    def get_match_info(self):
+        match = self.match_name
+        match_split = match.split()
+        middle_index = match_split.index('-')
+
+        def join(l):
+            return " ".join(l)
+
+        return join(match_split[:middle_index - 1]), match_split[middle_index - 1], \
+               join(match_split[middle_index + 2:]), match_split[middle_index + 1]
+
+    def is_match_of(self, team):
+        team = team.lower()
+        return self.team1.lower().startswith(team) or self.team2.lower().startswith(team)
+
     def __str__(self):
-        return str((self.link, self.match_name, self.img_link, self.view_count, self.category, self.time_since_added))
+        return str((self.link, self.match_name, self.team1, self.score1, self.team2, self.score2,
+                    self.img_link, self.view_count, self.category, self.time_since_added))
+
+
+def fetch_highlights_for_team(team):
+    highlights = fetch_highlights(10, 60)
+    latest_highlights_for_team = list(filter(lambda h: h.is_match_of(team), highlights))
+
+    return latest_highlights_for_team
 
 
 def fetch_highlights(num_pagelet=3, max_days_ago=7):
@@ -28,7 +58,7 @@ def fetch_highlights(num_pagelet=3, max_days_ago=7):
     Fetch all the possible highlights available on footyroom given a number of pagelet to look at
     (24 highlights per pagelet)
 
-    :param num_pagelet:
+    :param num_pagelet: number of pagelet to consider
     :param max_days_ago: max age of a highlight (after this age, we don't consider the highlight)
     :return: the latests highlights available on footyroom
     """
@@ -36,12 +66,11 @@ def fetch_highlights(num_pagelet=3, max_days_ago=7):
     highlights = []
 
     for pagelet_num in range(num_pagelet):
-        highlights += _fetch_pagelet_highlights(pagelet_num+1, max_days_ago)
+        highlights += _fetch_pagelet_highlights(pagelet_num + 1, max_days_ago)
 
     return highlights
 
 
-# TODO: handle errors that can occur from parsing the page
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
@@ -126,9 +155,24 @@ def _is_valid_link(link):
 
 if __name__ == "__main__":
 
+    print("\nFetch highlights ------------------------------ \n")
+
+    start_time = time.time()
     highlights = fetch_highlights()
 
     for highlight in highlights:
         print(highlight)
 
     print("Number of highlights: " + str(len(highlights)))
+    print("Time taken: " + str(round(time.time() - start_time, 2)) + "s")
+
+    print("\nFetch highlights for team ------------------------------ \n")
+
+    start_time = time.time()
+    highlights = fetch_highlights_for_team("Anger")
+
+    for highlight in highlights:
+        print(highlight)
+
+    print("Number of highlights: " + str(len(highlights)))
+    print("Time taken: " + str(round(time.time() - start_time, 2)) + "s")

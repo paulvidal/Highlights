@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'fb_highlights.middleware.messenger_middleware.MessengerMiddleware'
+    'fb_bot.middleware.messenger_middleware.MessengerMiddleware'
 ]
 
 ROOT_URLCONF = 'highlights.urls'

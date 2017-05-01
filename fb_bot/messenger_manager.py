@@ -6,8 +6,16 @@ from fb_bot import highlights_fetcher
 ACCESS_TOKEN = 'EAAJvTnLYbnkBANP32ZCoDdyBw2nMvZAQ9vkHORylXFouyhvvv4VJ65DUPncr0RpeDZCzDtCb1FUoNFA9Ayq8STkMLXMKtAVIY0Udg3EZCzNtc6BcFdcvMzZCZC7ZBHBvZCZCZC1a1QRwgKfAMorFdHcoeqa5YphsvKXFdOZBggUCHFAIgZDZD'
 
 
-def send_highlight_message(fb_id, received_message):
-    send_facebook_message(fb_id, get_highlights_for_team(received_message))
+def send_highlight_message_for_team(fb_id, team):
+    send_facebook_message(fb_id, get_highlights_for_team(team))
+
+
+def send_highlight_message_recent(fb_id):
+    send_facebook_message(fb_id, get_most_recent_highlights())
+
+
+def send_highlight_message_popular(fb_id):
+    send_facebook_message(fb_id, get_most_popular_highlights())
 
 
 def send_facebook_message(fb_id, message):

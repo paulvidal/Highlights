@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from fb_bot.messenger_manager import send_highlight_message
+import fb_bot.messenger_manager as messenger_manager
 
 
 class HighlightsBotView(generic.View):
@@ -39,14 +39,23 @@ class HighlightsBotView(generic.View):
                 # Check to make sure the received call is a message call
                 # This might be delivery, optin, postback for other events
                 if 'message' in message:
-                    # Print the message to the terminal
-                    print("Message received: " + str(message))
-
                     HighlightsBotView.LATEST_SENDER_ID = message['sender']['id']
 
                     # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
                     # are sent as attachments and must be handled accordingly.
-                    send_highlight_message(message['sender']['id'], message['message']['text'])
+                    messenger_manager.send_highlight_message_for_team(message['sender']['id'], message['message']['text'])
+
+                elif 'postback' in message:
+                    postback = message['postback']['payload']
+
+                    if postback == 'get_started':
+                        pass
+
+                    elif postback == 'recent':
+                        messenger_manager.send_highlight_message_recent(message['sender']['id'])
+
+                    elif postback == 'popular':
+                        messenger_manager.send_highlight_message_popular(message['sender']['id'])
 
             HighlightsBotView.LATEST_SENDER_ID = 0
 

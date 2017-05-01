@@ -1,17 +1,16 @@
-# requirements.txt
-
 beautifulsoup4==4.5.3
 bs4==0.0.1
+contextlib2==0.5.5
 dateparser==0.6.0
-datetime==4.2
+DateTime==4.2
+Django==1.10.5
+gunicorn==19.7.1
 python-dateutil==2.6.0
 pytz==2017.2
+raven==6.0.0
 regex==2017.4.23
+requests==2.13.0
 ruamel.yaml==0.14.10
 six==1.10.0
 tzlocal==1.4
 zope.interface==4.4.0
-django==1.10.5
-readline==6.2
-requests==2.13.0
-raven==6.0.0

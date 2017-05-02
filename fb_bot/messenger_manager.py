@@ -30,7 +30,7 @@ def send_facebook_message(fb_id, message):
 
     status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    print("Message sent: " + str(status.json()))
+    print("Message sent: " + str(message))
 
 
 #

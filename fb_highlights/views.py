@@ -25,7 +25,7 @@ class HighlightsBotView(generic.View):
 
     # Post function to handle Facebook messages
     def post(self, request, *args, **kwargs):
-        print(request.body)
+        print("Message received: " + str(request.body))
 
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(request.body.decode('utf-8'))

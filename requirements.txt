@@ -1,10 +1,12 @@
 beautifulsoup4==4.5.3
 bs4==0.0.1
+certifi==2017.4.17
 contextlib2==0.5.5
 dateparser==0.6.0
 DateTime==4.2
 Django==1.10.5
 gunicorn==19.7.1
+Logentries==0.17
 python-dateutil==2.6.0
 pytz==2017.2
 raven==6.0.0

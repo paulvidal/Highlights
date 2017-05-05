@@ -1,21 +1,23 @@
 import json
 import requests
+import highlights.settings
+import highlights.settings
 
 from fb_bot import highlights_fetcher
 
-ACCESS_TOKEN = 'EAAJvTnLYbnkBANP32ZCoDdyBw2nMvZAQ9vkHORylXFouyhvvv4VJ65DUPncr0RpeDZCzDtCb1FUoNFA9Ayq8STkMLXMKtAVIY0Udg3EZCzNtc6BcFdcvMzZCZC7ZBHBvZCZCZC1a1QRwgKfAMorFdHcoeqa5YphsvKXFdOZBggUCHFAIgZDZD'
+ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
 
 def send_highlight_message_for_team(fb_id, team):
-    send_facebook_message(fb_id, get_highlights_for_team(team))
+    return send_facebook_message(fb_id, get_highlights_for_team(team))
 
 
 def send_highlight_message_recent(fb_id):
-    send_facebook_message(fb_id, get_most_recent_highlights())
+    return send_facebook_message(fb_id, get_most_recent_highlights())
 
 
 def send_highlight_message_popular(fb_id):
-    send_facebook_message(fb_id, get_most_popular_highlights())
+    return send_facebook_message(fb_id, get_most_popular_highlights())
 
 
 def send_facebook_message(fb_id, message):
@@ -28,9 +30,10 @@ def send_facebook_message(fb_id, message):
             "message": message
         })
 
-    status = requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+    if not highlights.settings.DEBUG:
+        requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
 
-    print("Message sent: " + str(message))
+    return response_msg
 
 
 #
@@ -110,7 +113,7 @@ def create_generic_attachment(elements):
 
 
 def highlights_to_json(highlights):
-    return json.dumps(map(lambda h: highlight_to_json(h), highlights))
+    return list(map(lambda h: highlight_to_json(h), highlights))
 
 
 def highlight_to_json(highlight):

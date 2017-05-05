@@ -12,21 +12,29 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 
 import os
 
+
+# Get environment variable
+def get_env_var(var_name):
+    env_var = os.environ.get(var_name)
+
+    if env_var is None:
+        raise KeyError('Environnement variable ' + var_name + ' not set !!')
+
+    return env_var
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@%p0e-8q%w67m*im7%j=kuel7)_kyn3c7n++-43lemcj4577$a'
+SECRET_KEY = get_env_var('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -121,6 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 # Raven config for sentry logging
 

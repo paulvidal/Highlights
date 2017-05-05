@@ -1,0 +1,113 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Boostrap JS and Jquery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <script>
+        function send_message() {
+            var message = $("#message").val()
+
+            var request_data = JSON.stringify({
+                                  "object":"page",
+                                  "entry":[
+                                    {
+                                      "id":"1661818147398143",
+                                      "time":1493911374840,
+                                      "messaging":[
+                                        {
+                                          "sender": {
+                                            "id":"1299131333541579"
+                                          },
+                                          "recipient":{
+                                            "id":"1661818147398143"
+                                          },
+                                          "timestamp":1493911373874,
+                                          "message": {
+                                            "mid":"mid.$cAAXnamDTS6JiBVPQMlb1A6Hcns6f",
+                                            "seq":255027,
+                                            "text": message
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }, null, 4);
+
+            $.post( "/d08fcf03937a116ab14ea30725c72d33ac715bcfa085e296cd/", request_data, function(json) {
+                $("#request").append("<pre>" + request_data + "</pre>");
+                $("#response").append("<pre>" + JSON.stringify(JSON.parse(json), null, 4) + "</pre>");
+            })
+        }
+    </script>
+
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Highlight Debug Panel</a>
+        </div>
+
+        <!--<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">-->
+          <!--<ul class="nav navbar-nav">-->
+            <!--<li><a href="#">Link</a></li>-->
+          <!--</ul>-->
+        <!--</div>-->
+
+      </div>
+    </nav>
+
+    <!-- Send message -->
+    <div class="container-fluid">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Send message to Webhook</h3>
+          </div>
+          <div class="panel-body">
+
+            <textarea class="form-control" rows="3" id="message"></textarea>
+
+            <div class="row container-fluid">
+                <button type="submit" onclick="send_message()" class="btn btn-primary col-md-offset-10 col-md-2" style="margin-top: 10px;">Submit</button>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Request</h3>
+          </div>
+          <div class="panel-body" id="request">
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Response</h3>
+          </div>
+          <div class="panel-body" id="response">
+          </div>
+        </div>
+    </div>
+
+</body>
+</html>

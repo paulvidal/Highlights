@@ -1,2 +1,4 @@
 .idea
 *.pyc
+runserver.sh
+set_env_var.sh

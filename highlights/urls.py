@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^fb_highlights/', include('fb_highlights.urls')),
+    url(r'^', include('fb_highlights.urls')),
 ]

@@ -1,15 +1,20 @@
 import json
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
+import highlights.settings
+
+
+class DebugPageView(TemplateView):
+    template_name = "debug.html"
 
 
 class HighlightsBotView(generic.View):
-
     LATEST_SENDER_ID = 0
 
     @method_decorator(csrf_exempt)
@@ -30,8 +35,8 @@ class HighlightsBotView(generic.View):
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(request.body.decode('utf-8'))
 
-        # Facebook recommends going through every entry since they might send
-        # multiple messages in a single call during high load
+        response_msg = ""
+
         for entry in incoming_message['entry']:
 
             for message in entry['messaging']:
@@ -43,7 +48,8 @@ class HighlightsBotView(generic.View):
 
                     # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
                     # are sent as attachments and must be handled accordingly.
-                    messenger_manager.send_highlight_message_for_team(message['sender']['id'], message['message']['text'])
+                    response_msg = messenger_manager.send_highlight_message_for_team(message['sender']['id'],
+                                                                                     message['message']['text'])
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']
@@ -52,11 +58,16 @@ class HighlightsBotView(generic.View):
                         pass
 
                     elif postback == 'recent':
-                        messenger_manager.send_highlight_message_recent(message['sender']['id'])
+                        response_msg = messenger_manager.send_highlight_message_recent(message['sender']['id'])
 
                     elif postback == 'popular':
-                        messenger_manager.send_highlight_message_popular(message['sender']['id'])
+                        response_msg = messenger_manager.send_highlight_message_popular(message['sender']['id'])
 
+            print("Message sent: " + str(response_msg))
             HighlightsBotView.LATEST_SENDER_ID = 0
+
+        # For DEBUG MODE only
+        if highlights.settings.DEBUG:
+            return JsonResponse(response_msg, safe=False)
 
         return HttpResponse()

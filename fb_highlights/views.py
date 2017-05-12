@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
 import highlights.settings
+from fb_bot.logger import logger
 
 
 class DebugPageView(TemplateView):
@@ -30,7 +31,7 @@ class HighlightsBotView(generic.View):
 
     # Post function to handle Facebook messages
     def post(self, request, *args, **kwargs):
-        print("Message received: " + str(request.body))
+        logger.log("Message received: " + str(request.body))
 
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(request.body.decode('utf-8'))
@@ -42,31 +43,32 @@ class HighlightsBotView(generic.View):
             for message in entry['messaging']:
 
                 HighlightsBotView.LATEST_SENDER_ID = message['sender']['id']
+                logger.log_for_user("Message received: " + str(message), HighlightsBotView.LATEST_SENDER_ID)
 
                 # Check to make sure the received call is a message call
                 # This might be delivery, optin, postback for other events
                 if 'message' in message:
                     # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
                     # are sent as attachments and must be handled accordingly.
-                    response_msg = messenger_manager.send_highlight_message_for_team(message['sender']['id'],
+                    response_msg = messenger_manager.send_highlight_message_for_team(HighlightsBotView.LATEST_SENDER_ID,
                                                                                      message['message']['text'])
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
-                        response_msg = messenger_manager.send_facebook_message(message['sender']['id'],
+                        response_msg = messenger_manager.send_facebook_message(HighlightsBotView.LATEST_SENDER_ID,
                                        messenger_manager.create_message("Hi Boss! I am the smart bot that fetches the "
                                        "latest football highlights for you :) To get started, enter the name of any team you love to see the highlights for!"))
 
                     elif postback == 'recent':
-                        response_msg = messenger_manager.send_highlight_message_recent(message['sender']['id'])
+                        response_msg = messenger_manager.send_highlight_message_recent(HighlightsBotView.LATEST_SENDER_ID)
 
                     elif postback == 'popular':
-                        response_msg = messenger_manager.send_highlight_message_popular(message['sender']['id'])
+                        response_msg = messenger_manager.send_highlight_message_popular(HighlightsBotView.LATEST_SENDER_ID)
 
-            print("Message sent: " + str(response_msg))
-            HighlightsBotView.LATEST_SENDER_ID = 0
+                logger.log_for_user("Message sent: " + str(response_msg), HighlightsBotView.LATEST_SENDER_ID)
+                HighlightsBotView.LATEST_SENDER_ID = 0
 
         # For DEBUG MODE only
         if highlights.settings.DEBUG:

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import dj_database_url
 
 
 # Get environment variable
@@ -86,10 +87,20 @@ WSGI_APPLICATION = 'highlights.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'highlights',
+        'USER': 'highlights',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
+
+# Set heroku database config
+config = dj_database_url.config()
+
+if config:
+    DATABASES['default'] = config
 
 
 # Password validation
@@ -127,7 +138,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = (
@@ -139,3 +149,8 @@ STATICFILES_DIRS = (
 RAVEN_CONFIG = {
     'dsn': 'https://f36f69a6c1144ff08577ada9e27dcf85:4cc732fc03fd44dea2beb78b23a72145@sentry.io/163242',
 }
+
+# Simplified static file serving.
+# https://warehouse.python.org/project/whitenoise/
+
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

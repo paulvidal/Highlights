@@ -4,9 +4,11 @@ certifi==2017.4.17
 contextlib2==0.5.5
 dateparser==0.6.0
 DateTime==4.2
+dj-database-url==0.4.2
 Django==1.10.5
 gunicorn==19.7.1
 Logentries==0.17
+psycopg2==2.7.1
 python-dateutil==2.6.0
 pytz==2017.2
 raven==6.0.0
@@ -15,4 +17,5 @@ requests==2.13.0
 ruamel.yaml==0.14.10
 six==1.10.0
 tzlocal==1.4
+whitenoise==3.3.0
 zope.interface==4.4.0

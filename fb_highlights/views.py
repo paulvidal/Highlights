@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
 import highlights.settings
+from fb_bot import user_manager
 from fb_bot.logger import logger
 
 
@@ -43,13 +44,12 @@ class HighlightsBotView(generic.View):
             for message in entry['messaging']:
 
                 HighlightsBotView.LATEST_SENDER_ID = message['sender']['id']
+                user = user_manager.get_user(HighlightsBotView.LATEST_SENDER_ID)
+
                 logger.log_for_user("Message received: " + str(message), HighlightsBotView.LATEST_SENDER_ID)
 
-                # Check to make sure the received call is a message call
-                # This might be delivery, optin, postback for other events
+                # Events
                 if 'message' in message:
-                    # Assuming the sender only sends text. Non-text messages like stickers, audio, pictures
-                    # are sent as attachments and must be handled accordingly.
                     response_msg = messenger_manager.send_highlight_message_for_team(HighlightsBotView.LATEST_SENDER_ID,
                                                                                      message['message']['text'])
 

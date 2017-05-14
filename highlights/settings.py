@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fb_highlights',
-    'raven.contrib.django.raven_compat',
 ]
 
 MIDDLEWARE = [
@@ -58,8 +57,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'fb_bot.middleware.messenger_middleware.MessengerMiddleware'
 ]
+
+# Disable SENTRY in debug mode
+if not DEBUG:
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
+    MIDDLEWARE.append('fb_bot.middleware.messenger_middleware.MessengerMiddleware')
+
 
 ROOT_URLCONF = 'highlights.urls'
 

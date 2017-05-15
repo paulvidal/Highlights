@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 
-from fb_bot.messenger_manager import send_facebook_message, create_message
+from fb_bot.messages import ERROR_MESSAGE
+from fb_bot.messenger_manager import send_error_message
 from fb_highlights.views import HighlightsBotView
 
 from raven.contrib.django.raven_compat.models import client, got_request_exception
@@ -23,7 +24,7 @@ class MessengerMiddleware(object):
 
     def process_exception(self, request, exception):
         id = HighlightsBotView.LATEST_SENDER_ID
-        send_facebook_message(id, create_message("Sorry, an error occured :("))
+        send_error_message(id)
 
         # Make sure the exception signal is fired for Sentry
         client.user_context({

@@ -34,7 +34,7 @@ class User(models.Model):
     @staticmethod
     def get_default_user():
         return User(facebook_id=0,
-                    first_name="Default",
+                    first_name="man",
                     last_name="",
                     image_url="",
                     locale="",
@@ -62,4 +62,21 @@ class Team(models.Model):
 
     @staticmethod
     def search_fields():
-        return ('team_name',)
+        return 'team_name',
+
+
+class LatestHighlight(models.Model):
+    link = models.TextField(default="")
+    time_since_added = models.CharField(max_length=80)
+
+    @staticmethod
+    def to_list_display():
+        return 'link', 'time_since_added'
+
+    @staticmethod
+    def to_list_filter():
+        return ()
+
+    @staticmethod
+    def search_fields():
+        return ()

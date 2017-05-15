@@ -5,7 +5,8 @@ import highlights.settings
 
 from fb_bot import highlights_fetcher
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
-    ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, HELP_MESSAGE
+    ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
+    HELP_MESSAGE
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
@@ -18,7 +19,8 @@ def send_help_message(fb_id):
 
 def send_menu_message(fb_id):
     return send_facebook_message(
-        fb_id, create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights"]))
+        fb_id,
+        create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights"]))
 
 
 def send_notification_message(fb_id, teams):
@@ -61,7 +63,7 @@ def send_team_deleted_message(fb_id, team):
 
 
 def send_getting_started_message(fb_id, user_name):
-    return send_facebook_message(fb_id, create_message(GET_STARTED_MESSAGE))
+    return send_facebook_message(fb_id, create_message(GET_STARTED_MESSAGE.format(user_name)))
 
 
 def send_error_message(fb_id):
@@ -78,6 +80,11 @@ def send_highlight_message_recent(fb_id):
 
 def send_highlight_message_popular(fb_id):
     return send_facebook_message(fb_id, get_most_popular_highlights())
+
+
+# For scheduler
+def send_highlight_message(fb_id, highlight):
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json([highlight])))
 
 
 ### MAIN METHOD ###
@@ -110,6 +117,7 @@ def send_typing(fb_id):
 
     if not highlights.settings.DEBUG:
         requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+
 
 #
 # Highlights getters

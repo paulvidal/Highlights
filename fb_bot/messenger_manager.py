@@ -98,6 +98,19 @@ def send_facebook_message(fb_id, message):
     return response_msg
 
 
+def send_typing(fb_id):
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
+    response_msg = json.dumps(
+        {
+            "recipient": {
+                "id": fb_id
+            },
+            "sender_action": "typing_on"
+        })
+
+    if not highlights.settings.DEBUG:
+        requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+
 #
 # Highlights getters
 #

@@ -57,8 +57,6 @@ class HighlightsBotView(generic.View):
 
                     text = message['message']['text']
 
-                    # TODO: use payload to make sure quick reply button used
-
                     # MENU
                     if 'menu' == text:
                         print("MENU")
@@ -109,16 +107,26 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
+                    # HELP
                     elif 'help' in text.lower():
                         print("HELP")
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
+                    # LATEST HIGHLIGHTS
+                    elif 'Latest Highlights' == text:
+                        response_msg.append(messenger_manager.send_highlight_message_recent(sender_id))
+
+                    # POPULAR HIGHLIGHTS
+                    elif 'Popular Highlights' == text:
+                        response_msg.append(messenger_manager.send_highlight_message_popular(sender_id))
+
                     # SEARCH FOR TEAM
                     else:
                         print("SEARCH FOR TEAM")
+                        messenger_manager.send_typing(sender_id)
+
                         context_manager.update_context(sender_id, ContextType.NONE)
                         response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, text))
-
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']
@@ -126,12 +134,6 @@ class HighlightsBotView(generic.View):
                     if postback == 'get_started':
                         user = user_manager.get_user(sender_id)
                         response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
-
-                    elif postback == 'recent':
-                        response_msg.append(messenger_manager.send_highlight_message_recent(sender_id))
-
-                    elif postback == 'popular':
-                        response_msg.append(messenger_manager.send_highlight_message_popular(sender_id))
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0

@@ -109,17 +109,23 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
+                    elif 'help' in text.lower():
+                        print("HELP")
+                        response_msg.append(messenger_manager.send_help_message(sender_id))
+
                     # SEARCH FOR TEAM
                     else:
                         print("SEARCH FOR TEAM")
                         context_manager.update_context(sender_id, ContextType.NONE)
                         response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, text))
 
+
                 elif 'postback' in message:
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
-                        response_msg.append(messenger_manager.send_getting_started_message(sender_id))
+                        user = user_manager.get_user(sender_id)
+                        response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
 
                     elif postback == 'recent':
                         response_msg.append(messenger_manager.send_highlight_message_recent(sender_id))

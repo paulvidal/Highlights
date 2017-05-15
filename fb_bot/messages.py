@@ -1,4 +1,7 @@
-GET_STARTED_MESSAGE = "Hi Boss! I am the smart bot that fetches the latest football highlights for you :) To get started, enter the name of any team you love to see the highlights for!"
+HELP_MESSAGE = "Enter the name of any team to get their latest highlights. You can also set notifications to get the latest highlights for the teams you register, as soon as the match finishes :) For this type \"menu\""
+
+GET_STARTED_MESSAGE = "Hey %s! I am the smart bot that fetches the latest football highlights for you :) To get started, enter the name of any team you love to see their highlights!" \
+                      " You can also type \"menu\" to get access to the menu and set notifications."
 
 MENU_MESSAGE = "Tell me what you want to do :) Press notifications to subscribe to teams to get highlights notifications as soon as they are available!"
 

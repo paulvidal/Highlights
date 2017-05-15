@@ -5,16 +5,20 @@ import highlights.settings
 
 from fb_bot import highlights_fetcher
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
-    ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE
+    ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, HELP_MESSAGE
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
 
 ### MESSAGES ###
 
+def send_help_message(fb_id):
+    return send_facebook_message(fb_id, create_message(HELP_MESSAGE))
+
+
 def send_menu_message(fb_id):
     return send_facebook_message(
-        fb_id, create_quick_text_reply_message(MENU_MESSAGE, ["Latest Highlights", "Popular Highlights", "Notifications"]))
+        fb_id, create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights"]))
 
 
 def send_notification_message(fb_id, teams):
@@ -56,7 +60,7 @@ def send_team_deleted_message(fb_id, team):
     return send_facebook_message(fb_id, create_message(TEAM_DELETED_MESSAGE.format(team)))
 
 
-def send_getting_started_message(fb_id):
+def send_getting_started_message(fb_id, user_name):
     return send_facebook_message(fb_id, create_message(GET_STARTED_MESSAGE))
 
 

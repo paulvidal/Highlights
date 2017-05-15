@@ -5,7 +5,7 @@ GET_STARTED_MESSAGE = "Hey %s! I am the smart bot that fetches the latest footba
 
 MENU_MESSAGE = "Tell me what you want to do :) Press notifications to subscribe to teams to get highlights notifications as soon as they are available!"
 
-NOTIFICATION_MESSAGE = "You are currently receiving highlights for the following teams: \n\n{}\n\n Do you want to ADD or DELETE a team?"
+NOTIFICATION_MESSAGE = "You are currently receiving highlights for the following teams: \n\n{}\n\nDo you want to ADD or DELETE a team?"
 
 ADD_TEAM_MESSAGE = "Type the name of the team you want to add"
 

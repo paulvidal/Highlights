@@ -13,7 +13,7 @@ class User(models.Model):
     locale = models.CharField(max_length=10)
     timezone = models.SmallIntegerField()
     gender = models.CharField(max_length=20)
-    context = models.SmallIntegerField(default=0)
+    context = models.SmallIntegerField(default=1)
 
     # Stats
     join_date = models.DateTimeField(default=datetime.now)

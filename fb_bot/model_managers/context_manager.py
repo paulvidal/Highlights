@@ -1,6 +1,6 @@
 from enum import Enum
 
-from fb_bot.user_manager import get_user
+from fb_bot.model_managers.user_manager import get_user
 
 
 class ContextType(Enum):

@@ -2,14 +2,20 @@ from fb_bot import user_fetcher
 from fb_highlights.models import User
 
 
-def get_user(facebook_id):
-    if not _is_in_db(facebook_id):
-        success = _insert_user(facebook_id)
+def get_user(fb_id):
+    if not _is_in_db(fb_id):
+        success = _insert_user(fb_id)
 
         if not success:
             return User.get_default_user()
 
-    return User.objects.get(facebook_id=facebook_id)
+    return User.objects.get(facebook_id=fb_id)
+
+
+def increment_user_message_count(fb_id):
+    user = get_user(fb_id)
+    user.message_count += 1
+    user.save()
 
 
 def _is_in_db(fb_id):

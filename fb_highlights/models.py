@@ -46,15 +46,15 @@ class User(models.Model):
 
 
 class Team(models.Model):
-    facebook_id = models.ForeignKey(User, on_delete=models.CASCADE, to_field='facebook_id')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
     team_name = models.CharField(max_length=80)
 
     class Meta:
-        unique_together = ('facebook_id', 'team_name')
+        unique_together = ('user', 'team_name')
 
     @staticmethod
     def to_list_display():
-        return 'facebook_id', 'team_name'
+        return 'user', 'team_name'
 
     @staticmethod
     def to_list_filter():

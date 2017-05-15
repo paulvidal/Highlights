@@ -19,12 +19,13 @@ def send_menu_message(fb_id):
 
 def send_notification_message(fb_id, teams):
     formatted_teams = ""
-    quick_reply_buttons = ["Add"]
+    quick_reply_buttons = ["Add", "Delete"]
 
     if len(teams) == 0:
         formatted_teams = "-> No team registered"
-    else:
-        quick_reply_buttons += ["Delete"]
+        quick_reply_buttons = ["Add"]
+    elif len(teams) == 10:
+        quick_reply_buttons = ["Delete"]
 
     for i in range(len(teams)):
         if i > 0:

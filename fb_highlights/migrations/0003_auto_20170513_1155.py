@@ -26,4 +26,14 @@ class Migration(migrations.Migration):
             field=models.PositiveIntegerField(default=0),
             preserve_default=False,
         ),
+        migrations.AddField(
+            model_name='user',
+            name='context',
+            field=models.SmallIntegerField(default=0),
+        ),
+        migrations.AlterField(
+            model_name='user',
+            name='message_count',
+            field=models.PositiveIntegerField(default=0),
+        ),
     ]

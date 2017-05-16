@@ -16,7 +16,7 @@ def send_most_recent_highlights():
         link = highlight.link
         time_since_added = highlight.time_since_added
 
-        if not latest_highlight_manager.already_has_highlight(link, time_since_added):
+        if not latest_highlight_manager.already_has_highlight(link):
             most_recent_highlights.append(highlight)
             latest_highlight_manager.add_highlight(link=link, time_since_added=time_since_added)
 

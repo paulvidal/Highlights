@@ -59,6 +59,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Tell user which mode
+print("Starting server in DEBUG MODE: " + str(DEBUG))
+
 # Disable SENTRY in debug mode
 if not DEBUG:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')

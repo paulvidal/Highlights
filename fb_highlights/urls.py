@@ -3,5 +3,6 @@ from fb_highlights import views
 
 urlpatterns = [
     url(r'^d08fcf03937a116ab14ea30725c72d33ac715bcfa085e296cd/?$', views.HighlightsBotView.as_view()),
-    url(r'^debug', views.DebugPageView.as_view())
+    url(r'^debug', views.DebugPageView.as_view()),
+    url(r'^privacy', views.PrivacyPageView.as_view())
 ]

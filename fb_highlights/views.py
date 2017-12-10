@@ -18,6 +18,10 @@ class DebugPageView(TemplateView):
     template_name = "debug.html"
 
 
+class PrivacyPageView(TemplateView):
+    template_name = "privacy.html"
+
+
 class HighlightsBotView(generic.View):
     LATEST_SENDER_ID = 0
 

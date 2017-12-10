@@ -14,7 +14,8 @@ def send_most_recent_highlights():
 
     for highlight in highlights:
         link = highlight.link
-        time_since_added = highlight.time_since_added
+        # Parse the date before inserting it (date needs to be a string)
+        time_since_added = str(dateparser.parse(highlight.time_since_added))
 
         if not latest_highlight_manager.already_has_highlight(link):
             most_recent_highlights.append(highlight)

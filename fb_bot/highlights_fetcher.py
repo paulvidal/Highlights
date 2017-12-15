@@ -77,45 +77,45 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     page = requests.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
     soup = BeautifulSoup(page.content, 'html.parser')
 
-    for vid in soup.find_all(class_="vid"):
+    for video_card in soup.find_all(class_="card"):
         # Get link of video
-        vid_top = vid.find(class_="vidTop")
+        video = video_card.find(class_="card-image")
 
-        if vid_top is None or vid_top.find("a") is None:
+        if video is None or video.find("a") is None:
             continue
 
-        link = str(vid_top.find("a").get("href"))
+        link = str(video.find("a").get("href"))
 
         if not _is_valid_link(link):
             continue
 
-        # Get match name
-        match_name = vid_top.find("a").get_text()
-
         # Get match image link
-        vid_thumb = vid.find(class_="vidthumb")
-
-        if vid_thumb is None or vid_thumb.find("img") is None:
-            continue
-
-        img_link = str(vid_thumb.find("img").get("src"))
+        img_link = str(video.find("img").get("src"))
 
         # Get video view count
-        vid_bot = vid.find(class_="vidBot")
+        video_info = video.find(class_="card-info")
         view_count = 0
 
-        if vid_bot and vid_bot.find(class_="views-count"):
-            view_count = int(vid_bot.find(class_="views-count").get_text())
+        if video_info and video_info.find(class_="views-count"):
+            view_count = int(video_info.find(class_="views-count").get_text())
+
+        # Get match name
+        title = video_card.find(class_="card-title")
+
+        if not title:
+            continue
+
+        match_name = str(title.find(class_="spoiler").get_text())
 
         # Get category
-        vid_category = vid.find(class_="vid_category")
+        vid_category = video_card.find(class_="card-category")
         category = ""
 
-        if vid_category and vid_category.find("a"):
-            category = vid_category.find("a").get_text()
+        if vid_category:
+            category = vid_category.get_text()
 
         # Get time since video added
-        vid_time_added = vid.find(class_="time_added")
+        vid_time_added = video_card.find(class_="card-time")
 
         if vid_time_added is None:
             continue
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     print("\nFetch highlights for team ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights_for_team("Anger")
+    highlights = fetch_highlights_for_team("Arsenal")
 
     for highlight in highlights:
         print(highlight)

@@ -1,9 +1,12 @@
-HELP_MESSAGE = "Enter the name of any team to get their latest highlights. You can also set notifications to get the latest highlights for the teams you register, as soon as the match finishes :) For this type \"menu\""
+# TODO: redirect directly to notifications instead of menu
+HELP_MESSAGE = "Enter the name of any team to get their latest highlights. You can also set notifications to get the " \
+               "latest highlights for the teams you register, as soon as the match finishes :) For this press \"Menu\""
 
-GET_STARTED_MESSAGE = "Hey {}! I am the smart bot that fetches the latest football highlights for you :) To get started, enter the name of any team you love to see their highlights!" \
-                      " You can also type \"menu\" to get access to the menu and set notifications."
+GET_STARTED_MESSAGE = "Hey {}! I am the smart bot that fetches the latest football highlights for you :) To get started, " \
+                      "enter the name of any team you would love to follow to get their highlights as soon as they are available!" \
+                      " You can also type at anytime the name of a team to get their latest highlights"
 
-MENU_MESSAGE = "Tell me what you want to do :) Press notifications to subscribe to teams to get highlights notifications as soon as they are available!"
+MENU_MESSAGE = "Tell me what you want to do :) Press notifications to subscribe to teams to get highlights notifications as soon as the video is available!"
 
 NOTIFICATION_MESSAGE = "You are currently receiving highlights for the following teams: \n\n{}\n\nDo you want to ADD or DELETE a team?"
 
@@ -17,6 +20,6 @@ TEAM_ADDED_FAIL_MESSAGE = "Could not find the team: {}"
 
 TEAM_DELETED_MESSAGE = "{} successfully deleted from your teams"
 
-NO_MATCH_FOUND = "No highlights found for this team :("
+NO_MATCH_FOUND = "No highlights found for this team! :("
 
 ERROR_MESSAGE = "Sorry, an error occured :("

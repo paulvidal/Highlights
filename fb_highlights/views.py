@@ -61,10 +61,16 @@ class HighlightsBotView(generic.View):
 
                     text = message['message']['text']
 
+                    # Cancel quick reply
+                    if 'cancel' == text.lower():
+                        print("CANCEL")
+                        context_manager.update_context(sender_id, ContextType.NONE)
+
                     # MENU
-                    if 'menu' == text:
+                    elif 'menu' == text.lower():
                         print("MENU")
                         context_manager.update_context(sender_id, ContextType.MENU)
+
                         response_msg.append(messenger_manager.send_menu_message(sender_id))
 
                     # NOTIFICATION SETTING
@@ -85,20 +91,21 @@ class HighlightsBotView(generic.View):
                     # DELETE TEAM SETTING
                     elif 'Delete' == text and context_manager.is_notifications_setting_context(sender_id):
                         print("DELETE TEAM SETTING")
-
-                        teams = team_manager.get_teams_for_user(sender_id)
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
+                        teams = team_manager.get_teams_for_user(sender_id)
                         response_msg.append(messenger_manager.send_delete_team_message(sender_id, teams))
 
                     # ADDING TEAM
+                    # TODO: check if team added exists (create a DB of teams, make suggestions if mistyped, and make simple map for teams like psg -> Paris saint germain)
                     elif context_manager.is_adding_team_context(sender_id):
                         print("ADDING TEAM")
+                        context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+
                         team_manager.add_team(sender_id, text)
                         response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
 
                         teams = team_manager.get_teams_for_user(sender_id)
-                        context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
                     # DELETING TEAM
@@ -111,11 +118,6 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
-                    # HELP
-                    elif 'help' in text.lower():
-                        print("HELP")
-                        response_msg.append(messenger_manager.send_help_message(sender_id))
-
                     # LATEST HIGHLIGHTS
                     elif 'Latest Highlights' == text:
                         response_msg.append(messenger_manager.send_highlight_message_recent(sender_id))
@@ -123,6 +125,11 @@ class HighlightsBotView(generic.View):
                     # POPULAR HIGHLIGHTS
                     elif 'Popular Highlights' == text:
                         response_msg.append(messenger_manager.send_highlight_message_popular(sender_id))
+
+                    # HELP
+                    elif 'help' in text.lower():
+                        print("HELP")
+                        response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     # SEARCH FOR TEAM
                     else:
@@ -138,6 +145,9 @@ class HighlightsBotView(generic.View):
                     if postback == 'get_started':
                         user = user_manager.get_user(sender_id)
                         response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
+
+                        # Set the user in add a team context
+                        context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0

@@ -14,7 +14,7 @@ ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 ### MESSAGES ###
 
 def send_help_message(fb_id):
-    return send_facebook_message(fb_id, create_message(HELP_MESSAGE))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, ['Menu', 'Cancel']))
 
 
 def send_menu_message(fb_id):
@@ -25,13 +25,13 @@ def send_menu_message(fb_id):
 
 def send_notification_message(fb_id, teams):
     formatted_teams = ""
-    quick_reply_buttons = ["Add", "Delete"]
+    quick_reply_buttons = ["Add", "Delete", "Cancel"]
 
     if len(teams) == 0:
         formatted_teams = "-> No team registered"
-        quick_reply_buttons = ["Add"]
+        quick_reply_buttons.remove("Delete")
     elif len(teams) == 10:
-        quick_reply_buttons = ["Delete"]
+        quick_reply_buttons.remove("Add")
 
     for i in range(len(teams)):
         if i > 0:
@@ -145,7 +145,7 @@ def get_highlights_for_team(team):
     highlights = highlights_fetcher.fetch_highlights_for_team(team)
 
     if not highlights:
-        return create_message(NO_MATCH_FOUND)
+        return create_quick_text_reply_message(NO_MATCH_FOUND, ['Help'])
 
     highlights = truncate_num_of_highlights(highlights)
 

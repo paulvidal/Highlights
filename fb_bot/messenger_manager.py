@@ -20,7 +20,7 @@ def send_help_message(fb_id):
 def send_menu_message(fb_id):
     return send_facebook_message(
         fb_id,
-        create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights"]))
+        create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights", "Cancel"]))
 
 
 def send_notification_message(fb_id, teams):

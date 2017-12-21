@@ -52,6 +52,9 @@ class HighlightsBotView(generic.View):
                 sender_id = message['sender']['id']
                 HighlightsBotView.LATEST_SENDER_ID = sender_id
 
+                # Send typing event - so user is aware received message
+                messenger_manager.send_typing(sender_id)
+
                 user_manager.increment_user_message_count(sender_id)
 
                 logger.log_for_user("Message received: " + str(message), sender_id)
@@ -134,9 +137,8 @@ class HighlightsBotView(generic.View):
                     # SEARCH FOR TEAM
                     else:
                         print("SEARCH FOR TEAM")
-                        messenger_manager.send_typing(sender_id)
-
                         context_manager.update_context(sender_id, ContextType.NONE)
+
                         response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, text))
 
                 elif 'postback' in message:

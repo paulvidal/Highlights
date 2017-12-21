@@ -12,7 +12,7 @@ def get_users_for_team(team):
 
 
 def add_team(fb_id, team):
-    Team.objects.create(user_id=fb_id, team_name=team.title())
+    Team.objects.update_or_create(user_id=fb_id, team_name=team.title())
 
 
 def delete_team(fb_id, team):

@@ -30,12 +30,12 @@ def _insert_user(fb_id):
 
     facebook_id, first_name, last_name, image_url, locale, timezone, gender = user_info
 
-    User.objects.create(facebook_id=facebook_id,
-                        first_name=first_name,
-                        last_name=last_name,
-                        image_url=image_url,
-                        locale=locale,
-                        timezone=timezone,
-                        gender=gender)
+    User.objects.update_or_create(facebook_id=facebook_id,
+                                  first_name=first_name,
+                                  last_name=last_name,
+                                  image_url=image_url,
+                                  locale=locale,
+                                  timezone=timezone,
+                                  gender=gender)
 
     return True

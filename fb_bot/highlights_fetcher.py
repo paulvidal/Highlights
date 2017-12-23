@@ -78,6 +78,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     soup = BeautifulSoup(page.content, 'html.parser')
 
     for video_card in soup.find_all(class_="card"):
+
         # Get link of video
         video = video_card.find(class_="card-image")
 
@@ -121,8 +122,14 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
             continue
 
         time_since_added = str(vid_time_added.get_text())
+        time_since_added_date = dateparser.parse(time_since_added)
 
-        if not _is_recent(time_since_added, max_days_ago):
+        # If error occur while arsing date, skip
+        # TODO: handle case where date malformed (special string field)
+        if not time_since_added_date:
+            continue
+
+        if not _is_recent(time_since_added_date, max_days_ago):
             continue
 
         highlights.append(Highlight(link, match_name, img_link, view_count, category, time_since_added))
@@ -131,11 +138,10 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
 
 def _is_recent(date, max_days_ago):
-    if not isinstance(date, str):
+    if not isinstance(date, datetime):
         return False
 
     today = datetime.today()
-    date = dateparser.parse(date)
 
     # Return True if the video is less than a week old
     return (today - date) < timedelta(days=max_days_ago)

@@ -12,7 +12,13 @@ NOTIFICATION_MESSAGE = "You are currently receiving highlights for the following
 
 ADD_TEAM_MESSAGE = "Type the name of the team you want to add"
 
+DELETE_TEAM_NOT_FOUND_MESSAGE = "Team to delete not found :/ Please choose one of the followings"
+
 DELETE_TEAM_MESSAGE = "Which team do you want to delete:"
+
+TEAM_RECOMMEND_MESSAGE = "Team not found :/ Did you mean?"
+
+TEAM_NOT_FOUND_MESSAGE = "Team not found :/ Try entering the full name of the team."
 
 TEAM_ADDED_SUCCESS_MESSAGE = "{} successfully added to your teams"
 

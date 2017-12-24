@@ -1,6 +1,7 @@
 import requests
 import dateparser
 import time
+import re
 
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -34,8 +35,16 @@ class Highlight:
         def join(l):
             return " ".join(l)
 
-        return join(match_split[:middle_index - 1]), match_split[middle_index - 1], \
-               join(match_split[middle_index + 2:]), match_split[middle_index + 1]
+        team1 = join(match_split[:middle_index - 1])
+        score1 = match_split[middle_index - 1]
+        team2 = join(match_split[middle_index + 2:])
+        score2 = match_split[middle_index + 1]
+
+        def clean_team_name(team):
+            junk_index = team.find('[')
+            return team[:junk_index-1] if junk_index > 0 else team
+
+        return clean_team_name(team1), score1, clean_team_name(team2), score2
 
     def is_match_of(self, team):
         team = team.lower()

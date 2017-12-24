@@ -2,6 +2,10 @@ from fb_bot import user_fetcher
 from fb_highlights.models import User
 
 
+def get_all_users_id():
+    return [user.facebook_id for user in User.objects.all()]
+
+
 def get_user(fb_id):
     if not _is_in_db(fb_id):
         success = _insert_user(fb_id)

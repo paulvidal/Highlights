@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 import highlights.settings
 from fb_bot.logger import logger
-from fb_bot.model_managers import context_manager, user_manager
+from fb_bot.model_managers import context_manager, user_manager, football_team_manager
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers.context_manager import ContextType
 
@@ -82,6 +82,9 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 
                         teams = team_manager.get_teams_for_user(sender_id)
+                        # Format team names
+                        teams = [team.title() for team in teams]
+
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
                     # ADD TEAM SETTING
@@ -97,29 +100,78 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
                         teams = team_manager.get_teams_for_user(sender_id)
+                        # Format team names
+                        teams = [team.title() for team in teams]
+
                         response_msg.append(messenger_manager.send_delete_team_message(sender_id, teams))
 
                     # ADDING TEAM
-                    # TODO: check if team added exists (create a DB of teams, make suggestions if mistyped, and make simple map for teams like psg -> Paris saint germain)
                     elif context_manager.is_adding_team_context(sender_id):
                         print("ADDING TEAM")
-                        context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 
-                        team_manager.add_team(sender_id, text)
-                        response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
+                        team_to_add = text.lower()
 
-                        teams = team_manager.get_teams_for_user(sender_id)
-                        response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+                        # Check if team exists, make a recommendation if no teams
+                        if team_to_add == 'other':
+                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+
+                            response_msg.append(messenger_manager.send_add_team_message(sender_id))
+
+                        elif football_team_manager.has_football_team(team_to_add):
+                            # Does team exist check
+                            context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+
+                            team_manager.add_team(sender_id, team_to_add)
+                            response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
+
+                            teams = team_manager.get_teams_for_user(sender_id)
+                            # Format team names
+                            teams = [team.title() for team in teams]
+
+                            response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+
+                        elif football_team_manager.similar_football_teams(team_to_add):
+                            # Team recommendation
+                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+
+                            recommendations = football_team_manager.similar_football_teams(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
+                            # Format recommendation names
+                            recommendations = [recommendation.title() for recommendation in recommendations]
+
+                            response_msg.append(messenger_manager.send_recommended_team_messages(sender_id, recommendations))
+
+                        else:
+                            # No team or recommendation found
+                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+
+                            response_msg.append(messenger_manager.send_team_not_found_message(sender_id))
 
                     # DELETING TEAM
                     elif context_manager.is_deleting_team_context(sender_id):
                         print("DELETING TEAM")
-                        team_manager.delete_team(sender_id, text)
-                        response_msg.append(messenger_manager.send_team_deleted_message(sender_id, text))
+                        team_to_delete = text.lower()
 
-                        teams = team_manager.get_teams_for_user(sender_id)
-                        context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
-                        response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+                        if football_team_manager.has_football_team(team_to_delete):
+                            # Delete team
+                            team_manager.delete_team(sender_id, team_to_delete)
+                            response_msg.append(messenger_manager.send_team_deleted_message(sender_id, text))
+
+                            teams = team_manager.get_teams_for_user(sender_id)
+                            # Format team names
+                            teams = [team.title() for team in teams]
+
+                            context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+                            response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+
+                        else:
+                            # Team to delete not found
+                            context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
+
+                            teams = team_manager.get_teams_for_user(sender_id)
+                            # Format team names
+                            teams = [team.title() for team in teams]
+
+                            response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
 
                     # LATEST HIGHLIGHTS
                     elif 'Latest Highlights' == text:

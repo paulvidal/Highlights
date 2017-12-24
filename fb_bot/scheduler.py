@@ -26,11 +26,11 @@ def send_most_recent_highlights():
     for recent_highlight in most_recent_highlights:
         user_ids = []
 
-        team1 = recent_highlight.team1
-        user_ids += team_manager.get_users_for_team(team=team1.title())
+        team1 = recent_highlight.team1.lower()
+        user_ids += team_manager.get_users_for_team(team1)
 
-        team2 = recent_highlight.team2
-        user_ids += team_manager.get_users_for_team(team=team2.title())
+        team2 = recent_highlight.team2.lower()
+        user_ids += team_manager.get_users_for_team(team2)
 
         for user_id in user_ids:
             messenger_manager.send_highlight_message(user_id, recent_highlight)

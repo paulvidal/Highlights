@@ -42,12 +42,31 @@ class User(models.Model):
                     gender="")
 
     def __str__(self):
-        return str((self.facebook_id, self.first_name, self.last_name, self.image_url, self.locale, self.timezone, self.gender))
+        return str(self.first_name) + ' ' + str(self.last_name)
+
+
+class FootballTeam(models.Model):
+    name = models.CharField(max_length=200, unique=True, primary_key=True)
+
+    @staticmethod
+    def to_list_display():
+        return 'name',
+
+    @staticmethod
+    def to_list_filter():
+        return ()
+
+    @staticmethod
+    def search_fields():
+        return 'name',
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Team(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
-    team_name = models.CharField(max_length=80)
+    team_name = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team_name")
 
     class Meta:
         unique_together = ('user', 'team_name')

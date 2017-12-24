@@ -6,9 +6,11 @@ import highlights.settings
 from fb_bot import highlights_fetcher
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
     ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
-    HELP_MESSAGE
+    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
+
+MAX_QUICK_REPLIES = 10
 
 
 ### MESSAGES ###
@@ -30,7 +32,7 @@ def send_notification_message(fb_id, teams):
     if len(teams) == 0:
         formatted_teams = "-> No team registered"
         quick_reply_buttons.remove("Delete")
-    elif len(teams) == 10:
+    elif len(teams) == MAX_QUICK_REPLIES:
         quick_reply_buttons.remove("Add")
 
     for i in range(len(teams)):
@@ -48,7 +50,15 @@ def send_add_team_message(fb_id):
 
 
 def send_delete_team_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams + ['Cancel']))
+
+
+def send_recommended_team_messages(fb_id, recommended):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended + ['Other']))
+
+
+def send_team_not_found_message(fb_id):
+    return send_facebook_message(fb_id, TEAM_NOT_FOUND_MESSAGE)
 
 
 def send_team_added_message(fb_id, success, team):
@@ -58,8 +68,12 @@ def send_team_added_message(fb_id, success, team):
         return send_facebook_message(fb_id, create_message(TEAM_ADDED_FAIL_MESSAGE.format(team)))
 
 
-def send_team_deleted_message(fb_id, team):
-    return send_facebook_message(fb_id, create_message(TEAM_DELETED_MESSAGE.format(team)))
+def send_team_to_delete_not_found_message(fb_id, teams):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_NOT_FOUND_MESSAGE, teams + ['Cancel']))
+
+
+def send_team_deleted_message(fb_id, teams):
+    return send_facebook_message(fb_id, create_message(TEAM_DELETED_MESSAGE.format(teams)))
 
 
 def send_getting_started_message(fb_id, user_name):

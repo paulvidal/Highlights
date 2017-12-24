@@ -1,6 +1,5 @@
 from django.http import HttpResponse
 
-from fb_bot.messages import ERROR_MESSAGE
 from fb_bot.messenger_manager import send_error_message
 from fb_highlights.views import HighlightsBotView
 

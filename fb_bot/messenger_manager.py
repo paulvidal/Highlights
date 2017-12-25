@@ -6,7 +6,7 @@ import highlights.settings
 from fb_bot import highlights_fetcher
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
     ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
-    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE
+    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
@@ -17,6 +17,10 @@ MAX_QUICK_REPLIES = 10
 
 def send_help_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, ['Menu', 'Cancel']))
+
+
+def send_cancel_message(fb_id):
+    return send_facebook_message(fb_id, create_message(CANCEL_MESSAGE))
 
 
 def send_menu_message(fb_id):

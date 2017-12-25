@@ -69,6 +69,8 @@ class HighlightsBotView(generic.View):
                         print("CANCEL")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
+                        response_msg.append(messenger_manager.send_cancel_message(sender_id))
+
                     # MENU
                     elif 'menu' == text.lower():
                         print("MENU")

@@ -132,11 +132,11 @@ class HighlightsBotView(generic.View):
 
                             response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
-                        elif football_team_manager.similar_football_teams(team_to_add):
+                        elif football_team_manager.similar_football_team_names(team_to_add):
                             # Team recommendation
                             context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
-                            recommendations = football_team_manager.similar_football_teams(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
+                            recommendations = football_team_manager.similar_football_team_names(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
                             # Format recommendation names
                             recommendations = [recommendation.title() for recommendation in recommendations]
 

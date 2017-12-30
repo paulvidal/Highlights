@@ -2,7 +2,10 @@ from __future__ import unicode_literals
 
 from datetime import datetime
 
+import dateparser
 from django.db import models
+
+from fb_bot.highlight_fetchers import football_team_mapping
 
 
 class User(models.Model):
@@ -85,17 +88,40 @@ class Team(models.Model):
 
 
 class LatestHighlight(models.Model):
-    link = models.TextField(default="")
-    time_since_added = models.CharField(max_length=80)
+    link = models.TextField(unique=True, primary_key=True)
+    img_link = models.TextField(default="")
+    time_since_added = models.CharField(max_length=120)
+    category = models.CharField(max_length=120)
+    view_count = models.IntegerField(default=0)
+    team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="team1")
+    score1 = models.SmallIntegerField()
+    team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="team2")
+    score2 = models.SmallIntegerField()
+    source = models.CharField(max_length=80)
+    sent = models.BooleanField(default=False)
 
     @staticmethod
     def to_list_display():
-        return 'link', 'time_since_added'
+        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent'
 
     @staticmethod
     def to_list_filter():
-        return ()
+        return 'category', 'source', 'sent'
 
     @staticmethod
     def search_fields():
-        return ()
+        return 'team1__name', 'team2__name'
+
+    def get_match_name(self):
+        return "{} {} - {} {}".format(self.team1.name.title(), self.score1, self.score2, self.team2.name.title())
+
+    def get_parsed_time_since_added(self):
+        return dateparser.parse(str(self.time_since_added))
+
+    def is_match_of(self, team_name):
+        """
+        :param team_name: the name of the football team
+        :return: True if the highlight is for a match with this team
+        """
+        team_name = football_team_mapping.get_exact_name(team_name.lower())
+        return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)

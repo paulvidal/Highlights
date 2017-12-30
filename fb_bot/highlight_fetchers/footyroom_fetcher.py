@@ -1,7 +1,7 @@
 import requests
 import dateparser
 import time
-import re
+from fb_bot.highlight_fetchers.Highlight import Highlight
 
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -11,24 +11,9 @@ ROOT_URL = 'http://footyroom.com/'
 PAGELET_EXTENSION = 'posts-pagelet?page='
 
 
-class Highlight:
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        self.link = link
-        self.match_name = match_name
-        self.img_link = img_link
-        self.view_count = view_count
-        self.category = category
-        self.time_since_added = time_since_added
+class FootyroomHighlight(Highlight):
 
-        # Match information
-        team1, score1, team2, score2 = self.get_match_info()
-        self.team1 = team1
-        self.score1 = score1
-        self.team2 = team2
-        self.score2 = score2
-
-    def get_match_info(self):
-        match = self.match_name
+    def get_match_info(self, match):
         match_split = match.split()
         middle_index = match_split.index('-')
 
@@ -42,7 +27,7 @@ class Highlight:
 
         def clean_team_name(team):
             junk_index = team.find('[')
-            return team[:junk_index-1] if junk_index > 0 else team
+            return team[:junk_index - 1] if junk_index > 0 else team
 
         return clean_team_name(team1), score1, clean_team_name(team2), score2
 
@@ -50,16 +35,8 @@ class Highlight:
         team = team.lower()
         return self.team1.lower().startswith(team) or self.team2.lower().startswith(team)
 
-    def __str__(self):
-        return str((self.link, self.match_name, self.team1, self.score1, self.team2, self.score2,
-                    self.img_link, self.view_count, self.category, self.time_since_added))
-
-
-def fetch_highlights_for_team(team):
-    highlights = fetch_highlights(10, 60)
-    latest_highlights_for_team = list(filter(lambda h: h.is_match_of(team), highlights))
-
-    return latest_highlights_for_team
+    def get_source(self):
+        return 'footyroom'
 
 
 def fetch_highlights(num_pagelet=3, max_days_ago=7):
@@ -133,7 +110,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         time_since_added = str(vid_time_added.get_text())
         time_since_added_date = dateparser.parse(time_since_added)
 
-        # If error occur while arsing date, skip
+        # If error occur while parsing date, skip
         # TODO: handle case where date malformed (special string field)
         if not time_since_added_date:
             continue
@@ -141,7 +118,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not _is_recent(time_since_added_date, max_days_ago):
             continue
 
-        highlights.append(Highlight(link, match_name, img_link, view_count, category, time_since_added))
+        highlights.append(FootyroomHighlight(link, match_name, img_link, view_count, category, time_since_added))
 
     return highlights
 
@@ -174,17 +151,6 @@ if __name__ == "__main__":
 
     start_time = time.time()
     highlights = fetch_highlights()
-
-    for highlight in highlights:
-        print(highlight)
-
-    print("Number of highlights: " + str(len(highlights)))
-    print("Time taken: " + str(round(time.time() - start_time, 2)) + "s")
-
-    print("\nFetch highlights for team ------------------------------ \n")
-
-    start_time = time.time()
-    highlights = fetch_highlights_for_team("Arsenal")
 
     for highlight in highlights:
         print(highlight)

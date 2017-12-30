@@ -28,6 +28,8 @@ TEAM_ADDED_FAIL_MESSAGE = "Could not find the team: {}"
 
 TEAM_DELETED_MESSAGE = "{} successfully deleted from your teams"
 
+NO_MATCH_FOUND_TEAM_RECOMMENDATION = "No highlights found for this team! :( Did you mean?"
+
 NO_MATCH_FOUND = "No highlights found for this team! :("
 
 ERROR_MESSAGE = "Sorry, an error occured :("

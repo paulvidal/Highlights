@@ -1,12 +1,15 @@
 import json
-import requests
-import highlights.settings
-import highlights.settings
 
-from fb_bot import highlights_fetcher
+import requests
+
+import highlights.settings
+import highlights.settings
+from fb_bot.highlight_fetchers import footyroom_fetcher
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
     ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
-    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE
+    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
+    NO_MATCH_FOUND_TEAM_RECOMMENDATION
+from fb_bot.model_managers import latest_highlight_manager, football_team_manager
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
@@ -101,8 +104,8 @@ def send_highlight_message_popular(fb_id):
 
 
 # For scheduler
-def send_highlight_message(fb_id, highlight):
-    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json([highlight])))
+def send_highlight_message(fb_id, highlight_model):
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json([highlight_model])))
 
 
 ### MAIN METHOD ###
@@ -141,15 +144,16 @@ def send_typing(fb_id):
 # Highlights getters
 #
 
+# TODO: remove most recent and popular highlight feature
 def get_most_recent_highlights():
-    highlights = highlights_fetcher.fetch_highlights()
+    highlights = footyroom_fetcher.fetch_highlights()
     highlights = truncate_num_of_highlights(highlights)
 
     return create_generic_attachment(highlights_to_json(highlights))
 
 
 def get_most_popular_highlights():
-    highlights = highlights_fetcher.fetch_highlights()
+    highlights = footyroom_fetcher.fetch_highlights()
 
     # Order by most popular highlight videos
     highlights.sort(key=lambda h: h.view_count, reverse=True)
@@ -160,10 +164,21 @@ def get_most_popular_highlights():
 
 
 def get_highlights_for_team(team):
-    highlights = highlights_fetcher.fetch_highlights_for_team(team)
+    highlights = latest_highlight_manager.get_highlights_for_team(team)
 
+    # Case no highlight found for the team
     if not highlights:
-        return create_quick_text_reply_message(NO_MATCH_FOUND, ['Help'])
+        similar_team_names = football_team_manager.similar_football_team_names(team)
+        similar_team_names = [team_name.title() for team_name in similar_team_names]
+
+        # Check if name of team was not properly written
+        if similar_team_names:
+            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names + ['Cancel'])
+        else:
+            return create_quick_text_reply_message(NO_MATCH_FOUND, ['Help'])
+
+    # Order highlights by date
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)
 
     highlights = truncate_num_of_highlights(highlights)
 
@@ -183,18 +198,18 @@ def truncate_num_of_highlights(highlights):
 #
 
 
-def highlights_to_json(highlights):
-    return list(map(lambda h: highlight_to_json(h), highlights))
+def highlights_to_json(highlight_models):
+    return list(map(lambda h: highlight_to_json(h), highlight_models))
 
 
-def highlight_to_json(highlight):
+def highlight_to_json(highlight_model):
     return {
-        "title": highlight.match_name,
-        "image_url": highlight.img_link,
-        "subtitle": highlight.time_since_added,
+        "title": highlight_model.get_match_name(),
+        "image_url": highlight_model.img_link,
+        "subtitle": highlight_model.time_since_added,
         "default_action": {
             "type": "web_url",
-            "url": highlight.link,
+            "url": highlight_model.link,
             "messenger_extensions": "false",
             "webview_height_ratio": "full"
         }

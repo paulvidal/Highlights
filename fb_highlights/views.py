@@ -62,24 +62,24 @@ class HighlightsBotView(generic.View):
                 # Events
                 if 'message' in message:
 
-                    text = message['message']['text']
+                    text = message['message']['text'].lower()
 
                     # Cancel quick reply
-                    if 'cancel' == text.lower():
+                    if 'cancel' == text:
                         print("CANCEL")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
 
-                    # MENU
-                    elif 'menu' == text.lower():
-                        print("MENU")
-                        context_manager.update_context(sender_id, ContextType.MENU)
+                    # SEARCH HIGHLIGHT OPTION
+                    elif 'search highlights' == text:
+                        print("SEARCH HIGHLIGHTS")
+                        context_manager.update_context(sender_id, ContextType.NONE)
 
-                        response_msg.append(messenger_manager.send_menu_message(sender_id))
+                        response_msg.append(messenger_manager.send_search_highlights_message(sender_id))
 
                     # NOTIFICATION SETTING
-                    elif 'Notifications' == text and context_manager.is_menu_context(sender_id) :
+                    elif 'notifications' == text:
                         print("NOTIFICATION SETTING")
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 
@@ -90,14 +90,14 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
                     # ADD TEAM SETTING
-                    elif 'Add' == text and context_manager.is_notifications_setting_context(sender_id):
+                    elif 'add' == text and context_manager.is_notifications_setting_context(sender_id):
                         print("ADD TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
                         response_msg.append(messenger_manager.send_add_team_message(sender_id))
 
                     # DELETE TEAM SETTING
-                    elif 'Delete' == text and context_manager.is_notifications_setting_context(sender_id):
+                    elif 'delete' == text and context_manager.is_notifications_setting_context(sender_id):
                         print("DELETE TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
@@ -111,7 +111,7 @@ class HighlightsBotView(generic.View):
                     elif context_manager.is_adding_team_context(sender_id):
                         print("ADDING TEAM")
 
-                        team_to_add = text.lower()
+                        team_to_add = text
 
                         # Check if team exists, make a recommendation if no teams
                         if team_to_add == 'other':
@@ -175,17 +175,11 @@ class HighlightsBotView(generic.View):
 
                             response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
 
-                    # LATEST HIGHLIGHTS
-                    elif 'Latest Highlights' == text:
-                        response_msg.append(messenger_manager.send_highlight_message_recent(sender_id))
-
-                    # POPULAR HIGHLIGHTS
-                    elif 'Popular Highlights' == text:
-                        response_msg.append(messenger_manager.send_highlight_message_popular(sender_id))
-
                     # HELP
-                    elif 'help' in text.lower():
+                    elif 'help' in text:
                         print("HELP")
+                        context_manager.update_context(sender_id, ContextType.NONE)
+
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     # SEARCH FOR TEAM

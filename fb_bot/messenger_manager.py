@@ -4,11 +4,10 @@ import requests
 
 import highlights.settings
 import highlights.settings
-from fb_bot.highlight_fetchers import footyroom_fetcher
-from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, MENU_MESSAGE, NOTIFICATION_MESSAGE, \
+from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, NOTIFICATION_MESSAGE, \
     ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
     HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
-    NO_MATCH_FOUND_TEAM_RECOMMENDATION
+    NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
@@ -19,17 +18,15 @@ MAX_QUICK_REPLIES = 10
 ### MESSAGES ###
 
 def send_help_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, ['Menu', 'Cancel']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, ['Notifications', 'Search highlights', 'Cancel']))
 
 
 def send_cancel_message(fb_id):
     return send_facebook_message(fb_id, create_message(CANCEL_MESSAGE))
 
 
-def send_menu_message(fb_id):
-    return send_facebook_message(
-        fb_id,
-        create_quick_text_reply_message(MENU_MESSAGE, ["Notifications", "Latest Highlights", "Popular Highlights", "Cancel"]))
+def send_search_highlights_message(fb_id):
+    return send_facebook_message(fb_id, create_message(SEARCH_HIGHLIGHTS_MESSAGE))
 
 
 def send_notification_message(fb_id, teams):
@@ -95,14 +92,6 @@ def send_highlight_message_for_team(fb_id, team):
     return send_facebook_message(fb_id, get_highlights_for_team(team))
 
 
-def send_highlight_message_recent(fb_id):
-    return send_facebook_message(fb_id, get_most_recent_highlights())
-
-
-def send_highlight_message_popular(fb_id):
-    return send_facebook_message(fb_id, get_most_popular_highlights())
-
-
 # For scheduler
 def send_highlight_message(fb_id, highlight_model):
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json([highlight_model])))
@@ -144,25 +133,6 @@ def send_typing(fb_id):
 # Highlights getters
 #
 
-# TODO: remove most recent and popular highlight feature
-def get_most_recent_highlights():
-    highlights = footyroom_fetcher.fetch_highlights()
-    highlights = truncate_num_of_highlights(highlights)
-
-    return create_generic_attachment(highlights_to_json(highlights))
-
-
-def get_most_popular_highlights():
-    highlights = footyroom_fetcher.fetch_highlights()
-
-    # Order by most popular highlight videos
-    highlights.sort(key=lambda h: h.view_count, reverse=True)
-
-    highlights = truncate_num_of_highlights(highlights)
-
-    return create_generic_attachment(highlights_to_json(highlights))
-
-
 def get_highlights_for_team(team):
     highlights = latest_highlight_manager.get_highlights_for_team(team)
 
@@ -173,7 +143,7 @@ def get_highlights_for_team(team):
 
         # Check if name of team was not properly written
         if similar_team_names:
-            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names + ['Cancel'])
+            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9] + ['Help', 'Cancel'])
         else:
             return create_quick_text_reply_message(NO_MATCH_FOUND, ['Help'])
 

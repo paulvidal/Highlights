@@ -5,10 +5,9 @@ from fb_bot.model_managers.user_manager import get_user
 
 class ContextType(Enum):
     NONE = 0
-    MENU = 1
-    NOTIFICATIONS_SETTING = 2
-    ADDING_TEAM = 3
-    DELETING_TEAM = 4
+    NOTIFICATIONS_SETTING = 1
+    ADDING_TEAM = 2
+    DELETING_TEAM = 3
 
 
 def update_context(fb_id, context):
@@ -18,10 +17,6 @@ def update_context(fb_id, context):
     user = get_user(fb_id)
     user.context = context.value
     user.save()
-
-
-def is_menu_context(fb_id):
-    return get_user(fb_id).context == ContextType.MENU.value
 
 
 def is_notifications_setting_context(fb_id):

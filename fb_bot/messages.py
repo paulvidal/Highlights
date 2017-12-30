@@ -1,14 +1,14 @@
-# TODO: redirect directly to notifications instead of menu
-HELP_MESSAGE = "Enter the name of any team to get their latest highlights. You can also set notifications to get the " \
-               "latest highlights for the teams you register, as soon as the match finishes :) For this press \"Menu\""
+HELP_MESSAGE = "Here is what you can do:\n\n" \
+               "1) Press \"Notifications\" to subscribe to teams and get highlights notifications as soon as the video is available!\n" \
+               "2) Press \"Search highlights\" to get the latest highlights for a team"
 
-CANCEL_MESSAGE = "No worries :D Do not hesitate to talk to me if you need something else!"
+CANCEL_MESSAGE = "No worries :D Do not hesitate to enter a team name at any time to get their latest highlight videos!"
+
+SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos?"
 
 GET_STARTED_MESSAGE = "Hey {}! I am the smart bot that fetches the latest football highlights for you :)\n\n" \
                       "To get started, enter the name of any team you would love to follow to get their highlights as soon as they are available!\n\n" \
                       "You can also type at anytime the name of a team to get their latest highlights."
-
-MENU_MESSAGE = "Tell me what you want to do :) Press notifications to subscribe to teams to get highlights notifications as soon as the video is available!"
 
 NOTIFICATION_MESSAGE = "You are currently receiving highlights for the following teams: \n\n{}\n\nDo you want to ADD or DELETE a team?"
 

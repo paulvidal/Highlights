@@ -176,7 +176,7 @@ def highlight_to_json(highlight_model):
     return {
         "title": highlight_model.get_match_name(),
         "image_url": highlight_model.img_link,
-        "subtitle": highlight_model.time_since_added,
+        "subtitle": highlight_model.get_parsed_time_since_added().strftime('%d %B %Y'),
         "default_action": {
             "type": "web_url",
             "url": highlight_model.link,

@@ -93,8 +93,8 @@ def send_highlight_message_for_team(fb_id, team):
 
 
 # For scheduler
-def send_highlight_message(fb_id, highlight_model):
-    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json([highlight_model])))
+def send_highlight_message(fb_id, highlight_models):
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(highlight_models)))
 
 
 ### MAIN METHOD ###
@@ -134,7 +134,7 @@ def send_typing(fb_id):
 #
 
 def get_highlights_for_team(team):
-    highlights = latest_highlight_manager.get_highlights_for_team(team)
+    highlights = latest_highlight_manager.get_highlights_for_team(team, source='footyroom')
 
     # Case no highlight found for the team
     if not highlights:

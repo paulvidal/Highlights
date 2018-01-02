@@ -4,6 +4,7 @@ import dateparser
 
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import footyroom_fetcher, hoofoot_fetcher
+from fb_bot.logger import logger
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers import latest_highlight_manager
 
@@ -47,7 +48,7 @@ def send_most_recent_highlights():
     for highlight in not_sent_highlights:
         time_since_added = highlight.get_parsed_time_since_added()
 
-        if timedelta(minutes=30) < (today - time_since_added):
+        if timedelta(minutes=30) < abs(today - time_since_added):
 
             if latest_highlight_manager.has_higher_priority_highlight(highlight, not_sent_highlights):
                 # If higher priority highlight exists, set sent to true as we will not send this highlight to
@@ -63,11 +64,19 @@ def send_most_recent_highlights():
             team2 = highlight.team2.name.lower()
             user_ids += team_manager.get_users_for_team(team2)
 
-            for user_id in user_ids:
-                messenger_manager.send_highlight_message(user_id, highlight)
+            all_similar_highlights = latest_highlight_manager.get_similar_highlights(highlight)
+            # FIXME: Put Hoofoot highlight before Footyroom
+            all_similar_highlights = sorted(all_similar_highlights, key=lambda h: h.source, reverse=True)
 
-            # Set highlight as sent
-            latest_highlight_manager.set_sent(highlight)
+            # Log highlights sent
+            logger.log("Highlight sent: " + str(all_similar_highlights))
+
+            for user_id in user_ids:
+                messenger_manager.send_highlight_message(user_id, all_similar_highlights)
+
+            for h in all_similar_highlights:
+                # Set highlight as sent
+                latest_highlight_manager.set_sent(h)
 
     # Delete old highlights
     all_highlights = latest_highlight_manager.get_all_highlights()

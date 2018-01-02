@@ -67,6 +67,30 @@ class FootballTeam(models.Model):
         return str(self.name)
 
 
+# Teams to potentially add to FootballTeam
+class NewFootballTeam(models.Model):
+    name = models.CharField(max_length=200)
+    source = models.CharField(max_length=80)
+
+    class Meta:
+        unique_together = ('name', 'source')
+
+    @staticmethod
+    def to_list_display():
+        return 'name', 'source'
+
+    @staticmethod
+    def to_list_filter():
+        return 'source',
+
+    @staticmethod
+    def search_fields():
+        return 'name',
+
+    def __str__(self):
+        return str(self.name) + ' | ' + str(self.source)
+
+
 class Team(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
     team_name = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team_name")
@@ -125,3 +149,6 @@ class LatestHighlight(models.Model):
         """
         team_name = football_team_mapping.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
+
+    def __str__(self):
+        return str(self.team1) + ' ' + str(self.score1) + ' - ' + str(self.score2) + ' ' + str(self.team2) + ' | ' + str(self.source)

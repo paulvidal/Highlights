@@ -1,5 +1,7 @@
 import abc
 
+import dateparser
+
 from fb_bot.highlight_fetchers import football_team_mapping
 
 
@@ -33,6 +35,9 @@ class Highlight:
     @abc.abstractmethod
     def get_source(self):
         """ Override method """
+
+    def get_parsed_time_since_added(self):
+        return dateparser.parse(self.time_since_added)
 
     def __str__(self):
         return str((self.link, self.team1, self.score1, self.team2, self.score2,

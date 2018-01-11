@@ -71,6 +71,13 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
 
+                    # Done quick reply
+                    if 'done' == text:
+                        print("DONE")
+                        context_manager.update_context(sender_id, ContextType.NONE)
+
+                        response_msg.append(messenger_manager.send_done_message(sender_id))
+
                     # SEARCH HIGHLIGHT OPTION
                     elif 'search highlights' == text:
                         print("SEARCH HIGHLIGHTS")

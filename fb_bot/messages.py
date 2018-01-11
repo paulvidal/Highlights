@@ -4,6 +4,8 @@ HELP_MESSAGE = "Here is what you can do:\n\n" \
 
 CANCEL_MESSAGE = "No worries :D Do not hesitate to enter a team name at any time to get their latest highlight videos!"
 
+DONE_MESSAGE = "You're good to go! :D I will send you the latest highlights for your teams as soon as the videos are available."
+
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos?"
 
 GET_STARTED_MESSAGE = "Hey {}! I am the smart bot that fetches the latest football highlights for you :)\n\n" \

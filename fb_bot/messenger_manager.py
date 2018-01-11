@@ -7,7 +7,7 @@ import highlights.settings
 from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, NOTIFICATION_MESSAGE, \
     ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
     HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
-    NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE
+    NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE, DONE_MESSAGE
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
@@ -25,13 +25,17 @@ def send_cancel_message(fb_id):
     return send_facebook_message(fb_id, create_message(CANCEL_MESSAGE))
 
 
+def send_done_message(fb_id):
+    return send_facebook_message(fb_id, create_message(DONE_MESSAGE))
+
+
 def send_search_highlights_message(fb_id):
     return send_facebook_message(fb_id, create_message(SEARCH_HIGHLIGHTS_MESSAGE))
 
 
 def send_notification_message(fb_id, teams):
     formatted_teams = ""
-    quick_reply_buttons = ["Add", "Delete", "Cancel"]
+    quick_reply_buttons = ["Add", "Delete", "Done"]
 
     if len(teams) == 0:
         formatted_teams = "-> No team registered"

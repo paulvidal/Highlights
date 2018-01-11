@@ -46,6 +46,8 @@ NAME_MAPPING = {
     'hamburg': 'hamburger sv',
     'qarabag': 'qarabag fk',
     'sporting': 'sporting cp',
+    'formentera': 'sd formentera',
+    'celta': 'celta vigo'
 }
 
 

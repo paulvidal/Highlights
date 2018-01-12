@@ -1,4 +1,5 @@
 import json
+from urllib.parse import quote
 
 import requests
 
@@ -9,6 +10,7 @@ from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, 
     HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
     NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE, DONE_MESSAGE
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager
+from highlights import settings
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
@@ -93,12 +95,12 @@ def send_error_message(fb_id):
 
 
 def send_highlight_message_for_team(fb_id, team):
-    return send_facebook_message(fb_id, get_highlights_for_team(team))
+    return send_facebook_message(fb_id, get_highlights_for_team(fb_id, team))
 
 
 # For scheduler
 def send_highlight_message(fb_id, highlight_models):
-    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(highlight_models)))
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, highlight_models)))
 
 
 ### MAIN METHOD ###
@@ -137,8 +139,8 @@ def send_typing(fb_id):
 # Highlights getters
 #
 
-def get_highlights_for_team(team):
-    highlights = latest_highlight_manager.get_highlights_for_team(team, source='footyroom')
+def get_highlights_for_team(fb_id, team):
+    highlights = latest_highlight_manager.get_highlights_for_team(team)
 
     # Case no highlight found for the team
     if not highlights:
@@ -151,20 +153,13 @@ def get_highlights_for_team(team):
         else:
             return create_quick_text_reply_message(NO_MATCH_FOUND, ['Help'])
 
-    # Order highlights by date
-    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)
+    # Eliminate duplicates
+    highlights = latest_highlight_manager.get_unique_highlights(highlights)
 
-    highlights = truncate_num_of_highlights(highlights)
+    # Order highlights by date and take the first 10
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:10]
 
-    return create_generic_attachment(highlights_to_json(highlights))
-
-
-# Limit to ten highlights as facebook doesn't allow more than 10 views in generic view
-def truncate_num_of_highlights(highlights):
-    if len(highlights) > 10:
-        highlights = highlights[:10]
-
-    return highlights
+    return create_generic_attachment(highlights_to_json(fb_id, highlights))
 
 
 #
@@ -172,22 +167,38 @@ def truncate_num_of_highlights(highlights):
 #
 
 
-def highlights_to_json(highlight_models):
-    return list(map(lambda h: highlight_to_json(h), highlight_models))
+def highlights_to_json(fb_id, highlight_models):
+    return list(map(lambda h: highlight_to_json(fb_id, h), highlight_models))
 
 
-def highlight_to_json(highlight_model):
+def highlight_to_json(fb_id, highlight_model):
     return {
         "title": highlight_model.get_match_name(),
         "image_url": highlight_model.img_link,
         "subtitle": highlight_model.get_parsed_time_since_added().strftime('%d %B %Y'),
         "default_action": {
             "type": "web_url",
-            "url": highlight_model.link,
+            "url": create_tracking_link(fb_id, highlight_model),
             "messenger_extensions": "false",
             "webview_height_ratio": "full"
         }
     }
+
+
+# Essential method for link creation and redirection to website (and tracking)
+def create_tracking_link(fb_id, highlight_model):
+    # Form correct url to redirect to server
+    link = settings.BASE_URL + "/highlight?team1={}&score1={}&team2={}&score2={}&date={}&user_id=".format(
+        quote(highlight_model.team1.name.lower()),
+        highlight_model.score1,
+        quote(highlight_model.team2.name.lower()),
+        highlight_model.score2,
+        highlight_model.get_parsed_time_since_added().date()
+    )
+
+    tracking_link = link + str(fb_id)
+
+    return tracking_link
 
 
 #

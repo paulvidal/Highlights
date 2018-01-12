@@ -17,9 +17,25 @@ def get_user(fb_id):
 
 
 def increment_user_message_count(fb_id):
+    if not _is_in_db(fb_id):
+        return False
+
     user = get_user(fb_id)
     user.message_count += 1
     user.save()
+
+    return True
+
+
+def increment_user_highlight_click_count(fb_id):
+    if not _is_in_db(fb_id):
+        return False
+
+    user = get_user(fb_id)
+    user.highlights_click_count += 1
+    user.save()
+
+    return True
 
 
 def _is_in_db(fb_id):

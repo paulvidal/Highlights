@@ -21,10 +21,11 @@ class User(models.Model):
     # Stats
     join_date = models.DateTimeField(default=datetime.now)
     message_count = models.PositiveIntegerField(default=0)
+    highlights_click_count = models.PositiveIntegerField(default=0)
 
     @staticmethod
     def to_list_display():
-        return 'facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'join_date', 'context'
+        return 'facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context'
 
     @staticmethod
     def to_list_filter():
@@ -123,14 +124,16 @@ class LatestHighlight(models.Model):
     score2 = models.SmallIntegerField()
     source = models.CharField(max_length=80)
     sent = models.BooleanField(default=False)
+    click_count = models.PositiveIntegerField(default=0)
+    valid = models.BooleanField(default=True)
 
     @staticmethod
     def to_list_display():
-        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent'
+        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'valid', 'click_count'
 
     @staticmethod
     def to_list_filter():
-        return 'category', 'source', 'sent'
+        return 'category', 'source', 'sent', 'valid'
 
     @staticmethod
     def search_fields():

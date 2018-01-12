@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            scheduler.send_most_recent_highlights()
+            scheduler.check_highlight_validity()
         except Exception as error:
             if not settings.DEBUG:
                 # Report to sentry if problem detected

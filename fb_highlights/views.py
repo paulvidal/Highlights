@@ -1,6 +1,8 @@
 import json
 
+import dateparser
 from django.http.response import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -9,7 +11,7 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 import highlights.settings
 from fb_bot.logger import logger
-from fb_bot.model_managers import context_manager, user_manager, football_team_manager
+from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers.context_manager import ContextType
 
@@ -224,3 +226,35 @@ class HighlightsBotView(generic.View):
         formatted_response += "]"
 
         return JsonResponse(formatted_response, safe=False)
+
+
+class HighlightRedirectView(generic.View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return generic.View.dispatch(self, request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        param_keys = ['team1', 'score1', 'team2', 'score2', 'date', 'user_id']
+
+        for param_key in param_keys:
+            if param_key not in request.GET:
+                return HttpResponse('Invalid link')
+
+        team1 = request.GET['team1'].lower()
+        score1 = int(request.GET['score1'])
+        team2 = request.GET['team2'].lower()
+        score2 = int(request.GET['score2'])
+        date = dateparser.parse(request.GET['date'])
+        user_id = int(request.GET['user_id'])
+
+        # user tracking recording if user clicked on link
+        user_manager.increment_user_highlight_click_count(user_id)
+
+        highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
+        highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models)
+
+        # link click tracking
+        latest_highlight_manager.increment_click_count(highlight_to_send)
+
+        return redirect(highlight_to_send.link)

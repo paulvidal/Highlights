@@ -3,10 +3,13 @@ from datetime import datetime, timedelta
 import dateparser
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import footyroom_fetcher, hoofoot_fetcher
+from fb_bot.highlight_fetchers import footyroom_fetcher, hoofoot_fetcher, ressource_checker
 from fb_bot.logger import logger
-from fb_bot.model_managers import team_manager
 from fb_bot.model_managers import latest_highlight_manager
+from fb_bot.model_managers import team_manager
+
+
+# Send highlights
 
 
 def send_most_recent_highlights():
@@ -50,10 +53,8 @@ def send_most_recent_highlights():
 
         if timedelta(minutes=30) < abs(today - time_since_added):
 
-            if latest_highlight_manager.has_higher_priority_highlight(highlight, not_sent_highlights):
-                # If higher priority highlight exists, set sent to true as we will not send this highlight to
-                # subscribers (we will send the one with the highest priority)
-                latest_highlight_manager.set_sent(highlight)
+            if highlight.sent:
+                # highlight has already been sent
                 continue
 
             user_ids = []
@@ -64,18 +65,16 @@ def send_most_recent_highlights():
             team2 = highlight.team2.name.lower()
             user_ids += team_manager.get_users_for_team(team2)
 
-            all_similar_highlights = latest_highlight_manager.get_similar_highlights(highlight)
-            # FIXME: Put Hoofoot highlight before Footyroom
-            all_similar_highlights = sorted(all_similar_highlights, key=lambda h: h.source, reverse=True)
-
             # Log highlights sent
-            logger.log("Highlight sent: " + str(all_similar_highlights))
+            logger.log("Highlight sent: " + highlight.get_match_name())
 
             for user_id in user_ids:
-                messenger_manager.send_highlight_message(user_id, all_similar_highlights)
+                messenger_manager.send_highlight_message(user_id, [highlight])
 
-            for h in all_similar_highlights:
-                # Set highlight as sent
+            # Set highlights for same match to sent
+            similar_highlights = latest_highlight_manager.get_similar_highlights(highlight, not_sent_highlights)
+
+            for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
 
     # Delete old highlights
@@ -89,5 +88,13 @@ def send_most_recent_highlights():
             latest_highlight_manager.delete_highlight(highlight)
 
 
-if __name__ == '__main__':
-    send_most_recent_highlights()
+# Check if highlight links are still alive (not taken down)
+
+def check_highlight_validity():
+    highlights = latest_highlight_manager.get_all_highlights_from_source(source='hoofoot')
+
+    for h in highlights:
+        is_valid = ressource_checker.check(h.link)
+
+        if not is_valid:
+            latest_highlight_manager.invalidate(h)

@@ -35,6 +35,8 @@ SECRET_KEY = get_env_var('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
 
+BASE_URL = get_env_var('BASE_URL')
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition

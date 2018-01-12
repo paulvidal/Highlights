@@ -16,10 +16,14 @@ def has_highlight(highlight):
     return LatestHighlight.objects.filter(link=highlight.link)
 
 
-def get_similar_highlights(highlight_model):
-    return [h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2,
-                                                      score1=highlight_model.score1, score2=highlight_model.score2)
-            if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
+def increment_click_count(highlight_model):
+    highlight_model.click_count += 1
+    highlight_model.save()
+
+
+def get_highlights(team1, score1, team2, score2, date):
+    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2)
+            if abs(date - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
 
 def get_similar_sent_highlights(highlight):
@@ -34,20 +38,25 @@ def get_similar_sent_highlights(highlight):
             if abs(highlight.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2) ]
 
 
-def get_highlights_for_team(team_name, source):
+def get_highlights_for_team(team_name):
     if not football_team_manager.has_football_team(team_name):
         return None
 
     team = football_team_manager.get_football_team(team_name)
 
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team, source=source)] \
-                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team, source=source)]
+    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team)] \
+                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team)]
 
     return highlights
 
 
 def set_sent(highlight_model):
     highlight_model.sent = True
+    highlight_model.save()
+
+
+def invalidate(highlight_model):
+    highlight_model.valid = False
     highlight_model.save()
 
 
@@ -87,6 +96,7 @@ def add_highlight(highlight, sent=False):
     if highlights_in_db:
         h = highlights_in_db[0]
         h.link = highlight.link
+        h.valid = True
         h.save()
 
     else:
@@ -113,6 +123,42 @@ def add_new_team_to_db(highlight):
 
     return False
 
+
+def get_unique_highlights(highlight_models):
+    unique = []
+
+    for h in highlight_models:
+        if not get_similar_highlights(h, unique):
+            unique.append(h)
+
+    return unique
+
+
+def get_best_highlight(highlight_models):
+    """
+    Get the most relevant highlight to send to the user (the link needs to be valid)
+
+    :param highlight_models: list of highlights for a match, coming from different sources
+    :return: the most relevant highlight
+
+    Highlights priority:
+    1. Hoofoot
+    2. Footyroom
+    """
+    current_best = None
+
+    for h in highlight_models:
+        if not h.valid:
+            continue
+
+        if not current_best:
+            current_best = h
+        elif h.source == 'hoofoot':
+            current_best = h
+
+    return current_best
+
+
 def has_higher_priority_highlight(highlight, not_sent_highlights):
     """
     Check if higher priority in similar highlights exists
@@ -134,6 +180,10 @@ def has_higher_priority_highlight(highlight, not_sent_highlights):
                 return True
 
     return False
+
+
+def get_similar_highlights(highlight, highlights_model):
+    return [h for h in highlights_model if is_same_match_highlight(highlight, h)]
 
 
 def is_same_match_highlight(h1, h2):

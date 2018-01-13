@@ -155,7 +155,7 @@ class HighlightsBotView(generic.View):
                         team_to_add = text
 
                         # Check if team exists, make a recommendation if no teams
-                        if team_to_add == 'other':
+                        if team_to_add == 'other' or team_to_add == 'try again':
                             context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
                             response_msg.append(messenger_manager.send_add_team_message(sender_id))

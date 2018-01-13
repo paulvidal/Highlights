@@ -11,8 +11,7 @@ from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, 
     NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE, DONE_MESSAGE, EMOJI_MAGNIFYING_GLASS, \
     EMOJI_NOTIFICATION, EMOJI_CROSS, EMOJI_DONE, EMOJI_REMOVE, EMOJI_ADD, WHAT_DO_YOU_WANT_TODO_MESSAGE, EMOJI_HELP, \
     GET_STARTED_MESSAGE_2, ANYTHING_ELSE_I_CAN_DO_MESSAGE
-from fb_bot.model_managers import latest_highlight_manager, football_team_manager, context_manager
-from fb_bot.model_managers.context_manager import ContextType
+from fb_bot.model_managers import latest_highlight_manager, football_team_manager
 from highlights import settings
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
@@ -86,7 +85,7 @@ def send_recommended_team_messages(fb_id, recommended):
 
 
 def send_team_not_found_message(fb_id):
-    return send_facebook_message(fb_id, TEAM_NOT_FOUND_MESSAGE)
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, ['Try again', EMOJI_CROSS + ' Cancel']))
 
 
 def send_team_added_message(fb_id, success, team):

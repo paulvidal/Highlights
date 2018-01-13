@@ -8,6 +8,7 @@ class ContextType(Enum):
     NOTIFICATIONS_SETTING = 1
     ADDING_TEAM = 2
     DELETING_TEAM = 3
+    SEARCH_HIGHLIGHTS = 4
 
 
 def update_context(fb_id, context):
@@ -33,4 +34,8 @@ def is_adding_team_context(fb_id):
 
 def is_deleting_team_context(fb_id):
     return get_user(fb_id).context == ContextType.DELETING_TEAM.value
+
+
+def is_searching_highlights_context(fb_id):
+    return get_user(fb_id).context == ContextType.SEARCH_HIGHLIGHTS.value
 

@@ -67,28 +67,60 @@ class HighlightsBotView(generic.View):
                     text = message['message']['text'].lower()
 
                     # Cancel quick reply
-                    if 'cancel' == text:
+                    if 'cancel' in text:
                         print("CANCEL")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
 
+                        # Answer with new message what want to do
+                        response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+
                     # Done quick reply
-                    if 'done' == text:
+                    elif 'done' in text:
                         print("DONE")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_done_message(sender_id))
 
-                    # SEARCH HIGHLIGHT OPTION
-                    elif 'search highlights' == text:
-                        print("SEARCH HIGHLIGHTS")
+                        # Answer with new message what want to do
+                        response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+
+                    # HELP
+                    elif 'help' in text:
+                        print("HELP")
                         context_manager.update_context(sender_id, ContextType.NONE)
+
+                        response_msg.append(messenger_manager.send_help_message(sender_id))
+
+                    # SEARCH HIGHLIGHT OPTION
+                    elif 'search highlights' in text:
+                        print("SEARCH HIGHLIGHTS")
+                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                         response_msg.append(messenger_manager.send_search_highlights_message(sender_id))
 
+                    # SEARCHING HIGHLIGHTS
+                    elif context_manager.is_searching_highlights_context(sender_id):
+                        print("SEARCHING HIGHLIGHTS")
+                        team_found, similar_team_found = messenger_manager.has_highlight_for_team(text)
+
+                        response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, text))
+
+                        if team_found:
+                            context_manager.update_context(sender_id, ContextType.NONE)
+
+                            # Answer with new message what want to do
+                            response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+
+                        elif similar_team_found:
+                            context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+
+                        else:
+                            context_manager.update_context(sender_id, ContextType.NONE)
+
                     # NOTIFICATION SETTING
-                    elif 'notifications' == text:
+                    elif 'notifications' in text:
                         print("NOTIFICATION SETTING")
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 
@@ -99,15 +131,15 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
 
                     # ADD TEAM SETTING
-                    elif 'add' == text and context_manager.is_notifications_setting_context(sender_id):
+                    elif 'add' in text and context_manager.is_notifications_setting_context(sender_id):
                         print("ADD TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
                         response_msg.append(messenger_manager.send_add_team_message(sender_id))
 
-                    # DELETE TEAM SETTING
-                    elif 'delete' == text and context_manager.is_notifications_setting_context(sender_id):
-                        print("DELETE TEAM SETTING")
+                    # REMOVE TEAM SETTING
+                    elif 'remove' in text and context_manager.is_notifications_setting_context(sender_id):
+                        print("REMOVE TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
                         teams = team_manager.get_teams_for_user(sender_id)
@@ -184,26 +216,21 @@ class HighlightsBotView(generic.View):
 
                             response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
 
-                    # HELP
-                    elif 'help' in text:
-                        print("HELP")
-                        context_manager.update_context(sender_id, ContextType.NONE)
-
-                        response_msg.append(messenger_manager.send_help_message(sender_id))
-
-                    # SEARCH FOR TEAM
+                    # IF NO MATCH, ASK WHAT WANT TO DO
                     else:
-                        print("SEARCH FOR TEAM")
+                        print("WHAT WANT TO DO")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
-                        response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, text))
+                        response_msg.append(messenger_manager.send_what_do_you_want_to_do_message(sender_id))
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
                         user = user_manager.get_user(sender_id)
+
                         response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
+                        response_msg.append(messenger_manager.send_getting_started_message_2(sender_id))
 
                         # Set the user in add a team context
                         context_manager.update_context(sender_id, ContextType.ADDING_TEAM)

@@ -55,8 +55,8 @@ def set_sent(highlight_model):
     highlight_model.save()
 
 
-def invalidate(highlight_model):
-    highlight_model.valid = False
+def set_validity(highlight_model, validity):
+    highlight_model.valid = validity
     highlight_model.save()
 
 

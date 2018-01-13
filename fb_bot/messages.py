@@ -56,7 +56,7 @@ DELETE_TEAM_MESSAGE = "Which team do you want to remove?"
 
 TEAM_RECOMMEND_MESSAGE = "I did not find your team " + EMOJI_BROKEN_HEART +" Did you mean?"
 
-TEAM_NOT_FOUND_MESSAGE = "I did not find your team " + EMOJI_BROKEN_HEART + "Try entering the full name of the team."
+TEAM_NOT_FOUND_MESSAGE = "I did not find your team " + EMOJI_BROKEN_HEART + " Try entering the full name of the team."
 
 TEAM_ADDED_SUCCESS_MESSAGE = "{} successfully added to your teams " + EMOJI_THUMBS_UP
 

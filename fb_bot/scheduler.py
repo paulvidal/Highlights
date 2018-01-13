@@ -95,6 +95,4 @@ def check_highlight_validity():
 
     for h in highlights:
         is_valid = ressource_checker.check(h.link)
-
-        if not is_valid:
-            latest_highlight_manager.invalidate(h)
+        latest_highlight_manager.set_validity(h, is_valid)

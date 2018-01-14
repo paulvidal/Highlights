@@ -88,11 +88,13 @@ def send_most_recent_highlights():
             latest_highlight_manager.delete_highlight(highlight)
 
 
-# Check if highlight links are still alive (not taken down)
+# Check if highlight links are still alive (not taken down) and remove it if so
 
 def check_highlight_validity():
     highlights = latest_highlight_manager.get_all_highlights_from_source(source='hoofoot')
 
     for h in highlights:
         is_valid = ressource_checker.check(h.link)
-        latest_highlight_manager.set_validity(h, is_valid)
+
+        if not is_valid:
+            latest_highlight_manager.delete_highlight(h)

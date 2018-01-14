@@ -125,15 +125,14 @@ class LatestHighlight(models.Model):
     source = models.CharField(max_length=80)
     sent = models.BooleanField(default=False)
     click_count = models.PositiveIntegerField(default=0)
-    valid = models.BooleanField(default=True)
 
     @staticmethod
     def to_list_display():
-        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'valid', 'click_count'
+        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'click_count'
 
     @staticmethod
     def to_list_filter():
-        return 'category', 'source', 'sent', 'valid'
+        return 'category', 'source', 'sent'
 
     @staticmethod
     def search_fields():

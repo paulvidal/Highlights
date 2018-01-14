@@ -25,7 +25,8 @@ NAME_MAPPING = {
     'huddersfield town': 'huddersfield',
     'inter': 'inter milan',
     'borussia dortmund': 'dortmund',
-    'borussia monchengladbach': 'monchengladbach',
+    "borussia m'gladbach": 'borussia monchengladbach',
+    'monchengladbach': 'borussia monchengladbach',
     'rasenballsport leipzig': 'leipzig',
     'saint-etienne': 'saint etienne',
     'swansea city': 'swansea',
@@ -47,7 +48,8 @@ NAME_MAPPING = {
     'qarabag': 'qarabag fk',
     'sporting': 'sporting cp',
     'formentera': 'sd formentera',
-    'celta': 'celta vigo'
+    'celta': 'celta vigo',
+    'olympique marseille': 'marseille'
 }
 
 

@@ -51,7 +51,23 @@ NAME_MAPPING = {
     'formentera': 'sd formentera',
     'celta': 'celta vigo',
     'olympique marseille': 'marseille',
+    'olympique lyonnais': 'lyon',
     'om': 'marseille',
+    'ol': 'lyon',
+    'aca': 'ajaccio',
+    'asm': 'monaco',
+    'aja': 'auxerre',
+    'bor': 'bordeaux',
+    'lil': 'lille',
+    'fcn': 'nantes',
+    'nic': 'nice',
+    'rcl': 'lens',
+    'str': 'rennes',
+    'stade rennais': 'rennes',
+    'se': 'saint etienne',
+    'soc': 'sochaux',
+    'tfc': 'toulouse',
+    'est': 'troyes'
 }
 
 

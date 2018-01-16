@@ -9,6 +9,7 @@ Django==1.10.5
 emoji==0.4.5
 gunicorn==19.7.1
 Logentries==0.17
+nltk==3.2.5
 psycopg2==2.7.1
 python-dateutil==2.6.0
 pytz==2017.2

@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from fb_bot.highlight_fetchers import hoofoot_fetcher, football_team_mapping
+from fb_bot.highlight_fetchers import football_team_mapping
 from fb_bot.model_managers import football_team_manager
 
 

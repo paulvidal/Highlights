@@ -8,8 +8,7 @@ def has_football_team(name):
 
 
 def similar_football_team_names(name):
-    similar_names = [team.name for team in FootballTeam.objects.all() if team.name.startswith(name)] \
-                    + football_team_mapping.get_similar_names_in_mapping(name)
+    similar_names = football_team_mapping.get_similar_names(name, get_all_football_team_names())
 
     # remove duplicates
     return list(set(similar_names))

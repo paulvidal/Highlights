@@ -94,7 +94,7 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     # SEARCH HIGHLIGHT OPTION
-                    elif 'search highlights' in text:
+                    elif 'search highlights' in text or 'search again' in text:
                         print("SEARCH HIGHLIGHTS")
                         context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
@@ -113,11 +113,8 @@ class HighlightsBotView(generic.View):
                             # Answer with new message what want to do
                             response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
 
-                        elif similar_team_found:
-                            context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
-
                         else:
-                            context_manager.update_context(sender_id, ContextType.NONE)
+                            context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                     # NOTIFICATION SETTING
                     elif 'notifications' in text:

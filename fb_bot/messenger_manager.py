@@ -189,7 +189,8 @@ def get_highlights_for_team(fb_id, team):
             return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9]
                                                    + [EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
         else:
-            return create_quick_text_reply_message(NO_MATCH_FOUND, [EMOJI_HELP + ' Help'])
+            return create_quick_text_reply_message(NO_MATCH_FOUND, [EMOJI_MAGNIFYING_GLASS + ' Search again',
+                                                                    EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)

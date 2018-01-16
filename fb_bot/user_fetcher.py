@@ -16,12 +16,12 @@ def get_facebook_user_info(fb_id):
     json_response = response.json()
 
     facebook_id = fb_id
-    first_name = json_response['first_name']
-    last_name = json_response['last_name']
-    image_url = json_response['profile_pic']
-    locale = json_response['locale']
-    timezone = json_response['timezone']
-    gender = json_response['gender']
+    first_name = json_response.get('first_name') if json_response.get('first_name') else 'default'
+    last_name = json_response.get('last_name') if json_response.get('last_name') else 'default'
+    image_url = json_response.get('profile_pic') if json_response.get('profile_pic') else 'https://www.default-profile-pic.com'
+    locale = json_response.get('locale') if json_response.get('locale') else 'default'
+    timezone = json_response.get('timezone') if json_response.get('timezone') else 0
+    gender = json_response.get('gender') if json_response.get('gender') else 'default'
 
     return facebook_id, first_name, last_name, image_url, locale, timezone, gender
 

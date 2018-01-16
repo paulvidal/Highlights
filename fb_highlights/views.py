@@ -64,7 +64,7 @@ class HighlightsBotView(generic.View):
                 # Events
                 if 'message' in message:
 
-                    text = message['message']['text'].lower()
+                    text = message['message']['text'].lower() if message['message'].get('text') else ''
 
                     # Cancel quick reply
                     if 'cancel' in text:

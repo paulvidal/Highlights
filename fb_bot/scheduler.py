@@ -5,11 +5,12 @@ import dateparser
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import footyroom_fetcher, hoofoot_fetcher, ressource_checker
 from fb_bot.logger import logger
-from fb_bot.model_managers import latest_highlight_manager
+from fb_bot.model_managers import latest_highlight_manager, context_manager
 from fb_bot.model_managers import team_manager
 
 
 # Send highlights
+from fb_bot.model_managers.context_manager import ContextType
 
 
 def send_most_recent_highlights():
@@ -57,19 +58,16 @@ def send_most_recent_highlights():
                 # highlight has already been sent
                 continue
 
-            user_ids = []
-
-            team1 = highlight.team1.name.lower()
-            user_ids += team_manager.get_users_for_team(team1)
-
-            team2 = highlight.team2.name.lower()
-            user_ids += team_manager.get_users_for_team(team2)
-
             # Log highlights sent
             logger.log("Highlight sent: " + highlight.get_match_name())
 
-            for user_id in user_ids:
-                messenger_manager.send_highlight_message(user_id, [highlight])
+            # Send highlight for team1
+            team1 = highlight.team1.name.lower()
+            send_highlight_to_users(highlight, team1)
+
+            # Send highlight for team2
+            team2 = highlight.team2.name.lower()
+            send_highlight_to_users(highlight, team2)
 
             # Set highlights for same match to sent
             similar_highlights = latest_highlight_manager.get_similar_highlights(highlight, not_sent_highlights)
@@ -98,3 +96,20 @@ def check_highlight_validity():
 
         if not is_valid:
             latest_highlight_manager.delete_highlight(h)
+
+
+# HELPERS
+
+def send_highlight_to_users(highlight, team):
+
+    for user_id in team_manager.get_users_for_team(team):
+        # Send introduction message to user
+        messenger_manager.send_highlight_message_for_team_message(user_id, team.title())
+        # Send the highlight
+        messenger_manager.send_highlight_message(user_id, [highlight])
+        # Send the menu options message
+        # TODO: want to sent this message ?
+        # messenger_manager.send_anything_else_i_can_do_message(user_id)
+
+        # Reset the context to none
+        context_manager.update_context(user_id, ContextType.NONE)

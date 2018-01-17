@@ -10,8 +10,8 @@ from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, 
     HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
     NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE, DONE_MESSAGE, EMOJI_MAGNIFYING_GLASS, \
     EMOJI_NOTIFICATION, EMOJI_CROSS, EMOJI_DONE, EMOJI_REMOVE, EMOJI_ADD, WHAT_DO_YOU_WANT_TODO_MESSAGE, EMOJI_HELP, \
-    GET_STARTED_MESSAGE_2, ANYTHING_ELSE_I_CAN_DO_MESSAGE
-from fb_bot.model_managers import latest_highlight_manager, football_team_manager
+    GET_STARTED_MESSAGE_2, ANYTHING_ELSE_I_CAN_DO_MESSAGE, NEW_HIGHLIGHT_MESSAGE
+from fb_bot.model_managers import latest_highlight_manager, football_team_manager, user_manager
 from highlights import settings
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
@@ -124,6 +124,11 @@ def send_highlight_message(fb_id, highlight_models):
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, highlight_models)))
 
 
+def send_highlight_message_for_team_message(fb_id, team_name):
+    user_name = user_manager.get_user(fb_id).first_name
+    return send_facebook_message(fb_id, create_message(NEW_HIGHLIGHT_MESSAGE.format(user_name, team_name)))
+
+
 ### MAIN METHOD ###
 
 def send_facebook_message(fb_id, message):
@@ -138,6 +143,8 @@ def send_facebook_message(fb_id, message):
 
     if not highlights.settings.DEBUG:
         requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+    else:
+        print(response_msg)
 
     return response_msg
 

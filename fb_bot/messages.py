@@ -69,3 +69,5 @@ NO_MATCH_FOUND_TEAM_RECOMMENDATION = "I did not find highlights for your team " 
 NO_MATCH_FOUND = "I did not find highlights for your team! " + EMOJI_BROKEN_HEART
 
 ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
+
+NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for your " + EMOJI_FOOTBALL + " team {}."

@@ -24,6 +24,7 @@ EMOJI_BROKEN_HEART = emo(':broken_heart:')
 EMOJI_THUMBS_UP = emo(':+1:')
 EMOJI_FIRE = emo(':fire:')
 EMOJI_TV = emo(':tv:')
+EMOJI_MUSCLE = emo(':muscle:')
 EMOJI_CLAP = emo(':clap:')
 
 
@@ -81,4 +82,4 @@ TUTORIAL_MESSAGE_2 = "Sounds cool, right? :)"
 
 TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 +  " You're all set up! You can subscribe to more teams if you wish to :)"
 
-
+THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

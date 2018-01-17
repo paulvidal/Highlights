@@ -94,6 +94,12 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
+                    elif 'thank you' in message or 'thanks' in message or 'cheers' in message:
+                        print("THANK YOU MESSAGE")
+                        context_manager.update_context(sender_id, ContextType.NONE)
+
+                        response_msg.append(messenger_manager.send_than_you_message(sender_id))
+
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_tutorial_context(sender_id):

@@ -24,6 +24,7 @@ EMOJI_BROKEN_HEART = emo(':broken_heart:')
 EMOJI_THUMBS_UP = emo(':+1:')
 EMOJI_FIRE = emo(':fire:')
 EMOJI_TV = emo(':tv:')
+EMOJI_CLAP = emo(':clap:')
 
 
 # MESSAGES
@@ -41,6 +42,8 @@ CANCEL_MESSAGE = "Alright let's stop there then :)"
 DONE_MESSAGE = "You're good to go! :D I will send you the latest highlights for your teams as soon as the videos " + EMOJI_TV + " are available."
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
+
+NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight for your team " + EMOJI_BROKEN_HEART
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + " I am the smart bot that fetches the latest football highlights for you :)"
 
@@ -71,3 +74,11 @@ NO_MATCH_FOUND = "I did not find highlights for your team! " + EMOJI_BROKEN_HEAR
 ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
 NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for your " + EMOJI_FOOTBALL + " team {}."
+
+TUTORIAL_MESSAGE_1 = "All good " + EMOJI_DONE + " I will now send you highlights for {} at the end of every match in the following format"
+
+TUTORIAL_MESSAGE_2 = "Sounds cool, right? :)"
+
+TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 +  " You're all set up! You can subscribe to more teams if you wish to :)"
+
+

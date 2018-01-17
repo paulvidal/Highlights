@@ -10,6 +10,9 @@ class ContextType(Enum):
     DELETING_TEAM = 3
     SEARCH_HIGHLIGHTS = 4
 
+    TUTORIAL_ADD_TEAM = 100
+    TUTORIAL_UNDERSTOOD = 101
+
 
 def update_context(fb_id, context):
     if not isinstance(context, ContextType):
@@ -39,3 +42,15 @@ def is_deleting_team_context(fb_id):
 def is_searching_highlights_context(fb_id):
     return get_user(fb_id).context == ContextType.SEARCH_HIGHLIGHTS.value
 
+
+def is_tutorial_context(fb_id):
+    context = get_user(fb_id).context
+    return context == ContextType.TUTORIAL_ADD_TEAM.value or context == ContextType.TUTORIAL_UNDERSTOOD.value
+
+
+def is_tutorial_add_team_context(fb_id):
+    return get_user(fb_id).context == ContextType.TUTORIAL_ADD_TEAM.value
+
+
+def is_tutorial_understood_context(fb_id):
+    return get_user(fb_id).context == ContextType.TUTORIAL_UNDERSTOOD.value

@@ -5,12 +5,7 @@ import requests
 
 import highlights.settings
 import highlights.settings
-from fb_bot.messages import NO_MATCH_FOUND, ERROR_MESSAGE, GET_STARTED_MESSAGE, NOTIFICATION_MESSAGE, \
-    ADD_TEAM_MESSAGE, DELETE_TEAM_MESSAGE, TEAM_ADDED_SUCCESS_MESSAGE, TEAM_ADDED_FAIL_MESSAGE, TEAM_DELETED_MESSAGE, \
-    HELP_MESSAGE, TEAM_NOT_FOUND_MESSAGE, TEAM_RECOMMEND_MESSAGE, DELETE_TEAM_NOT_FOUND_MESSAGE, CANCEL_MESSAGE, \
-    NO_MATCH_FOUND_TEAM_RECOMMENDATION, SEARCH_HIGHLIGHTS_MESSAGE, DONE_MESSAGE, EMOJI_MAGNIFYING_GLASS, \
-    EMOJI_NOTIFICATION, EMOJI_CROSS, EMOJI_DONE, EMOJI_REMOVE, EMOJI_ADD, WHAT_DO_YOU_WANT_TODO_MESSAGE, EMOJI_HELP, \
-    GET_STARTED_MESSAGE_2, ANYTHING_ELSE_I_CAN_DO_MESSAGE, NEW_HIGHLIGHT_MESSAGE
+from fb_bot.messages import *
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager, user_manager
 from highlights import settings
 
@@ -24,6 +19,10 @@ MAX_QUICK_REPLIES = 10
 def send_help_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
                                                                                        EMOJI_NOTIFICATION + ' Notifications']))
+
+
+def send_than_you_message(fb_id):
+    return send_facebook_message(fb_id, create_message(THANK_YOU))
 
 
 def send_what_do_you_want_to_do_message(fb_id):
@@ -84,8 +83,12 @@ def send_recommended_team_messages(fb_id, recommended):
     return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + ['Other', EMOJI_CROSS + ' Cancel']))
 
 
-def send_team_not_found_message(fb_id):
+def send_team_not_found_option_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, ['Try again', EMOJI_CROSS + ' Cancel']))
+
+
+def send_team_not_found_message(fb_id):
+    return send_facebook_message(fb_id, create_message(TEAM_NOT_FOUND_MESSAGE))
 
 
 def send_team_added_message(fb_id, success, team):
@@ -117,6 +120,37 @@ def send_error_message(fb_id):
 
 def send_highlight_message_for_team(fb_id, team):
     return send_facebook_message(fb_id, get_highlights_for_team(fb_id, team))
+
+
+# For tutorial
+def send_tutorial_message_1(fb_id, team):
+    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_1.format(team)))
+
+
+def send_tutorial_message_2(fb_id):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_2, [EMOJI_DONE + ' Chill']))
+
+
+def send_tutorial_message_3(fb_id):
+    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_3))
+
+
+def send_tutorial_highlight(fb_id, team):
+    highlights = latest_highlight_manager.get_highlights_for_team(team)
+
+    if highlights == []:
+        # Case no highlight found for the team, use example such as PSG, Barcelona, Real Madrid
+        highlights = latest_highlight_manager.get_highlights_for_team('psg') \
+                     ++ latest_highlight_manager.get_highlights_for_team('barcelona') \
+                     ++ latest_highlight_manager.get_highlights_for_team('real madrid')
+
+    # Eliminate duplicates
+    highlights = latest_highlight_manager.get_unique_highlights(highlights)
+
+    # Order highlights by date and take the first one
+    highlight = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[0]
+
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, [highlight])))
 
 
 # For scheduler
@@ -183,11 +217,16 @@ def has_highlight_for_team(team):
     return True, True
 
 
-def get_highlights_for_team(fb_id, team):
+def get_highlights_for_team(fb_id, team, highlight_count=10):
     highlights = latest_highlight_manager.get_highlights_for_team(team)
 
-    # Case no highlight found for the team
+    if highlights == []:
+        # Case no highlight found for the team
+        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search again',
+                                                                       EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
+
     if not highlights:
+        # Case no team name matched
         similar_team_names = football_team_manager.similar_football_team_names(team)
         similar_team_names = [team_name.title() for team_name in similar_team_names]
 
@@ -203,7 +242,7 @@ def get_highlights_for_team(fb_id, team):
     highlights = latest_highlight_manager.get_unique_highlights(highlights)
 
     # Order highlights by date and take the first 10
-    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:10]
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:highlight_count]
 
     return create_generic_attachment(highlights_to_json(fb_id, highlights))
 

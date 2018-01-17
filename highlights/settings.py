@@ -35,7 +35,16 @@ SECRET_KEY = get_env_var('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
 
+# GET BASE URL OF SERVER
 BASE_URL = get_env_var('BASE_URL')
+
+# STATUS OF SERVER - either "test | preprod | prod"
+PROD_STATUS = get_env_var('PROD_STATUS')
+
+
+def is_prod():
+    return PROD_STATUS == 'prod'
+
 
 ALLOWED_HOSTS = ['*']
 

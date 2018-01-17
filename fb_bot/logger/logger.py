@@ -22,5 +22,6 @@ def log_for_user(message, user_id):
 
 
 def _send_to_logentries(log):
-    if not settings.DEBUG:
+    if settings.is_prod():
+        # Only send in production mode
         LOGGER.info(log)

@@ -215,7 +215,7 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                     # NOTIFICATION SETTING
-                    elif 'notifications' in message:
+                    elif 'my teams' in message:
                         print("NOTIFICATION SETTING")
                         context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 

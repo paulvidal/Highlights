@@ -18,7 +18,7 @@ MAX_QUICK_REPLIES = 10
 
 def send_help_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                                       EMOJI_NOTIFICATION + ' Notifications']))
+                                                                                       EMOJI_NOTIFICATION + ' My teams']))
 
 
 def send_than_you_message(fb_id):
@@ -28,14 +28,14 @@ def send_than_you_message(fb_id):
 def send_what_do_you_want_to_do_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(WHAT_DO_YOU_WANT_TODO_MESSAGE,
                                                                         [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                         EMOJI_NOTIFICATION + ' Notifications',
+                                                                         EMOJI_NOTIFICATION + ' My teams',
                                                                          EMOJI_HELP + ' Help']))
 
 
 def send_anything_else_i_can_do_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(ANYTHING_ELSE_I_CAN_DO_MESSAGE,
                                                                         [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                         EMOJI_NOTIFICATION + ' Notifications',
+                                                                         EMOJI_NOTIFICATION + ' My teams',
                                                                          EMOJI_HELP + ' Help']))
 
 

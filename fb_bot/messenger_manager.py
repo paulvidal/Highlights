@@ -159,8 +159,8 @@ def send_tutorial_highlight(fb_id, team):
     if highlights == []:
         # Case no highlight found for the team, use example such as PSG, Barcelona, Real Madrid
         highlights = latest_highlight_manager.get_highlights_for_team('psg') \
-                     ++ latest_highlight_manager.get_highlights_for_team('barcelona') \
-                     ++ latest_highlight_manager.get_highlights_for_team('real madrid')
+                     + latest_highlight_manager.get_highlights_for_team('barcelona') \
+                     + latest_highlight_manager.get_highlights_for_team('real madrid')
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)

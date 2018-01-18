@@ -67,7 +67,9 @@ NAME_MAPPING = {
     'se': 'saint etienne',
     'soc': 'sochaux',
     'tfc': 'toulouse',
-    'est': 'troyes'
+    'est': 'troyes',
+    'wolverhampton wanderers': 'wolverhampton',
+    'wolves': 'wolverhampton',
 }
 
 

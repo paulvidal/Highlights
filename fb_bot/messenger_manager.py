@@ -79,16 +79,12 @@ def send_delete_team_message(fb_id, teams):
     return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams + [EMOJI_CROSS + ' Cancel']))
 
 
-def send_recommended_team_messages(fb_id, recommended):
+def send_recommended_team_message(fb_id, recommended):
     return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + ['Other', EMOJI_CROSS + ' Cancel']))
 
 
-def send_team_not_found_option_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, ['Try again', EMOJI_CROSS + ' Cancel']))
-
-
 def send_team_not_found_message(fb_id):
-    return send_facebook_message(fb_id, create_message(TEAM_NOT_FOUND_MESSAGE))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, ['Try again', EMOJI_CROSS + ' Cancel']))
 
 
 def send_team_added_message(fb_id, success, team):
@@ -122,13 +118,14 @@ def send_highlight_message_for_team(fb_id, team):
     return send_facebook_message(fb_id, get_highlights_for_team(fb_id, team))
 
 
-# For tutorial
+# For TUTORIAL
+
 def send_tutorial_message_1(fb_id, team):
     return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_1.format(team)))
 
 
 def send_tutorial_message_2(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_2, [EMOJI_DONE + ' Chill']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_2, [EMOJI_EXPLOSION + ' Thrilling!']))
 
 
 def send_tutorial_message_3(fb_id):
@@ -145,6 +142,14 @@ def send_tutorial_message_5(fb_id):
 
 def send_tutorial_message_6(fb_id):
     return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_6))
+
+
+def send_recommended_team_tutorial_message(fb_id, recommended):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + ['Other']))
+
+
+def send_team_not_found_tutorial_message(fb_id):
+    return send_facebook_message(fb_id, create_message(TEAM_NOT_FOUND_MESSAGE))
 
 
 # FIXME: duplication with real search
@@ -176,7 +181,7 @@ def get_tutorial_search_highlights(fb_id, team):
 
     if highlights == []:
         # Case no highlight found for the team
-        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search another team'])
+        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' New search'])
 
     if not highlights:
         # Case no team name matched

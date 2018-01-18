@@ -26,6 +26,7 @@ EMOJI_FIRE = emo(':fire:')
 EMOJI_TV = emo(':tv:')
 EMOJI_MUSCLE = emo(':muscle:')
 EMOJI_CLAP = emo(':clap:')
+EMOJI_EXPLOSION = emo(':boom:')
 
 
 # MESSAGES
@@ -62,7 +63,7 @@ TEAM_RECOMMEND_MESSAGE = "I did not find your team " + EMOJI_BROKEN_HEART +" Did
 
 TEAM_NOT_FOUND_MESSAGE = "I did not find your team " + EMOJI_BROKEN_HEART + " Try entering the full name of the team."
 
-TEAM_ADDED_SUCCESS_MESSAGE = "{} successfully added to your teams " + EMOJI_THUMBS_UP
+TEAM_ADDED_SUCCESS_MESSAGE = "{} was successfully added to your teams " + EMOJI_THUMBS_UP
 
 TEAM_ADDED_FAIL_MESSAGE = "I could not find the team: {}"
 
@@ -76,7 +77,7 @@ ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
 NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for your " + EMOJI_FOOTBALL + " team {}."
 
-TUTORIAL_MESSAGE_1 = "All good " + EMOJI_DONE + " I will now send you highlights for {} at the end of every match in the following format"
+TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you highlights for {} at the end of every match in the following format"
 
 TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
 
@@ -86,6 +87,6 @@ TUTORIAL_MESSAGE_4 = "Tell me for which team should I give you highlight videos?
 
 TUTORIAL_MESSAGE_5 = "This search is sick, right? :)"
 
-TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You're all set up! You can subscribe to more teams if you wish :)"
+TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You're all set up! You can now subscribe to more teams if you wish :)"
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

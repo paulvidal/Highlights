@@ -118,7 +118,6 @@ class HighlightsBotView(generic.View):
                                 # Does team exist check
 
                                 team_manager.add_team(sender_id, team_to_add)
-                                response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
 
                                 response_msg.append(messenger_manager.send_tutorial_message_1(sender_id, text))
                                 response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
@@ -134,17 +133,17 @@ class HighlightsBotView(generic.View):
                                 # Format recommendation names
                                 recommendations = [recommendation.title() for recommendation in recommendations]
 
-                                response_msg.append(messenger_manager.send_recommended_team_messages(sender_id, recommendations))
+                                response_msg.append(messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations))
 
                             else:
                                 # No team or recommendation found
 
-                                response_msg.append(messenger_manager.send_team_not_found_message(sender_id))
+                                response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
 
                         elif context_manager.is_tutorial_search_highlights_context(sender_id):
                             print("TUTORIAL SEARCH HIGHLIGHTS")
 
-                            if 'search highlights' in message or 'search again' in message or 'search another team' in message:
+                            if 'search highlights' in message or 'search again' in message or 'new search' in message:
                                 response_msg.append(messenger_manager.send_tutorial_message_4(sender_id))
 
                                 context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCHING_HIGHLIGHTS)
@@ -277,13 +276,13 @@ class HighlightsBotView(generic.View):
                             # Format recommendation names
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
-                            response_msg.append(messenger_manager.send_recommended_team_messages(sender_id, recommendations))
+                            response_msg.append(messenger_manager.send_recommended_team_message(sender_id, recommendations))
 
                         else:
                             # No team or recommendation found
                             context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
-                            response_msg.append(messenger_manager.send_team_not_found_option_message(sender_id))
+                            response_msg.append(messenger_manager.send_team_not_found_message(sender_id))
 
                     # DELETING TEAM
                     elif context_manager.is_deleting_team_context(sender_id):

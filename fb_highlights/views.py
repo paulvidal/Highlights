@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
-import highlights.settings
+from highlights import settings
 from fb_bot.logger import logger
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager
 from fb_bot.model_managers import team_manager
@@ -123,7 +123,7 @@ class HighlightsBotView(generic.View):
                                 response_msg.append(messenger_manager.send_tutorial_message_1(sender_id, text))
                                 response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
 
-                                context_manager.update_context(sender_id, ContextType.TUTORIAL_UNDERSTOOD)
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCH_HIGHLIGHTS)
 
                                 response_msg.append(messenger_manager.send_tutorial_message_2(sender_id))
 
@@ -141,10 +141,45 @@ class HighlightsBotView(generic.View):
 
                                 response_msg.append(messenger_manager.send_team_not_found_message(sender_id))
 
+                        elif context_manager.is_tutorial_search_highlights_context(sender_id):
+                            print("TUTORIAL SEARCH HIGHLIGHTS")
+
+                            if 'search highlights' in message or 'search again' in message or 'search another team' in message:
+                                response_msg.append(messenger_manager.send_tutorial_message_4(sender_id))
+
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCHING_HIGHLIGHTS)
+                            else:
+                                response_msg.append(messenger_manager.send_tutorial_message_3(sender_id))
+
+                        elif context_manager.is_tutorial_searching_highlights_context(sender_id):
+                            print("TUTORIAL SEARCHING HIGHLIGHTS")
+
+                            team_found, similar_team_found = messenger_manager.has_highlight_for_team(message)
+                            highlights = latest_highlight_manager.get_highlights_for_team(message)
+
+                            response_msg.append(messenger_manager.send_tutorial_search_highlights(sender_id, message))
+
+                            if highlights == []:
+                                # No highlights but team exists, try new search
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCH_HIGHLIGHTS)
+
+                            elif team_found:
+                                # Highlights found
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_UNDERSTOOD)
+
+                                response_msg.append(messenger_manager.send_tutorial_message_5(sender_id))
+
+                            elif similar_team_found:
+                                # Similar team found, keep on searching
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCHING_HIGHLIGHTS)
+                            else:
+                                # No result, go back to search again
+                                context_manager.update_context(sender_id, ContextType.TUTORIAL_SEARCH_HIGHLIGHTS)
+
                         elif context_manager.is_tutorial_understood_context(sender_id):
                             print("TUTORIAL UNDERSTOOD")
 
-                            response_msg.append(messenger_manager.send_tutorial_message_3(sender_id))
+                            response_msg.append(messenger_manager.send_tutorial_message_6(sender_id))
 
                             # Send notification menu
                             context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
@@ -163,6 +198,7 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_search_highlights_message(sender_id))
 
                     # SEARCHING HIGHLIGHTS
+                    # FIXME: duplication between tutorial and searching highlights
                     elif context_manager.is_searching_highlights_context(sender_id):
                         print("SEARCHING HIGHLIGHTS")
                         team_found, similar_team_found = messenger_manager.has_highlight_for_team(message)
@@ -298,7 +334,7 @@ class HighlightsBotView(generic.View):
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0
 
-        if not highlights.settings.DEBUG:
+        if not settings.DEBUG:
             return HttpResponse()
 
         # For DEBUG MODE only

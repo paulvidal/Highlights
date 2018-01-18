@@ -132,9 +132,22 @@ def send_tutorial_message_2(fb_id):
 
 
 def send_tutorial_message_3(fb_id):
-    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_3))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_3, [EMOJI_MAGNIFYING_GLASS + ' Search highlights']))
 
 
+def send_tutorial_message_4(fb_id):
+    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_4))
+
+
+def send_tutorial_message_5(fb_id):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_5, [EMOJI_MUSCLE + ' Cool shit']))
+
+
+def send_tutorial_message_6(fb_id):
+    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_6))
+
+
+# FIXME: duplication with real search
 def send_tutorial_highlight(fb_id, team):
     highlights = latest_highlight_manager.get_highlights_for_team(team)
 
@@ -151,6 +164,38 @@ def send_tutorial_highlight(fb_id, team):
     highlight = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[0]
 
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, [highlight])))
+
+
+def send_tutorial_search_highlights(fb_id, team):
+    return send_facebook_message(fb_id, get_tutorial_search_highlights(fb_id, team))
+
+
+# FIXME: duplication with real search
+def get_tutorial_search_highlights(fb_id, team):
+    highlights = latest_highlight_manager.get_highlights_for_team(team)
+
+    if highlights == []:
+        # Case no highlight found for the team
+        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search another team'])
+
+    if not highlights:
+        # Case no team name matched
+        similar_team_names = football_team_manager.similar_football_team_names(team)
+        similar_team_names = [team_name.title() for team_name in similar_team_names]
+
+        # Check if name of team was not properly written
+        if similar_team_names:
+            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:10])
+        else:
+            return create_quick_text_reply_message(NO_MATCH_FOUND, [EMOJI_MAGNIFYING_GLASS + ' Search again'])
+
+    # Eliminate duplicates
+    highlights = latest_highlight_manager.get_unique_highlights(highlights)
+
+    # Order highlights by date and take the first 10
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:10]
+
+    return create_generic_attachment(highlights_to_json(fb_id, highlights))
 
 
 # For scheduler
@@ -217,6 +262,7 @@ def has_highlight_for_team(team):
     return True, True
 
 
+# FIXME: code duplicated for tutorial
 def get_highlights_for_team(fb_id, team, highlight_count=10):
     highlights = latest_highlight_manager.get_highlights_for_team(team)
 

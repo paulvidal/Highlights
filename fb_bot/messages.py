@@ -44,7 +44,7 @@ DONE_MESSAGE = "You're good to go! :D I will send you the latest highlights for 
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
-NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight for your team " + EMOJI_BROKEN_HEART
+NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team " + EMOJI_BROKEN_HEART + " They must have not play for a long time."
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + " I am the smart bot that fetches the latest football highlights for you :)"
 
@@ -78,8 +78,14 @@ NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for y
 
 TUTORIAL_MESSAGE_1 = "All good " + EMOJI_DONE + " I will now send you highlights for {} at the end of every match in the following format"
 
-TUTORIAL_MESSAGE_2 = "Sounds cool, right? :)"
+TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
 
-TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 +  " You're all set up! You can subscribe to more teams if you wish to :)"
+TUTORIAL_MESSAGE_3 = "Another cool feature is the " + EMOJI_MAGNIFYING_GLASS + " search allowing you to find the latest highlights for a particular team. Try it out!"
+
+TUTORIAL_MESSAGE_4 = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
+
+TUTORIAL_MESSAGE_5 = "This search is sick, right? :)"
+
+TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You're all set up! You can subscribe to more teams if you wish :)"
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

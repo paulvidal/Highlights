@@ -52,7 +52,7 @@ def send_most_recent_highlights():
     for highlight in not_sent_highlights:
         time_since_added = highlight.get_parsed_time_since_added()
 
-        if timedelta(minutes=30) < abs(today - time_since_added):
+        if highlight.source == 'hoofoot' or timedelta(minutes=30) < abs(today - time_since_added):
 
             if highlight.sent:
                 # highlight has already been sent

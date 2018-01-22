@@ -49,7 +49,7 @@ NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight 
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + " I am the smart bot that fetches the latest football highlights for you :)"
 
-GET_STARTED_MESSAGE_2 = "To get started, enter the name of any " + EMOJI_FOOTBALL + " team you would love to subscribe to. You will get the latest highlight videos for your team as soon as they are available."
+GET_STARTED_MESSAGE_2 = "I will guide you throughout this tutorial :) To get started, enter the name of any " + EMOJI_FOOTBALL + " team you would love to subscribe to."
 
 NOTIFICATION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " teams: \n\n{}\n\nDo you want to ADD or REMOVE a team?"
 
@@ -77,16 +77,16 @@ ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
 NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for your " + EMOJI_FOOTBALL + " team {}."
 
-TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you highlights for {} at the end of every match in the following format"
+TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
 
-TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
+TUTORIAL_MESSAGE_2 = "Show me more :)"
 
 TUTORIAL_MESSAGE_3 = "Another cool feature is the " + EMOJI_MAGNIFYING_GLASS + " search allowing you to find the latest highlights for a particular team. Try it out!"
 
 TUTORIAL_MESSAGE_4 = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
-TUTORIAL_MESSAGE_5 = "This search is sick, right? :)"
+TUTORIAL_MESSAGE_5 = "Got it! :)"
 
-TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You're all set up! You can now subscribe to more teams if you wish :)"
+TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You have finished this tutorial successfully! You can now subscribe to more teams if you wish :)"
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

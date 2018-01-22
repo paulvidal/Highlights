@@ -13,12 +13,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         try:
-            highlights_footyroom = footyroom_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=2)
+            highlights_footyroom = footyroom_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
             if not highlights_footyroom:
                 raise ScrappingException("Failed to scrape FOOTYROOM")
 
-            highlights_hoofoot = hoofoot_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=2)
+            highlights_hoofoot = hoofoot_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
             if not highlights_hoofoot:
                 raise ScrappingException("Failed to scrape HOOFOOT")

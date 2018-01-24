@@ -16,7 +16,7 @@ from fb_bot.model_managers.context_manager import ContextType
 def send_most_recent_highlights():
     # Footyroom + Hoofoot highlights fetching
     highlights = footyroom_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=2) \
-                 + hoofoot_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=2)
+                 + hoofoot_fetcher.fetch_highlights(num_pagelet=4, max_days_ago=7)
 
     # Add new highlights
     for highlight in highlights:

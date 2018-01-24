@@ -128,7 +128,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'link', 'img_link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'click_count'
+        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'click_count', 'img_link',
 
     @staticmethod
     def to_list_filter():
@@ -154,3 +154,28 @@ class LatestHighlight(models.Model):
 
     def __str__(self):
         return str(self.team1) + ' ' + str(self.score1) + ' - ' + str(self.score2) + ' ' + str(self.team2) + ' | ' + str(self.source)
+
+
+class HighlightStat(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="highlight_stat_team1")
+    score1 = models.SmallIntegerField()
+    team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_stat_team2")
+    score2 = models.SmallIntegerField()
+    link = models.TextField()
+    time = models.CharField(max_length=120)
+
+    class Meta:
+        unique_together = ('user', 'time')
+
+    @staticmethod
+    def to_list_display():
+        return 'user', 'team1', 'score1', 'team2', 'score2', 'time', 'link'
+
+    @staticmethod
+    def to_list_filter():
+        return 'user',
+
+    @staticmethod
+    def search_fields():
+        return 'user', 'team1__name', 'team2__name'

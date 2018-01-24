@@ -11,7 +11,8 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 from highlights import settings
 from fb_bot.logger import logger
-from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager
+from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
+    highlight_stat_manager
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers.context_manager import ContextType
 
@@ -378,5 +379,8 @@ class HighlightRedirectView(generic.View):
 
         # link click tracking
         latest_highlight_manager.increment_click_count(highlight_to_send)
+
+        # Highlight event tracking
+        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send)
 
         return redirect(highlight_to_send.link)

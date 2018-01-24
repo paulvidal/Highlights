@@ -1,5 +1,5 @@
 from django.contrib import admin
-from fb_highlights.models import User, Team, LatestHighlight, FootballTeam, NewFootballTeam
+from fb_highlights.models import User, Team, LatestHighlight, FootballTeam, NewFootballTeam, HighlightStat
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -32,8 +32,15 @@ class NewFootballTeamAdmin(admin.ModelAdmin):
     search_fields = NewFootballTeam.search_fields()
 
 
+class HighlightStatAdmin(admin.ModelAdmin):
+    list_display = HighlightStat.to_list_display()
+    list_filter = HighlightStat.to_list_filter()
+    search_fields = HighlightStat.search_fields()
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(LatestHighlight, LatestHighlightAdmin)
 admin.site.register(FootballTeam, FootballTeamAdmin)
 admin.site.register(NewFootballTeam, NewFootballTeamAdmin)
+admin.site.register(HighlightStat, HighlightStatAdmin)

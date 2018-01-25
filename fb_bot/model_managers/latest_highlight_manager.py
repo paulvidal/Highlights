@@ -120,7 +120,7 @@ def get_best_highlight(highlight_models):
     Get the most relevant highlight to send to the user
 
     :param highlight_models: list of highlights for a match, coming from different sources
-    :return: the most relevant highlight
+    :return: the most relevant highlight (most recent)
 
     Highlights priority:
     1. Hoofoot
@@ -131,8 +131,17 @@ def get_best_highlight(highlight_models):
     for h in highlight_models:
         if not current_best:
             current_best = h
-        elif h.source == 'hoofoot':
-            current_best = h
+            continue
+
+        h_time = h.get_parsed_time_since_added()
+        current_best_time = current_best.get_parsed_time_since_added()
+
+        if h.source == 'hoofoot':
+
+            if current_best.source != 'hoofoot':
+                current_best = h
+            elif h_time > current_best_time:
+                current_best = h
 
     return current_best
 

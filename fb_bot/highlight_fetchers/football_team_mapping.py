@@ -9,6 +9,7 @@ NAME_MAPPING = {
     'deportivo': 'deportivo la coruna',
     'betis': 'real betis',
     'psg': 'paris saint germain',
+    'paris': 'paris saint germain',
     'as monaco': 'monaco',
     'fc köln': 'fc cologne',
     'fc koln': 'fc cologne',
@@ -70,6 +71,8 @@ NAME_MAPPING = {
     'est': 'troyes',
     'wolverhampton wanderers': 'wolverhampton',
     'wolves': 'wolverhampton',
+    'sc freiburg': 'freiburg',
+
 }
 
 

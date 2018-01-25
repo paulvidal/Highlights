@@ -125,7 +125,7 @@ def send_tutorial_message_1(fb_id, team):
 
 
 def send_tutorial_message_2(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_2, [EMOJI_EXPLOSION + ' Thrilling!']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_2, [EMOJI_EXPLOSION + ' Show me more!']))
 
 
 def send_tutorial_message_3(fb_id):
@@ -137,7 +137,7 @@ def send_tutorial_message_4(fb_id):
 
 
 def send_tutorial_message_5(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_5, [EMOJI_MUSCLE + ' Cool shit']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_5, [EMOJI_MUSCLE + ' Got it!']))
 
 
 def send_tutorial_message_6(fb_id):

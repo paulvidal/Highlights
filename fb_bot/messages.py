@@ -79,13 +79,13 @@ NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight for y
 
 TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
 
-TUTORIAL_MESSAGE_2 = "Show me more :)"
+TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
 
 TUTORIAL_MESSAGE_3 = "Another cool feature is the " + EMOJI_MAGNIFYING_GLASS + " search allowing you to find the latest highlights for a particular team. Try it out!"
 
 TUTORIAL_MESSAGE_4 = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
-TUTORIAL_MESSAGE_5 = "Got it! :)"
+TUTORIAL_MESSAGE_5 = "Do you see the power of the search? :)"
 
 TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You have finished this tutorial successfully! You can now subscribe to more teams if you wish :)"
 

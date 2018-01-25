@@ -18,6 +18,7 @@ class LatestHighlightAdmin(admin.ModelAdmin):
     list_display = LatestHighlight.to_list_display()
     list_filter = LatestHighlight.to_list_filter()
     search_fields = LatestHighlight.search_fields()
+    ordering = '-time_since_added',
 
 
 class FootballTeamAdmin(admin.ModelAdmin):
@@ -36,6 +37,7 @@ class HighlightStatAdmin(admin.ModelAdmin):
     list_display = HighlightStat.to_list_display()
     list_filter = HighlightStat.to_list_filter()
     search_fields = HighlightStat.search_fields()
+    ordering = '-time',
 
 
 admin.site.register(User, UserAdmin)

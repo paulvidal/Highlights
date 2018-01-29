@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import dateparser
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import footyroom_fetcher, hoofoot_fetcher, ressource_checker
+from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_footyroom_videos
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager
 from fb_bot.model_managers import team_manager
@@ -15,8 +15,9 @@ from fb_bot.model_managers.context_manager import ContextType
 
 def send_most_recent_highlights():
     # Footyroom + Hoofoot highlights fetching
-    highlights = footyroom_fetcher.fetch_highlights(num_pagelet=1, max_days_ago=2) \
-                 + hoofoot_fetcher.fetch_highlights(num_pagelet=4, max_days_ago=7)
+    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=2) \
+                 + fetcher_hoofoot.fetch_highlights(num_pagelet=4, max_days_ago=7) \
+                 + fetcher_footyroom_videos.fetch_highlights(num_pagelet=3, max_days_ago=7)
 
     # Add new highlights
     for highlight in highlights:

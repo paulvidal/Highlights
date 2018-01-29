@@ -73,6 +73,10 @@ NAME_MAPPING = {
     'wolves': 'wolverhampton',
     'sc freiburg': 'freiburg',
     'fc barcelona': 'barcelona',
+    'cardiff city': 'cardiff',
+    'newport county': 'newport',
+    'peterborough united': 'peterborough',
+    'yeovil town': 'yeovil'
 }
 
 

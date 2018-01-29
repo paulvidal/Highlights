@@ -74,7 +74,6 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         video_link = _get_video_link(full_link)
 
         if not video_link:
-            print(full_link)
             continue
 
         # Get match image link

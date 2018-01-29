@@ -152,6 +152,24 @@ class LatestHighlight(models.Model):
         team_name = football_team_mapping.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
+    def priority(self):
+        """
+        Highlights priority:
+        3. hoofoot
+        2. footyroom_video
+        1. footyroom
+        """
+        priority = 0
+
+        if self.source == 'hoofoot':
+            priority = 3
+        elif self.source == 'footyroom_video':
+            priority = 2
+        elif self.source == 'footyroom':
+            priority = 1
+
+        return priority
+
     def __str__(self):
         return str(self.team1) + ' ' + str(self.score1) + ' - ' + str(self.score2) + ' ' + str(self.team2) + ' | ' + str(self.source)
 

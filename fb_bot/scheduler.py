@@ -36,7 +36,7 @@ def send_most_recent_highlights():
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
-    # Set Footyroom images for all highlights
+    # Set Footyroom images for hoofoot highlights
     for hoofoot_highlight in latest_highlight_manager.get_all_highlights_from_source(source='hoofoot'):
         img_link = latest_highlight_manager.get_highlight_img_link_from_footyroom(hoofoot_highlight)
 
@@ -54,7 +54,7 @@ def send_most_recent_highlights():
         time_since_added = highlight.get_parsed_time_since_added()
 
         # TODO: remove time when FOOTYROOM will be parsed
-        if timedelta(minutes=30) < abs(today - time_since_added):
+        if timedelta(minutes=10) < abs(today - time_since_added):
 
             if highlight.sent:
                 # highlight has already been sent
@@ -91,7 +91,8 @@ def send_most_recent_highlights():
 # Check if highlight links are still alive (not taken down) and remove it if so
 
 def check_highlight_validity():
-    highlights = latest_highlight_manager.get_all_highlights_from_source(source='hoofoot')
+    highlights = latest_highlight_manager.get_all_highlights_from_source(source='hoofoot') \
+                 + latest_highlight_manager.get_all_highlights_from_source(source='footyroom_video')
 
     for h in highlights:
         is_valid = ressource_checker.check(h.link)

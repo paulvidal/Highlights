@@ -117,14 +117,10 @@ def get_unique_highlights(highlight_models):
 
 def get_best_highlight(highlight_models):
     """
-    Get the most relevant highlight to send to the user
+    Get the most relevant highlight to send to the user (depending on the priority the highlight source)
 
     :param highlight_models: list of highlights for a match, coming from different sources
-    :return: the most relevant highlight (most recent)
-
-    Highlights priority:
-    1. Hoofoot
-    2. Footyroom
+    :return: the most relevant highlight (most recent with highest priority)
     """
     current_best = None
 
@@ -136,37 +132,14 @@ def get_best_highlight(highlight_models):
         h_time = h.get_parsed_time_since_added()
         current_best_time = current_best.get_parsed_time_since_added()
 
-        if h.source == 'hoofoot':
+        if h.priority() >= current_best.priority():
 
-            if current_best.source != 'hoofoot':
+            if h.priority() > current_best.priority():
                 current_best = h
             elif h_time > current_best_time:
                 current_best = h
 
     return current_best
-
-
-def has_higher_priority_highlight(highlight, not_sent_highlights):
-    """
-    Check if higher priority in similar highlights exists
-
-    :return: False if there exists a highlight in not_sent_highlight with higher priority than highlight
-
-    Highlights priority:
-    1. Hoofoot
-    2. Footyroom
-    """
-    for h in not_sent_highlights:
-        if is_same_match_highlight(highlight, h):
-
-            # same match
-            if highlight.source == h.source:
-                continue
-
-            if h.source == 'hoofoot':
-                return True
-
-    return False
 
 
 def get_similar_highlights(highlight, highlights_model):

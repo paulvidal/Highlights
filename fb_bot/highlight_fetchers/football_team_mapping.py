@@ -72,7 +72,7 @@ NAME_MAPPING = {
     'wolverhampton wanderers': 'wolverhampton',
     'wolves': 'wolverhampton',
     'sc freiburg': 'freiburg',
-
+    'fc barcelona': 'barcelona',
 }
 
 

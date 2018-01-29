@@ -4,7 +4,7 @@ import time
 
 from bs4 import BeautifulSoup
 
-from fb_bot.highlight_fetchers import footyroom_fetcher
+from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.Highlight import Highlight
 
 ROOT_URL = 'http://hoofoot.com/'
@@ -113,7 +113,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not time_since_added_date:
             continue
 
-        if not footyroom_fetcher._is_recent(time_since_added_date, max_days_ago):
+        if not fetcher_footyroom._is_recent(time_since_added_date, max_days_ago):
             continue
 
         highlights.append(HoofootHighlight(video_link, match_name, img_link, view_count, category, time_since_added))

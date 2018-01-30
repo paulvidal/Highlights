@@ -41,15 +41,15 @@ ANYTHING_ELSE_I_CAN_DO_MESSAGE = "Anything else I can do for you? " + EMOJI_INNO
 
 CANCEL_MESSAGE = "Alright let's stop there then :)"
 
-DONE_MESSAGE = "You're good to go! :D I will send you the latest highlights for your teams as soon as the videos " + EMOJI_TV + " are available."
+DONE_MESSAGE = "You're good to go!\n I will send you the latest highlights for your teams as soon as the videos are available. " + EMOJI_TV
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
 NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team " + EMOJI_BROKEN_HEART + " They must have not play for a long time."
 
-GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + " I am the smart bot that fetches the latest football highlights for you :)"
+GET_STARTED_MESSAGE = "Hey {}, " + EMOJI_WAVE + "\n\nI am the smart bot that fetches the latest football highlights for you."
 
-GET_STARTED_MESSAGE_2 = "I will guide you throughout this tutorial :) To get started, enter the name of any " + EMOJI_FOOTBALL + " team you would love to subscribe to."
+GET_STARTED_MESSAGE_2 = "I will guide you throughout this tutorial. To get started, enter the name of any " + EMOJI_FOOTBALL + " team you would love to subscribe to."
 
 NOTIFICATION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " teams: \n\n{}\n\nDo you want to ADD or REMOVE a team?"
 
@@ -81,6 +81,6 @@ TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you the latest hi
 
 TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
 
-TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 + " You have finished this tutorial successfully! You can now subscribe to more teams if you wish :)"
+TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 + "\nYou have finished this tutorial successfully! You can now subscribe to more teams if you wish."
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

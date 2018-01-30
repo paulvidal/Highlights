@@ -129,19 +129,7 @@ def send_tutorial_message_2(fb_id):
 
 
 def send_tutorial_message_3(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_3, [EMOJI_MAGNIFYING_GLASS + ' Search highlights']))
-
-
-def send_tutorial_message_4(fb_id):
-    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_4))
-
-
-def send_tutorial_message_5(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TUTORIAL_MESSAGE_5, [EMOJI_MUSCLE + ' Got it!']))
-
-
-def send_tutorial_message_6(fb_id):
-    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_6))
+    return send_facebook_message(fb_id, create_message(TUTORIAL_MESSAGE_3))
 
 
 def send_recommended_team_tutorial_message(fb_id, recommended):

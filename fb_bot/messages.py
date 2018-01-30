@@ -81,12 +81,6 @@ TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you the latest hi
 
 TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
 
-TUTORIAL_MESSAGE_3 = "Another cool feature is the " + EMOJI_MAGNIFYING_GLASS + " search allowing you to find the latest highlights for a particular team. Try it out!"
-
-TUTORIAL_MESSAGE_4 = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
-
-TUTORIAL_MESSAGE_5 = "Do you see the power of the search? :)"
-
-TUTORIAL_MESSAGE_6 = "Awesome " + EMOJI_CLAP * 2 + " You have finished this tutorial successfully! You can now subscribe to more teams if you wish :)"
+TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 + " You have finished this tutorial successfully! You can now subscribe to more teams if you wish :)"
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

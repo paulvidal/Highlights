@@ -11,9 +11,7 @@ class ContextType(Enum):
     SEARCH_HIGHLIGHTS = 4
 
     TUTORIAL_ADD_TEAM = 100
-    TUTORIAL_SEARCH_HIGHLIGHTS = 101
-    TUTORIAL_SEARCHING_HIGHLIGHTS = 102
-    TUTORIAL_UNDERSTOOD = 103
+    TUTORIAL_UNDERSTOOD = 101
 
 
 def update_context(fb_id, context):
@@ -49,22 +47,11 @@ def is_searching_highlights_context(fb_id):
 
 def is_tutorial_context(fb_id):
     context = get_user(fb_id).context
-    return context == ContextType.TUTORIAL_ADD_TEAM.value \
-           or context == ContextType.TUTORIAL_SEARCH_HIGHLIGHTS.value \
-           or context == ContextType.TUTORIAL_SEARCHING_HIGHLIGHTS.value \
-           or context == ContextType.TUTORIAL_UNDERSTOOD.value
+    return context == ContextType.TUTORIAL_ADD_TEAM.value or context == ContextType.TUTORIAL_UNDERSTOOD.value
 
 
 def is_tutorial_add_team_context(fb_id):
     return get_user(fb_id).context == ContextType.TUTORIAL_ADD_TEAM.value
-
-
-def is_tutorial_search_highlights_context(fb_id):
-    return get_user(fb_id).context == ContextType.TUTORIAL_SEARCH_HIGHLIGHTS.value
-
-
-def is_tutorial_searching_highlights_context(fb_id):
-    return get_user(fb_id).context == ContextType.TUTORIAL_SEARCHING_HIGHLIGHTS.value
 
 
 def is_tutorial_understood_context(fb_id):

@@ -144,8 +144,7 @@ def _get_video_link(full_link):
         src = iframe.get("src")
 
         # Only pick video urls coming from the following websites
-        if src and (src.startswith("https://vid.me/")
-                    or src.startswith("http://www.dailymotion.com/")
+        if src and (src.startswith("http://www.dailymotion.com/")
                     or src.startswith("https://streamable.com/")):
             return src
 

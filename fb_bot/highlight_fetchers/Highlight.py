@@ -9,7 +9,7 @@ class Highlight:
     __metaclass__ = abc.ABCMeta
 
     def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        self.link = link
+        self.link = self.form_link(link)
         self.img_link = img_link
         self.view_count = view_count
         self.category = category
@@ -35,6 +35,10 @@ class Highlight:
     @abc.abstractmethod
     def get_source(self):
         """ Override method """
+
+    def form_link(self, link):
+        # Add only resource link, clear all arguments (to prevent duplicate links)
+        return link.split('?')[0] if '?' in link else link
 
     def get_parsed_time_since_added(self):
         return dateparser.parse(self.time_since_added)

@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+
+    <!-- Style -->
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        position: relative;
+      }
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    </style>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113381898-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-113381898-1');
+
+      // Set the user ID
+      gtag('set', {'user_id': '{{ user_id }}'});
+    </script>
+
+</head>
+
+<body>
+
+    <!-- Make video autoplay -->
+    <iframe src="{{ src }}?autoplay=1"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen>
+    </iframe>
+
+</body>
+
+</html>

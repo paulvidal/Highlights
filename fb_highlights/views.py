@@ -3,6 +3,7 @@ import json
 import dateparser
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
@@ -315,7 +316,7 @@ class HighlightsBotView(generic.View):
         return JsonResponse(formatted_response, safe=False)
 
 
-class HighlightRedirectView(generic.View):
+class HighlightRedirectView(TemplateView):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -326,7 +327,7 @@ class HighlightRedirectView(generic.View):
 
         for param_key in param_keys:
             if param_key not in request.GET:
-                return HttpResponse('Invalid link')
+                return HttpResponse('<h1>Invalid highlight link</h1>')
 
         team1 = request.GET['team1'].lower()
         score1 = int(request.GET['score1'])
@@ -347,4 +348,9 @@ class HighlightRedirectView(generic.View):
         # Highlight event tracking
         highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send)
 
-        return redirect(highlight_to_send.link)
+        return TemplateResponse(request, 'highlight.html',
+                                {
+                                    'title': highlight_to_send.get_match_name(),
+                                    'src': highlight_to_send.link,
+                                    'user_id': user_id,
+                                })

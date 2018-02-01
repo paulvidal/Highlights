@@ -5,7 +5,7 @@ import dateparser
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_footyroom_videos
 from fb_bot.logger import logger
-from fb_bot.model_managers import latest_highlight_manager, context_manager
+from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
 
 
@@ -110,9 +110,9 @@ def send_highlight_to_users(highlight, team):
         messenger_manager.send_highlight_message_for_team_message(user_id, team.title())
         # Send the highlight
         messenger_manager.send_highlight_message(user_id, [highlight])
-        # Send the menu options message
-        # TODO: want to sent this message ?
-        # messenger_manager.send_anything_else_i_can_do_message(user_id)
+
+        # Track highlight notification
+        highlight_notification_stat_manager.add_notification_stat(user_id, highlight)
 
         # Reset the context to none
         context_manager.update_context(user_id, ContextType.NONE)

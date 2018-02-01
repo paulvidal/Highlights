@@ -1,5 +1,6 @@
 from django.contrib import admin
-from fb_highlights.models import User, Team, LatestHighlight, FootballTeam, NewFootballTeam, HighlightStat
+from fb_highlights.models import User, Team, LatestHighlight, FootballTeam, NewFootballTeam, HighlightStat, \
+    HighlightNotificationStat
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -40,9 +41,17 @@ class HighlightStatAdmin(admin.ModelAdmin):
     ordering = '-time',
 
 
+class HighlightNotificationStatAdmin(admin.ModelAdmin):
+    list_display = HighlightNotificationStat.to_list_display()
+    list_filter = HighlightNotificationStat.to_list_filter()
+    search_fields = HighlightNotificationStat.search_fields()
+    ordering = '-send_time',
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(LatestHighlight, LatestHighlightAdmin)
 admin.site.register(FootballTeam, FootballTeamAdmin)
 admin.site.register(NewFootballTeam, NewFootballTeamAdmin)
 admin.site.register(HighlightStat, HighlightStatAdmin)
+admin.site.register(HighlightNotificationStat, HighlightNotificationStatAdmin)

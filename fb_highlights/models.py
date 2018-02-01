@@ -197,3 +197,33 @@ class HighlightStat(models.Model):
     @staticmethod
     def search_fields():
         return 'user', 'team1__name', 'team2__name'
+
+
+class HighlightNotificationStat(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="highlight_notification_stat_team1")
+    score1 = models.SmallIntegerField()
+    team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_notification_stat_team2")
+    score2 = models.SmallIntegerField()
+    match_time = models.CharField(max_length=120)
+    send_time = models.CharField(max_length=120)
+    open_time = models.CharField(max_length=120, default='')
+    opened = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('user', 'send_time')
+
+    @staticmethod
+    def to_list_display():
+        return 'user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time',
+
+    @staticmethod
+    def to_list_filter():
+        return 'user', 'opened',
+
+    @staticmethod
+    def search_fields():
+        return 'user', 'team1__name', 'team2__name',
+
+    def get_parsed_match_time(self):
+        return dateparser.parse(str(self.match_time))

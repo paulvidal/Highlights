@@ -299,7 +299,7 @@ def highlight_to_json(fb_id, highlight_model):
     return {
         "title": highlight_model.get_match_name(),
         "image_url": highlight_model.img_link,
-        "subtitle": highlight_model.get_parsed_time_since_added().strftime('%d %B %Y'),
+        "subtitle": highlight_model.get_formatted_date() + ' - ' + highlight_model.category.title(),
         "default_action": {
             "type": "web_url",
             "url": create_tracking_link(fb_id, highlight_model),

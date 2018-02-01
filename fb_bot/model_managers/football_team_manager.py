@@ -1,14 +1,14 @@
-from fb_bot.highlight_fetchers import football_team_mapping
+from fb_bot.highlight_fetchers import mapping_football_team
 from fb_highlights.models import FootballTeam
 
 
 def has_football_team(name):
-    name = football_team_mapping.get_exact_name(name)
+    name = mapping_football_team.get_exact_name(name)
     return [team for team in FootballTeam.objects.filter(name=name)]
 
 
 def similar_football_team_names(name):
-    similar_names = football_team_mapping.get_similar_names(name, get_all_football_team_names())
+    similar_names = mapping_football_team.get_similar_names(name, get_all_football_team_names())
 
     # remove duplicates
     return list(set(similar_names))

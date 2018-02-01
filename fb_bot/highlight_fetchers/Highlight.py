@@ -2,7 +2,7 @@ import abc
 
 import dateparser
 
-from fb_bot.highlight_fetchers import football_team_mapping
+from fb_bot.highlight_fetchers import mapping_football_team, mapping_football_competition
 
 
 class Highlight:
@@ -12,15 +12,15 @@ class Highlight:
         self.link = self.form_link(link)
         self.img_link = img_link
         self.view_count = view_count
-        self.category = category
+        self.category = mapping_football_competition.get_exact_name(category.lower())
         self.time_since_added = time_since_added
 
         # Match information
         team1, score1, team2, score2 = self.get_match_info(match_name)
 
         # Run mapping for football team names as team can be named differently
-        self.team1 = football_team_mapping.get_exact_name(team1.lower())
-        self.team2 = football_team_mapping.get_exact_name(team2.lower())
+        self.team1 = mapping_football_team.get_exact_name(team1.lower())
+        self.team2 = mapping_football_team.get_exact_name(team2.lower())
 
         self.score1 = score1
         self.score2 = score2

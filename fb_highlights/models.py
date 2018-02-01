@@ -5,7 +5,7 @@ from datetime import datetime
 import dateparser
 from django.db import models
 
-from fb_bot.highlight_fetchers import football_team_mapping
+from fb_bot.highlight_fetchers import mapping_football_team
 
 
 class User(models.Model):
@@ -144,12 +144,15 @@ class LatestHighlight(models.Model):
     def get_parsed_time_since_added(self):
         return dateparser.parse(str(self.time_since_added))
 
+    def get_formatted_date(self):
+        return self.get_parsed_time_since_added().strftime('%d %B %Y')
+
     def is_match_of(self, team_name):
         """
         :param team_name: the name of the football team
         :return: True if the highlight is for a match with this team
         """
-        team_name = football_team_mapping.get_exact_name(team_name.lower())
+        team_name = mapping_football_team.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
     def priority(self):

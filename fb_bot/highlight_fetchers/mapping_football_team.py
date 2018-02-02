@@ -76,7 +76,19 @@ NAME_MAPPING = {
     'cardiff city': 'cardiff',
     'newport county': 'newport',
     'peterborough united': 'peterborough',
-    'yeovil town': 'yeovil'
+    'yeovil town': 'yeovil',
+    'barca': 'barcelona',
+    'leicester': 'leicester city',
+    'ogc nice': 'nice',
+    'equipe de france': 'france',
+    'man u': 'manchester united',
+    'man city': 'manchester city',
+    'spurs': 'tottenham',
+    'gunners': 'arsenal',
+    'liverpool fc': 'liverpool',
+    'lille osc': 'lille',
+    'losc': 'lille',
+    'fc nantes': 'nantes'
 }
 
 

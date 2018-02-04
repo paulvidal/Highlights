@@ -77,10 +77,6 @@ ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
 NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video for your " + EMOJI_FOOTBALL + " team {}."
 
-TUTORIAL_MESSAGE_1 = "Great " + EMOJI_DONE + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
-
-TUTORIAL_MESSAGE_2 = "Sounds exciting, right? :)"
-
-TUTORIAL_MESSAGE_3 = "Awesome " + EMOJI_CLAP * 2 + "\nYou have finished this tutorial successfully! You can now subscribe to more teams if you wish."
+TUTORIAL_MESSAGE = "Awesome " + EMOJI_CLAP * 2 + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE

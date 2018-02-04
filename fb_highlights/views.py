@@ -104,56 +104,45 @@ class HighlightsBotView(generic.View):
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_tutorial_context(sender_id):
-                        print("TUTORIAL")
+                        print("TUTORIAL ADD TEAM")
 
-                        if context_manager.is_tutorial_add_team_context(sender_id):
-                            print("TUTORIAL ADD TEAM")
+                        team_to_add = message
 
-                            team_to_add = message
+                        # Check if team exists, make a recommendation if no teams
+                        if team_to_add == 'other':
+                            response_msg.append(messenger_manager.send_add_team_message(sender_id))
 
-                            # Check if team exists, make a recommendation if no teams
-                            if team_to_add == 'other':
-                                response_msg.append(messenger_manager.send_add_team_message(sender_id))
+                        elif football_team_manager.has_football_team(team_to_add):
+                            # Does team exist check
 
-                            elif football_team_manager.has_football_team(team_to_add):
-                                # Does team exist check
+                            team_manager.add_team(sender_id, team_to_add)
 
-                                team_manager.add_team(sender_id, team_to_add)
+                            response_msg.append(messenger_manager.send_tutorial_message(sender_id, text))
+                            response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
 
-                                response_msg.append(messenger_manager.send_tutorial_message_1(sender_id, text))
-                                response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
-
-                                context_manager.update_context(sender_id, ContextType.TUTORIAL_UNDERSTOOD)
-
-                                response_msg.append(messenger_manager.send_tutorial_message_2(sender_id))
-
-                            elif football_team_manager.similar_football_team_names(team_to_add):
-                                # Team recommendation
-
-                                recommendations = football_team_manager.similar_football_team_names(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
-                                # Format recommendation names
-                                recommendations = [recommendation.title() for recommendation in recommendations]
-
-                                response_msg.append(messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations))
-
-                            else:
-                                # No team or recommendation found
-
-                                response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
-
-                        elif context_manager.is_tutorial_understood_context(sender_id):
-                            print("TUTORIAL UNDERSTOOD")
-
-                            response_msg.append(messenger_manager.send_tutorial_message_3(sender_id))
-
-                            # Send notification menu
                             context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+
+                            # Send notification mode FIXME: remove duplication from notification
 
                             teams = team_manager.get_teams_for_user(sender_id)
                             # Format team names
                             teams = [team.title() for team in teams]
 
                             response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+
+                        elif football_team_manager.similar_football_team_names(team_to_add):
+                            # Team recommendation
+
+                            recommendations = football_team_manager.similar_football_team_names(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
+                            # Format recommendation names
+                            recommendations = [recommendation.title() for recommendation in recommendations]
+
+                            response_msg.append(messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations))
+
+                        else:
+                            # No team or recommendation found
+
+                            response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
 
                     # SEARCH HIGHLIGHT OPTION
                     elif 'search highlights' in message or 'search again' in message:

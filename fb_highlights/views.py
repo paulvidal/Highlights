@@ -95,7 +95,7 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
-                    elif 'thank you' in message or 'thanks' in message or 'cheers' in message:
+                    elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
                         print("THANK YOU MESSAGE")
                         context_manager.update_context(sender_id, ContextType.NONE)
 

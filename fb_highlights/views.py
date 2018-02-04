@@ -165,7 +165,7 @@ class HighlightsBotView(generic.View):
                     # SEARCHING HIGHLIGHTS
                     elif context_manager.is_searching_highlights_context(sender_id):
                         print("SEARCHING HIGHLIGHTS")
-                        team_found, similar_team_found = messenger_manager.has_highlight_for_team(message)
+                        team_found = messenger_manager.has_highlight_for_team(message)
 
                         response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
 
@@ -276,12 +276,23 @@ class HighlightsBotView(generic.View):
 
                             response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
 
-                    # IF NO MATCH, ASK WHAT WANT TO DO
+                    # IF NO MATCH, UNLESS NAME OF A TEAM IS TYPED, ASK WHAT WANT TO DO
                     else:
-                        print("WHAT WANT TO DO")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
-                        response_msg.append(messenger_manager.send_what_do_you_want_to_do_message(sender_id))
+                        team_found = messenger_manager.has_highlight_for_team(message)
+
+                        if team_found:
+                            # FIXME: duplication with searching highlights
+                            print("NO MATCH - SEARCHING HIGHLIGHTS")
+                            response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
+
+                            # Answer with new message what want to do
+                            response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+
+                        else:
+                            print("WHAT WANT TO DO")
+                            response_msg.append(messenger_manager.send_what_do_you_want_to_do_message(sender_id))
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']

@@ -240,19 +240,7 @@ def send_typing(fb_id):
 #
 
 def has_highlight_for_team(team):
-    highlights = latest_highlight_manager.get_highlights_for_team(team)
-
-    if not highlights:
-        similar_team_names = football_team_manager.similar_football_team_names(team)
-        similar_team_names = [team_name.title() for team_name in similar_team_names]
-
-        # Check if name of team was not properly written
-        if similar_team_names:
-            return False, True
-        else:
-            return False, False
-
-    return True, True
+    return latest_highlight_manager.get_highlights_for_team(team)
 
 
 # FIXME: code duplicated for tutorial

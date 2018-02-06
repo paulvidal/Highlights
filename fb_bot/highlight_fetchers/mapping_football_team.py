@@ -88,7 +88,8 @@ NAME_MAPPING = {
     'liverpool fc': 'liverpool',
     'lille osc': 'lille',
     'losc': 'lille',
-    'fc nantes': 'nantes'
+    'fc nantes': 'nantes',
+    'bourg-peronnas': 'bourg peronnas',
 }
 
 

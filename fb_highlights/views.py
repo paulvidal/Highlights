@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
+from fb_bot import language
 from highlights import settings
 from fb_bot.logger import logger
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
@@ -66,7 +67,7 @@ class HighlightsBotView(generic.View):
                 if 'message' in message:
 
                     text = message['message'].get('text') if message['message'].get('text') else ''
-                    message = text.lower()
+                    message = language.remove_accents(text.lower())
 
                     # Cancel quick reply
                     if 'cancel' in message:
@@ -269,9 +270,7 @@ class HighlightsBotView(generic.View):
                     else:
                         context_manager.update_context(sender_id, ContextType.NONE)
 
-                        team_found = messenger_manager.has_highlight_for_team(message)
-
-                        if team_found:
+                        if football_team_manager.has_football_team(message):
                             # FIXME: duplication with searching highlights
                             print("NO MATCH - SEARCHING HIGHLIGHTS")
                             response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))

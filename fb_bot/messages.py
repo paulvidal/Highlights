@@ -41,7 +41,7 @@ ANYTHING_ELSE_I_CAN_DO_MESSAGE = "Anything else I can do for you? " + EMOJI_INNO
 
 CANCEL_MESSAGE = "Alright let's stop there then :)"
 
-DONE_MESSAGE = "You're good to go!\n I will send you the latest highlights for your teams as soon as the videos are available. " + EMOJI_TV
+DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your teams as soon as the videos are available. " + EMOJI_TV
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 

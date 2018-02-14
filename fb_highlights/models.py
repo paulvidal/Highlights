@@ -156,6 +156,7 @@ class LatestHighlight(models.Model):
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
     def priority(self):
+        # TODO: change with function is better than
         """
         Highlights priority:
         3. hoofoot

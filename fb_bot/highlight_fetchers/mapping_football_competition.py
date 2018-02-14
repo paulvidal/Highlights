@@ -3,6 +3,7 @@ NAME_MAPPING = {
     'carabao cup': 'league cup',
     'turkey cup 1': 'turkish cup',
     'turkey cup': 'turkish cup',
+    'champions laegue': 'champions league'
 }
 
 

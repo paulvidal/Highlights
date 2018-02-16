@@ -73,6 +73,8 @@ NO_MATCH_FOUND_TEAM_RECOMMENDATION = "I did not find highlights for your team " 
 
 NO_MATCH_FOUND = "I did not find highlights for your team! " + EMOJI_BROKEN_HEART
 
+NO_TEAM_REGISTERED_MESSAGE = "-> No team registered"
+
 ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
 NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video for your " + EMOJI_FOOTBALL + " team {}."
@@ -80,3 +82,31 @@ NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video
 TUTORIAL_MESSAGE = "Awesome " + EMOJI_CLAP * 2 + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE
+
+
+# BUTTONS
+
+SEARCH_HIGHLIGHTS_BUTTON = EMOJI_MAGNIFYING_GLASS + " Search highlights"
+
+SEARCH_AGAIN_HIGHLIGHTS_BUTTON = EMOJI_MAGNIFYING_GLASS + " Search again"
+
+NEW_SEARCH_HIGHLIGHTS_BUTTON = EMOJI_MAGNIFYING_GLASS + " Search again"
+
+MY_TEAM_BUTTON = EMOJI_NOTIFICATION + " My teams"
+
+HELP_BUTTON = EMOJI_HELP + " Help"
+
+ADD_TEAM_BUTTON = EMOJI_ADD + " Add"
+
+REMOVE_TEAM_BUTTON = EMOJI_REMOVE + " Remove"
+
+DONE_TEAM_BUTTON = EMOJI_DONE + " Done"
+
+CANCEL_BUTTON = EMOJI_CROSS + " Cancel"
+
+OTHER_BUTTON = "Other"
+
+TRY_AGAIN_BUTTON = "Try again"
+
+
+

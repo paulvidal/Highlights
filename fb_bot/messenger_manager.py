@@ -17,8 +17,8 @@ MAX_QUICK_REPLIES = 10
 ### MESSAGES ###
 
 def send_help_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                                       EMOJI_NOTIFICATION + ' My teams']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, [SEARCH_HIGHLIGHTS_BUTTON,
+                                                                                       MY_TEAM_BUTTON]))
 
 
 def send_than_you_message(fb_id):
@@ -27,16 +27,16 @@ def send_than_you_message(fb_id):
 
 def send_what_do_you_want_to_do_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(WHAT_DO_YOU_WANT_TODO_MESSAGE,
-                                                                        [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                         EMOJI_NOTIFICATION + ' My teams',
-                                                                         EMOJI_HELP + ' Help']))
+                                                                        [SEARCH_HIGHLIGHTS_BUTTON,
+                                                                         MY_TEAM_BUTTON,
+                                                                         HELP_BUTTON]))
 
 
 def send_anything_else_i_can_do_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(ANYTHING_ELSE_I_CAN_DO_MESSAGE,
-                                                                        [EMOJI_MAGNIFYING_GLASS + ' Search highlights',
-                                                                         EMOJI_NOTIFICATION + ' My teams',
-                                                                         EMOJI_HELP + ' Help']))
+                                                                        [SEARCH_HIGHLIGHTS_BUTTON,
+                                                                         MY_TEAM_BUTTON,
+                                                                         HELP_BUTTON]))
 
 
 def send_cancel_message(fb_id):
@@ -53,13 +53,13 @@ def send_search_highlights_message(fb_id):
 
 def send_notification_message(fb_id, teams):
     formatted_teams = ""
-    quick_reply_buttons = [EMOJI_ADD + " Add", EMOJI_REMOVE + " Remove", EMOJI_DONE + " Done"]
+    quick_reply_buttons = [ADD_TEAM_BUTTON, REMOVE_TEAM_BUTTON, DONE_TEAM_BUTTON]
 
     if len(teams) == 0:
-        formatted_teams = "-> No team registered"
-        quick_reply_buttons.remove(EMOJI_REMOVE + " Remove")
+        formatted_teams = NO_TEAM_REGISTERED_MESSAGE
+        quick_reply_buttons.remove(REMOVE_TEAM_BUTTON)
     elif len(teams) == MAX_QUICK_REPLIES:
-        quick_reply_buttons.remove(EMOJI_ADD + " Add")
+        quick_reply_buttons.remove(ADD_TEAM_BUTTON)
 
     for i in range(len(teams)):
         if i > 0:
@@ -76,15 +76,15 @@ def send_add_team_message(fb_id):
 
 
 def send_delete_team_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams + [EMOJI_CROSS + ' Cancel']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams + [CANCEL_BUTTON]))
 
 
 def send_recommended_team_message(fb_id, recommended):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + ['Other', EMOJI_CROSS + ' Cancel']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON, CANCEL_BUTTON]))
 
 
 def send_team_not_found_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, ['Try again', EMOJI_CROSS + ' Cancel']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, [TRY_AGAIN_BUTTON, CANCEL_BUTTON]))
 
 
 def send_team_added_message(fb_id, success, team):
@@ -95,7 +95,7 @@ def send_team_added_message(fb_id, success, team):
 
 
 def send_team_to_delete_not_found_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_NOT_FOUND_MESSAGE, teams + [EMOJI_CROSS + ' Cancel']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_NOT_FOUND_MESSAGE, teams + [CANCEL_BUTTON]))
 
 
 def send_team_deleted_message(fb_id, teams):
@@ -125,7 +125,7 @@ def send_tutorial_message(fb_id, team):
 
 
 def send_recommended_team_tutorial_message(fb_id, recommended):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + ['Other']))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON]))
 
 
 def send_team_not_found_tutorial_message(fb_id):
@@ -161,7 +161,7 @@ def get_tutorial_search_highlights(fb_id, team):
 
     if highlights == []:
         # Case no highlight found for the team
-        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' New search'])
+        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [NEW_SEARCH_HIGHLIGHTS_BUTTON])
 
     if not highlights:
         # Case no team name matched
@@ -172,7 +172,7 @@ def get_tutorial_search_highlights(fb_id, team):
         if similar_team_names:
             return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:10])
         else:
-            return create_quick_text_reply_message(NO_MATCH_FOUND, [EMOJI_MAGNIFYING_GLASS + ' Search again'])
+            return create_quick_text_reply_message(NO_MATCH_FOUND, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON])
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)
@@ -241,8 +241,9 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
 
     if highlights == []:
         # Case no highlight found for the team
-        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [EMOJI_MAGNIFYING_GLASS + ' Search again',
-                                                                       EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
+        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
+                                                                       HELP_BUTTON,
+                                                                       CANCEL_BUTTON])
 
     if not highlights:
         # Case no team name matched
@@ -252,10 +253,12 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
         # Check if name of team was not properly written
         if similar_team_names:
             return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9]
-                                                   + [EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
+                                                   + [HELP_BUTTON,
+                                                      CANCEL_BUTTON])
         else:
-            return create_quick_text_reply_message(NO_MATCH_FOUND, [EMOJI_MAGNIFYING_GLASS + ' Search again',
-                                                                    EMOJI_HELP + ' Help', EMOJI_CROSS + ' Cancel'])
+            return create_quick_text_reply_message(NO_MATCH_FOUND, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
+                                                                    HELP_BUTTON,
+                                                                    CANCEL_BUTTON])
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)

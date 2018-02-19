@@ -18,7 +18,7 @@ def add_notification_stat(fb_id, highlight):
                                                        team2=team2,
                                                        score2=highlight.score2,
                                                        match_time=str(match_time),
-                                                       send_time=str(send_time))
+                                                       send_time=send_time)
 
 
 def update_notification_opened(fb_id, highlight_model):
@@ -40,7 +40,7 @@ def update_notification_opened(fb_id, highlight_model):
             continue
 
         highlight_stat.opened = True
-        highlight_stat.open_time = str(open_time)
+        highlight_stat.open_time = open_time
         highlight_stat.link = highlight_model.link
 
         highlight_stat.save()

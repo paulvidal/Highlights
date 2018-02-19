@@ -19,7 +19,7 @@ def add_highlight_stat(fb_id, highlight_model):
 
     # Do not insert 2 time the same event if there are only 5 seconds difference
     for highlight_stat in highlight_stats:
-        highlight_time = dateparser.parse(highlight_stat.time)
+        highlight_time = highlight_stat.time
 
         if abs(highlight_time - time) < timedelta(seconds=5):
             return
@@ -30,7 +30,7 @@ def add_highlight_stat(fb_id, highlight_model):
                                            team2=highlight_model.team2,
                                            score2=highlight_model.score2,
                                            link=highlight_model.link,
-                                           time=str(time))
+                                           time=time)
 
 
 def get_all_highlight_stats():

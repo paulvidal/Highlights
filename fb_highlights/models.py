@@ -185,7 +185,7 @@ class HighlightStat(models.Model):
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_stat_team2")
     score2 = models.SmallIntegerField()
     link = models.TextField()
-    time = models.CharField(max_length=120)
+    time = models.DateTimeField()
 
     class Meta:
         unique_together = ('user', 'time')
@@ -210,8 +210,8 @@ class HighlightNotificationStat(models.Model):
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_notification_stat_team2")
     score2 = models.SmallIntegerField()
     match_time = models.CharField(max_length=120)
-    send_time = models.CharField(max_length=120)
-    open_time = models.CharField(max_length=120, default='')
+    send_time = models.DateTimeField()
+    open_time = models.DateTimeField(null=True, blank=True)
     opened = models.BooleanField(default=False)
 
     class Meta:
@@ -219,7 +219,7 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time',
+        return 'user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time'
 
     @staticmethod
     def to_list_filter():

@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Boostrap JS and Jquery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <style>
+        .panel {
+            padding: 0;
+        }
+
+        .panel-body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Highlights Analytics</a>
+        </div>
+
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Highlight clicks - Today</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ today_click }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Highlight clicks - Yesterday</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ yesterday_click }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Highlight clicks - This week</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ week_click }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Highlight clicks - This month</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ month_click }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Notification opened - Last 24 hours</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ notification_opened_today_ratio }}%</h2> {{ notification_opened_today }} / {{ notification_today_total }}
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Notification opened - Previous 24 hours</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ notification_opened_yesterday_ratio }}%</h2> {{ notification_opened_yesterday }} / {{ notification_yesterday_total }}
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Notification opened - Last week</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ notification_opened_week_ratio }}%</h2> {{ notification_opened_week }} / {{ notification_week_total }}
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Notification opened - Last month</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ notification_opened_month_ratio }}%</h2> {{ notification_opened_month }} / {{ notification_month_total }}
+          </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

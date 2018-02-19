@@ -1,25 +1,38 @@
 import json
 
 import dateparser
-from django.http.response import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 import fb_bot.messenger_manager as messenger_manager
-from fb_bot import language
-from highlights import settings
+from fb_bot import language, analytics
 from fb_bot.logger import logger
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers.context_manager import ContextType
+from highlights import settings
 
 
-class DebugPageView(TemplateView):
-    template_name = "debug.html"
+class DebugPageView(LoginRequiredMixin, TemplateView):
+    login_url = '/admin/'
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, 'debug.html')
+
+
+class Analytics(LoginRequiredMixin, TemplateView):
+    login_url = '/admin/'
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, 'analytics.html', analytics.get_highlight_analytics())
 
 
 class PrivacyPageView(TemplateView):
@@ -325,7 +338,7 @@ class HighlightRedirectView(generic.View):
 
         for param_key in param_keys:
             if param_key not in request.GET:
-                return HttpResponse('Invalid link')
+                return HttpResponseBadRequest('<h1>Invalid link</h1>')
 
         team1 = request.GET['team1'].lower()
         score1 = int(request.GET['score1'])

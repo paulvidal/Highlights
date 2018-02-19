@@ -44,3 +44,7 @@ def update_notification_opened(fb_id, highlight_model):
         highlight_stat.link = highlight_model.link
 
         highlight_stat.save()
+
+
+def get_all_highlight_notification_stats():
+    return HighlightNotificationStat.objects.all()

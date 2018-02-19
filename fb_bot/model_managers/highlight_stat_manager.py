@@ -31,3 +31,7 @@ def add_highlight_stat(fb_id, highlight_model):
                                            score2=highlight_model.score2,
                                            link=highlight_model.link,
                                            time=str(time))
+
+
+def get_all_highlight_stats():
+    return HighlightStat.objects.all()

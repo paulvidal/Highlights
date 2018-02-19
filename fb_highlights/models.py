@@ -196,7 +196,7 @@ class HighlightStat(models.Model):
 
     @staticmethod
     def to_list_filter():
-        return 'user',
+        return ()
 
     @staticmethod
     def search_fields():
@@ -223,7 +223,7 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def to_list_filter():
-        return 'user', 'opened',
+        return 'opened',
 
     @staticmethod
     def search_fields():

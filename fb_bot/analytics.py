@@ -1,10 +1,14 @@
 from datetime import datetime, timedelta
 
-from fb_highlights.models import HighlightStat, HighlightNotificationStat
+from fb_highlights.models import HighlightStat, HighlightNotificationStat, User
 
 
 def get_highlight_analytics():
     return {
+        'total_user': get_total_user(),
+        'new_users_today': get_new_users_today(),
+        'new_users_yesterday': get_new_users_yesterday(),
+        'total_user_with_one_highlight_click': total_user_with_one_highlight_click(),
         'today_click': get_today_click(),
         'yesterday_click': get_yesterday_click(),
         'week_click': get_week_click(),
@@ -22,6 +26,28 @@ def get_highlight_analytics():
         'notification_opened_month': get_notification_opened_month(),
         'notification_month_total': get_notification_month_total(),
     }
+
+
+def get_total_user():
+    return len(User.objects.all())
+
+
+def get_new_users_today():
+    return len(User.objects.filter(
+        join_date__contains=datetime.today().date()
+    ))
+
+
+def get_new_users_yesterday():
+    return len(User.objects.filter(
+        join_date__contains=(datetime.today() - timedelta(days=1)).date()
+    ))
+
+
+def total_user_with_one_highlight_click():
+    return len(User.objects.filter(
+        highlights_click_count__gte=1
+    ))
 
 
 def get_today_click():

@@ -44,6 +44,46 @@
 
     <div class="container-fluid">
 
+        <!-- User -->
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Users</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ total_user }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">New users - Today</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ new_users_today }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">New users - Yesterday</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ new_users_yesterday }}</h2>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-md-3">
+          <div class="panel-heading">
+            <h3 class="panel-title">Users with at least 1 highlight click</h3>
+          </div>
+          <div class="panel-body">
+              <h2>{{ total_user_with_one_highlight_click }}</h2>
+          </div>
+        </div>
+
+        <!-- Highlights click -->
+
         <div class="panel panel-default col-xs-12 col-md-3">
           <div class="panel-heading">
             <h3 class="panel-title">Highlight clicks - Today</h3>
@@ -79,6 +119,8 @@
               <h2>{{ month_click }}</h2>
           </div>
         </div>
+
+        <!-- Highlights notification click -->
 
         <div class="panel panel-default col-xs-12 col-md-3">
           <div class="panel-heading">

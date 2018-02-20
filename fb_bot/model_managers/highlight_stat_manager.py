@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta
 
-import dateparser
-
 from fb_bot.model_managers import user_manager
 from fb_highlights.models import HighlightStat
 
@@ -31,7 +29,3 @@ def add_highlight_stat(fb_id, highlight_model):
                                            score2=highlight_model.score2,
                                            link=highlight_model.link,
                                            time=time)
-
-
-def get_all_highlight_stats():
-    return HighlightStat.objects.all()

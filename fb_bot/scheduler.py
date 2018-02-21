@@ -7,8 +7,6 @@ from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressou
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
-
-
 # Send highlights
 from fb_bot.model_managers.context_manager import ContextType
 
@@ -101,10 +99,40 @@ def check_highlight_validity():
             latest_highlight_manager.delete_highlight(h)
 
 
+# Check scrapping status of websites
+
+def check_scrapping_status():
+
+    # Define scrapping exception
+    class ScrappingException(Exception):
+        pass
+
+    scrapping_problems = []
+
+    highlights_footyroom = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=1000)
+
+    if not highlights_footyroom:
+        scrapping_problems.append('FOOTYROOM')
+
+    highlights_hoofoot = fetcher_hoofoot.fetch_highlights(num_pagelet=1, max_days_ago=1000)
+
+    if not highlights_hoofoot:
+        scrapping_problems.append('HOOFOOT')
+
+    if scrapping_problems:
+        raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))
+
+
+# Add the video length in seconds
+
+def add_video_time():
+
+
+
+
 # HELPERS
 
 def send_highlight_to_users(highlight, team):
-
     for user_id in team_manager.get_users_for_team(team):
         # Send introduction message to user
         messenger_manager.send_highlight_message_for_team_message(user_id, team.title())

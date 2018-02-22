@@ -10,15 +10,19 @@ logentries_token = settings.get_env_var("LOGENTRIES_TOKEN")
 LOGGER.addHandler(LogentriesHandler(logentries_token))
 
 
-def log(message):
+def log(message, forward=False):
     print(message)
-    _send_to_logentries(message)
+
+    if forward:
+        _send_to_logentries(message)
 
 
-def log_for_user(message, user_id):
+def log_for_user(message, user_id, forward=False):
     message = "User: " + str(user_id) + " | " + message
     print(message)
-    _send_to_logentries(message)
+
+    if forward:
+        _send_to_logentries(message)
 
 
 def _send_to_logentries(log):

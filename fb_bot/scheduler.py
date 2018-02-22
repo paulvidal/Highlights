@@ -59,7 +59,7 @@ def send_most_recent_highlights():
                 continue
 
             # Log highlights sent
-            logger.log("Highlight sent: " + highlight.get_match_name())
+            logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 
             # Send highlight for team1
             team1 = highlight.team1.name.lower()

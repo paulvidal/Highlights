@@ -10,7 +10,7 @@ def get_facebook_user_info(fb_id):
                                     "access_token": messenger_manager.ACCESS_TOKEN})
 
     if response.status_code != 200:
-        logger.log_for_user("Could not retrieve facebook information", fb_id)
+        logger.log_for_user("Could not retrieve facebook information", fb_id, forward=True)
         return None
 
     json_response = response.json()

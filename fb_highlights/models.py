@@ -125,10 +125,12 @@ class LatestHighlight(models.Model):
     source = models.CharField(max_length=80)
     sent = models.BooleanField(default=False)
     click_count = models.PositiveIntegerField(default=0)
+    video_duration = models.IntegerField(default=0)
+    video_url = models.TextField(null=True, blank=True)
 
     @staticmethod
     def to_list_display():
-        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'view_count', 'source', 'sent', 'click_count', 'img_link',
+        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'sent', 'click_count', 'img_link', 'video_url'
 
     @staticmethod
     def to_list_filter():

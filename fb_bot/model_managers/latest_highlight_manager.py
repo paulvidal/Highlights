@@ -8,8 +8,13 @@ def get_all_highlights():
     return LatestHighlight.objects.all()
 
 
+# FIXME: improve query performance
 def get_all_highlights_from_source(source):
     return [h for h in LatestHighlight.objects.all() if h.source == source]
+
+
+def get_all_highlights_without_info():
+    return LatestHighlight.objects.filter(video_duration=0)
 
 
 def has_highlight(highlight):
@@ -50,6 +55,8 @@ def get_highlights_for_team(team_name):
     return highlights
 
 
+# Setters
+
 def set_sent(highlight_model):
     highlight_model.sent = True
     highlight_model.save()
@@ -57,6 +64,16 @@ def set_sent(highlight_model):
 
 def set_img_link(highlight_model, img_link):
     highlight_model.img_link = img_link
+    highlight_model.save()
+
+
+def set_video_duration(highlight_model, duration):
+    highlight_model.video_duration = duration
+    highlight_model.save()
+
+
+def set_video_url(highlight_model, video_url):
+    highlight_model.video_url = video_url
     highlight_model.save()
 
 

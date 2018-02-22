@@ -7,10 +7,11 @@ from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressou
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
-# Send highlights
 from fb_bot.model_managers.context_manager import ContextType
+from fb_bot.video_providers import video_info_fetcher
 
 
+# Send highlights
 def send_most_recent_highlights():
     # Footyroom + Hoofoot highlights fetching
     highlights = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=2) \
@@ -123,11 +124,26 @@ def check_scrapping_status():
         raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))
 
 
-# Add the video length in seconds
+# Add the video info such as duration
 
-def add_video_time():
+def add_videos_info():
+    highlights = latest_highlight_manager.get_all_highlights_without_info()
 
+    for h in highlights:
+        info = video_info_fetcher.get_info(h.link)
 
+        if not info:
+            latest_highlight_manager.set_video_duration(h, -1)
+            continue
+
+        video_duration = info.get('duration')
+        video_url = info.get('video_url')
+
+        if video_duration:
+            latest_highlight_manager.set_video_duration(h, video_duration)
+
+        if video_url:
+            latest_highlight_manager.set_video_url(h, video_url)
 
 
 # HELPERS

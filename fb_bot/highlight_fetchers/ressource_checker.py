@@ -12,6 +12,7 @@ def check(link):
 
     page = requests.get(link).text
 
+    # FIXME: improve performance by performing HEAD request
     if 'dailymotion' in link:
         return not 'Content rejected.' in page
 

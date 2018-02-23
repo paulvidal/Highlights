@@ -202,7 +202,7 @@ class HighlightStat(models.Model):
 
     @staticmethod
     def search_fields():
-        return 'user', 'team1__name', 'team2__name'
+        return 'user__first_name', 'team1__name', 'team2__name'
 
 
 class HighlightNotificationStat(models.Model):
@@ -229,7 +229,7 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def search_fields():
-        return 'user', 'team1__name', 'team2__name',
+        return 'user__first_name', 'team1__name', 'team2__name',
 
     def get_parsed_match_time(self):
         return dateparser.parse(str(self.match_time))

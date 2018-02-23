@@ -9,10 +9,17 @@ def get_highlight_analytics():
         'new_users_today': get_new_users_today(),
         'new_users_yesterday': get_new_users_yesterday(),
         'total_user_with_one_highlight_click': total_user_with_one_highlight_click(),
+
         'today_click': get_today_click(),
         'yesterday_click': get_yesterday_click(),
         'week_click': get_week_click(),
         'month_click': get_month_click(),
+
+        'unique_highlight_viewer_today': get_unique_highlight_viewer_today(),
+        'unique_highlight_viewer_yesterday': get_unique_highlight_viewer_yesterday(),
+        'unique_highlight_viewer_week': get_unique_highlight_viewer_this_week(),
+        'unique_highlight_viewer_month': get_unique_highlight_viewer_this_month(),
+
         'notification_opened_today_ratio': _ratio(get_notification_opened_today, get_notification_today_total),
         'notification_opened_today': get_notification_opened_today(),
         'notification_today_total': get_notification_today_total(),
@@ -28,109 +35,141 @@ def get_highlight_analytics():
     }
 
 
+# User stats
+
 def get_total_user():
-    return len(User.objects.all())
+    return User.objects.all().count()
 
 
 def get_new_users_today():
-    return len(User.objects.filter(
+    return User.objects.filter(
         join_date__contains=datetime.today().date()
-    ))
+    ).count()
 
 
 def get_new_users_yesterday():
-    return len(User.objects.filter(
+    return User.objects.filter(
         join_date__contains=(datetime.today() - timedelta(days=1)).date()
-    ))
+    ).count()
 
 
 def total_user_with_one_highlight_click():
-    return len(User.objects.filter(
+    return User.objects.filter(
         highlights_click_count__gte=1
-    ))
+    ).count()
 
+
+# Highlight click stats
 
 def get_today_click():
-    return len(HighlightStat.objects.filter(
+    return HighlightStat.objects.filter(
         time__contains=datetime.today().date()
-    ))
+    ).count()
 
 
 def get_yesterday_click():
-    return len(HighlightStat.objects.filter(
+    return HighlightStat.objects.filter(
         time__contains=(datetime.today() - timedelta(days=1)).date()
-    ))
+    ).count()
 
 
 def get_week_click():
-    return len(HighlightStat.objects.filter(
+    return HighlightStat.objects.filter(
         time__gt=datetime.today() - timedelta(days=7)
-    ))
+    ).count()
 
 
 def get_month_click():
-    return len(HighlightStat.objects.filter(
+    return HighlightStat.objects.filter(
         time__gt=datetime.today() - timedelta(days=30)
-    ))
+    ).count()
 
+
+# Unique user highlight click stats
+
+def get_unique_highlight_viewer_today():
+    return HighlightStat.objects.filter(
+        time__contains=datetime.today().date()
+    ).distinct('user').count()
+
+
+def get_unique_highlight_viewer_yesterday():
+    return HighlightStat.objects.filter(
+        time__contains=(datetime.today() - timedelta(days=1)).date()
+    ).distinct('user').count()
+
+
+def get_unique_highlight_viewer_this_week():
+    return HighlightStat.objects.filter(
+        time__gt=datetime.today() - timedelta(days=7)
+    ).distinct('user').count()
+
+
+def get_unique_highlight_viewer_this_month():
+    return HighlightStat.objects.filter(
+        time__gt=datetime.today() - timedelta(days=30)
+    ).distinct('user').count()
+
+
+# Notification stats
 
 def get_notification_opened_today():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=1),
         open_time__gt=datetime.today() - timedelta(days=1),
         opened=True
-    ))
+    ).count()
 
 
 def get_notification_today_total():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=1)
-    ))
+    ).count()
 
 
 def get_notification_opened_yesterday():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=2),
         send_time__lt=datetime.today() - timedelta(days=1),
         open_time__gt=datetime.today() - timedelta(days=2),
         open_time__lt=datetime.today() - timedelta(days=1),
         opened=True
-    ))
+    ).count()
 
 
 def get_notification_yesterday_total():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=2),
         send_time__lt=datetime.today() - timedelta(days=1),
-    ))
+    ).count()
 
 
 def get_notification_opened_week():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=7),
         open_time__gt=datetime.today() - timedelta(days=7),
         opened=True
-    ))
+    ).count()
 
 
 def get_notification_week_total():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=7)
-    ))
+    ).count()
 
 
 def get_notification_opened_month():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=30),
         open_time__gt=datetime.today() - timedelta(days=30),
         opened=True
-    ))
+    ).count()
 
 
 def get_notification_month_total():
-    return len(HighlightNotificationStat.objects.filter(
+    return HighlightNotificationStat.objects.filter(
         send_time__gt=datetime.today() - timedelta(days=30)
-    ))
+    ).count()
 
 
 def _ratio(nominator, denominator):

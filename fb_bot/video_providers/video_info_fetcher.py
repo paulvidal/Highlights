@@ -1,4 +1,4 @@
-from fb_bot.Exceptions.TooManyRequestException import TooManyRequestsException
+from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
 from fb_bot.logger import logger
 from fb_bot.video_providers import dailymotion
 from fb_bot.video_providers import streamable

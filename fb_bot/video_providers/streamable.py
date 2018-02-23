@@ -3,7 +3,7 @@ from json import JSONDecodeError
 
 import requests
 
-from fb_bot.Exceptions.TooManyRequestException import TooManyRequestsException
+from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
 from fb_bot.logger import logger
 
 VIDEO_INFO_ENDPOINT =  'https://ajax.streamable.com/extract?url={}'

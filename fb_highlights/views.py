@@ -115,6 +115,10 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(messenger_manager.send_than_you_message(sender_id))
 
+                    elif 'no' == message or 'nothing' == message or 'ok' == message or 'shut up' in message:
+                        # Do not respond in those cases
+                        pass
+
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_tutorial_context(sender_id):

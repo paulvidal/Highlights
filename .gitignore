@@ -1,6 +1,6 @@
 .idea
 *.pyc
 runserver.sh
-runserver_gunicorn.sh
 set_env_var.sh
+set_prod_db.sh
 miscellaneous

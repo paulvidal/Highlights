@@ -188,9 +188,10 @@ def send_highlight_message(fb_id, highlight_models):
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, highlight_models)))
 
 
-def send_highlight_message_for_team_message(fb_id, team_name):
+def send_highlight_message_for_team_message(fb_id, team_name=None):
     user_name = user_manager.get_user(fb_id).first_name
-    return send_facebook_message(fb_id, create_message(NEW_HIGHLIGHT_MESSAGE.format(user_name, team_name)))
+    message = NEW_HIGHLIGHT_TEAM_MESSAGE.format(user_name, team_name) if team_name else NEW_HIGHLIGHT_TEAMS_MESSAGE
+    return send_facebook_message(fb_id, create_message(message))
 
 
 ### MAIN METHOD ###

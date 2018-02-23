@@ -62,13 +62,8 @@ def send_most_recent_highlights():
             # Log highlights sent
             logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 
-            # Send highlight for team1
-            team1 = highlight.team1.name.lower()
-            send_highlight_to_users(highlight, team1)
-
-            # Send highlight for team2
-            team2 = highlight.team2.name.lower()
-            send_highlight_to_users(highlight, team2)
+            # Send highlight to users
+            _send_highlight_to_users(highlight)
 
             # Set highlights for same match to sent
             similar_highlights = latest_highlight_manager.get_similar_highlights(highlight, not_sent_highlights)
@@ -148,10 +143,31 @@ def add_videos_info():
 
 # HELPERS
 
-def send_highlight_to_users(highlight, team):
-    for user_id in team_manager.get_users_for_team(team):
+def _send_highlight_to_users(highlight):
+    team1 = highlight.team1.name.lower()
+    team2 = highlight.team2.name.lower()
+
+    user_id_team1 = team_manager.get_users_for_team(team1)
+    user_id_team2 = team_manager.get_users_for_team(team2)
+
+    user_id_both_team = []
+
+    for id in user_id_team1:
+        if id in user_id_team2:
+            user_id_team1.remove(id)
+            user_id_team2.remove(id)
+            user_id_both_team.append(id)
+
+    _send_highlight_for_team(highlight, user_id_team1, team1.title())
+    _send_highlight_for_team(highlight, user_id_team2, team2.title())
+    _send_highlight_for_team(highlight, user_id_both_team, None)
+
+
+def _send_highlight_for_team(highlight, ids, team_name):
+
+    for user_id in ids:
         # Send introduction message to user
-        messenger_manager.send_highlight_message_for_team_message(user_id, team.title())
+        messenger_manager.send_highlight_message_for_team_message(user_id, team_name)
         # Send the highlight
         messenger_manager.send_highlight_message(user_id, [highlight])
 

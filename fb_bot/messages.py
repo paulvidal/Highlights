@@ -77,7 +77,8 @@ NO_TEAM_REGISTERED_MESSAGE = "-> No team registered"
 
 ERROR_MESSAGE = "I am sorry, but an error occured " + EMOJI_SWEAT
 
-NEW_HIGHLIGHT_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video for your " + EMOJI_FOOTBALL + " team {}."
+NEW_HIGHLIGHT_TEAM_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video for your " + EMOJI_FOOTBALL + " team {}."
+NEW_HIGHLIGHT_TEAMS_MESSAGE = "Hey {} " + EMOJI_WAVE + " Here is a new highlight video for your " + EMOJI_FOOTBALL + " teams."
 
 TUTORIAL_MESSAGE = "Awesome " + EMOJI_CLAP * 2 + " I will now send you the latest highlight videos for {} at the end of every match in the following format. Clicking on the message will redirect you to the video " + EMOJI_TV
 

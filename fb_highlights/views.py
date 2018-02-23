@@ -69,9 +69,6 @@ class HighlightsBotView(generic.View):
                 sender_id = message['sender'].get('id')
                 HighlightsBotView.LATEST_SENDER_ID = sender_id
 
-                # Send typing event - so user is aware received message
-                messenger_manager.send_typing(sender_id)
-
                 user_manager.increment_user_message_count(sender_id)
 
                 logger.log_for_user("Message received: " + str(message), sender_id)
@@ -81,6 +78,13 @@ class HighlightsBotView(generic.View):
 
                     text = message['message'].get('text') if message['message'].get('text') else ''
                     message = language.remove_accents(text.lower())
+
+                    # Do not respond in those cases
+                    if 'no' == message or 'nothing' == message or 'ok' == message or 'shut up' in message or message == '':
+                        continue
+
+                    # Send typing event - so user is aware received message
+                    messenger_manager.send_typing(sender_id)
 
                     # Cancel quick reply
                     if 'cancel' in message:
@@ -114,10 +118,6 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_than_you_message(sender_id))
-
-                    elif 'no' == message or 'nothing' == message or 'ok' == message or 'shut up' in message:
-                        # Do not respond in those cases
-                        pass
 
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team

@@ -215,8 +215,10 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_delete_team_message(sender_id, teams))
 
                     # ADDING TEAM
+                    # includes case where no valid option chosen in notification menu so consider user wants to add a team
                     # FIXME: duplication between tutorial and adding team
-                    elif context_manager.is_adding_team_context(sender_id):
+                    elif context_manager.is_adding_team_context(sender_id) \
+                            or context_manager.is_notifications_setting_context(sender_id):
                         print("ADDING TEAM")
 
                         team_to_add = message

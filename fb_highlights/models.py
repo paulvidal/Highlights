@@ -97,7 +97,7 @@ class Team(models.Model):
     team_name = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team_name")
 
     class Meta:
-        unique_together = ('user', 'team_name')
+        unique_together = ('user', 'team__first_name')
 
     @staticmethod
     def to_list_display():
@@ -109,7 +109,7 @@ class Team(models.Model):
 
     @staticmethod
     def search_fields():
-        return 'team_name',
+        return 'team_name__name', 'user__name'
 
 
 class LatestHighlight(models.Model):

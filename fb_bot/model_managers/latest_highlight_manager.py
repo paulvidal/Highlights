@@ -27,7 +27,7 @@ def increment_click_count(highlight_model):
 
 
 def get_highlights(team1, score1, team2, score2, date):
-    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2)
+    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2, valid=True)
             if abs(date - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
 
@@ -49,8 +49,8 @@ def get_highlights_for_team(team_name):
 
     team = football_team_manager.get_football_team(team_name)
 
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team)] \
-                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team)]
+    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team, valid=True)] \
+                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team, valid=True)]
 
     return highlights
 
@@ -59,6 +59,11 @@ def get_highlights_for_team(team_name):
 
 def set_sent(highlight_model):
     highlight_model.sent = True
+    highlight_model.save()
+
+
+def set_invalid(highlight_model):
+    highlight_model.valid = False
     highlight_model.save()
 
 
@@ -78,7 +83,7 @@ def set_video_url(highlight_model, video_url):
 
 
 def get_not_sent_highlights():
-    return LatestHighlight.objects.filter(sent=False)
+    return LatestHighlight.objects.filter(sent=False, valid=True)
 
 
 def get_highlight_img_link_from_footyroom(highlight_model):

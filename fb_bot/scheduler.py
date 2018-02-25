@@ -92,7 +92,7 @@ def check_highlight_validity():
         is_valid = ressource_checker.check(h.link)
 
         if not is_valid:
-            latest_highlight_manager.delete_highlight(h)
+            latest_highlight_manager.set_invalid(h)
 
 
 # Check scrapping status of websites

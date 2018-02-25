@@ -97,7 +97,7 @@ class Team(models.Model):
     team_name = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team_name")
 
     class Meta:
-        unique_together = ('user', 'team__first_name')
+        unique_together = ('user', 'team_name')
 
     @staticmethod
     def to_list_display():
@@ -124,17 +124,18 @@ class LatestHighlight(models.Model):
     score2 = models.SmallIntegerField()
     source = models.CharField(max_length=80)
     sent = models.BooleanField(default=False)
+    valid = models.BooleanField(default=True)
     click_count = models.PositiveIntegerField(default=0)
     video_duration = models.IntegerField(default=0)
     video_url = models.TextField(null=True, blank=True)
 
     @staticmethod
     def to_list_display():
-        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'sent', 'click_count', 'img_link', 'video_url'
+        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'sent', 'valid', 'click_count', 'img_link', 'video_url'
 
     @staticmethod
     def to_list_filter():
-        return 'category', 'source', 'sent'
+        return 'category', 'source', 'sent', 'valid'
 
     @staticmethod
     def search_fields():

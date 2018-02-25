@@ -32,7 +32,7 @@ def get_info(link):
             # remove temporarily fetcher for which too many request
             for fetcher_from_list in ALL_VIDEO_INFO_FETCHER:
                 if fetcher['name'] == fetcher_from_list['name']:
-                    logger.log('REMOVING fetcher: ' + fetcher['name'])
+                    logger.log('REMOVING fetcher: ' + fetcher['name'], forward=True)
                     ALL_VIDEO_INFO_FETCHER.remove(fetcher_from_list)
 
         if info:

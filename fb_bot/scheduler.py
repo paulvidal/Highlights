@@ -60,7 +60,7 @@ def send_most_recent_highlights():
                 continue
 
             # Log highlights sent
-            logger.log("Highlight sent: " + highlight.get_match_name())
+            logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 
             # Send highlight to users
             _send_highlight_to_users(highlight)

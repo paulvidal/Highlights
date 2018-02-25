@@ -150,13 +150,10 @@ def _send_highlight_to_users(highlight):
     user_id_team1 = team_manager.get_users_for_team(team1)
     user_id_team2 = team_manager.get_users_for_team(team2)
 
-    user_id_both_team = []
-
-    for id in user_id_team1:
-        if id in user_id_team2:
-            user_id_team1.remove(id)
-            user_id_team2.remove(id)
-            user_id_both_team.append(id)
+    user_id_both_team = [user_id for user_id in user_id_team1 if user_id in user_id_team2]
+    for user_id in user_id_both_team:
+        user_id_team1.remove(user_id)
+        user_id_team2.remove(user_id)
 
     _send_highlight_for_team(highlight, user_id_team1, team1.title())
     _send_highlight_for_team(highlight, user_id_team2, team2.title())

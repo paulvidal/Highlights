@@ -109,7 +109,7 @@ class Team(models.Model):
 
     @staticmethod
     def search_fields():
-        return 'team_name__name', 'user__name'
+        return 'team_name__name', 'user__first_name'
 
 
 class LatestHighlight(models.Model):

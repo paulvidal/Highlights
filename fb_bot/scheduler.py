@@ -62,14 +62,15 @@ def send_most_recent_highlights():
             # Log highlights sent
             logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 
-            # Send highlight to users
-            _send_highlight_to_users(highlight)
-
             # Set highlights for same match to sent
             similar_highlights = latest_highlight_manager.get_similar_highlights(highlight, not_sent_highlights)
 
             for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
+
+            # TODO: optimise function, taking too much time to run
+            # Send highlight to users
+            _send_highlight_to_users(highlight)
 
     # Delete old highlights
     all_highlights = latest_highlight_manager.get_all_highlights()

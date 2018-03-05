@@ -14,7 +14,7 @@ def check(link):
 
     # FIXME: improve performance by performing HEAD request
     if 'dailymotion' in link:
-        return not 'Content rejected.' in page
+        return not ('Content rejected.' in page or 'Content deleted.' in page)
 
     elif 'streamable' in link:
         return not 'Oops!' in page
@@ -29,10 +29,11 @@ if __name__ == "__main__":
     print("\nHighlights check ------------------------------ \n")
 
     start_time = time.time()
-    highlights = ['https://streamable.com/e/n3bpf',
-                  'https://streamable.com/e/sstxd',
-                  'http://www.dailymotion.com/embed/video/x6czbc8?start=0',
-                  'http://www.dailymotion.com/embed/video/x6bm57o?start=18']
+    highlights = ['https://streamable.com/e/n3bpf', # True
+                  'https://streamable.com/e/sstxd', # False
+                  'http://www.dailymotion.com/embed/video/x6czbc8?start=0', # True
+                  'http://www.dailymotion.com/embed/video/x6bm57o?start=18', # False
+                  'http://www.dailymotion.com/embed/video/x6fnbfs'] # False
 
     for highlight in highlights:
         print(highlight + ' --> ' + str(check(highlight)))

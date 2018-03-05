@@ -1,18 +1,11 @@
-from raven.contrib.django.raven_compat.models import client
-from django.core.management.base import BaseCommand
-
 from fb_bot import scheduler
-from highlights import settings
+from fb_highlights.management.commands.CustomCommand import CustomCommand
 
 
-class Command(BaseCommand):
+class Command(CustomCommand):
 
-    def handle(self, *args, **options):
-        try:
-            scheduler.check_scrapping_status()
-        except Exception as error:
-            if not settings.DEBUG:
-                # Report to sentry if problem detected
-                client.captureException()
-            else:
-                raise error
+    def get_task_name(self):
+        return 'check scrapping status'
+
+    def run_task(self):
+        scheduler.check_scrapping_status()

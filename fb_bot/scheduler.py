@@ -162,13 +162,13 @@ def _send_highlight_to_users(highlight):
 
 
 def _send_highlight_for_team(highlight, ids, team_name):
+    # Send introduction message to users
+    messenger_manager.send_highlight_for_team_messages(ids, team_name)
+    # Send the highlight to users
+    messenger_manager.send_highlight_messages(ids, [highlight])
 
+    # TODO: do batch update on database
     for user_id in ids:
-        # Send introduction message to user
-        messenger_manager.send_highlight_message_for_team_message(user_id, team_name)
-        # Send the highlight
-        messenger_manager.send_highlight_message(user_id, [highlight])
-
         # Track highlight notification
         highlight_notification_stat_manager.add_notification_stat(user_id, highlight)
 

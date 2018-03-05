@@ -1,10 +1,10 @@
 import json
 from urllib.parse import quote
 
-import requests
-
 import highlights.settings
 import highlights.settings
+from fb_bot import client
+from fb_bot.logger import logger
 from fb_bot.messages import *
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager, user_manager
 from highlights import settings
@@ -184,17 +184,45 @@ def get_tutorial_search_highlights(fb_id, team):
 
 
 # For scheduler
-def send_highlight_message(fb_id, highlight_models):
-    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, highlight_models)))
+def send_highlight_messages(fb_ids, highlight_models):
+    attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models)) for fb_id in fb_ids]
+    return send_batch_facebook_message(fb_ids, attachments)
 
 
-def send_highlight_message_for_team_message(fb_id, team_name=None):
-    user_name = user_manager.get_user(fb_id).first_name
-    message = NEW_HIGHLIGHT_TEAM_MESSAGE.format(user_name, team_name) if team_name else NEW_HIGHLIGHT_TEAMS_MESSAGE.format(user_name)
-    return send_facebook_message(fb_id, create_message(message))
+def send_highlight_for_team_messages(fb_ids, team_name=None):
+    messages = []
+
+    for id in fb_ids:
+        user_name = user_manager.get_user(id).first_name
+        message = NEW_HIGHLIGHT_TEAM_MESSAGE.format(user_name, team_name) if team_name else NEW_HIGHLIGHT_TEAMS_MESSAGE.format(user_name)
+        messages.append(create_message(message))
+
+    return send_batch_facebook_message(fb_ids, messages)
 
 
 ### MAIN METHOD ###
+
+def send_batch_facebook_message(fb_ids, messages):
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
+    response_msgs = []
+
+    for i in range(len(fb_ids)):
+        response_msgs.append(json.dumps(
+            {
+                "recipient": {
+                    "id": fb_ids[i]
+                },
+                "message": messages[i]
+            })
+        )
+
+    if not highlights.settings.DEBUG:
+        client.send_fb_messages_async(post_message_url, response_msgs)
+    else:
+        logger.log(response_msgs)
+
+    return response_msgs
+
 
 def send_facebook_message(fb_id, message):
     post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
@@ -207,9 +235,9 @@ def send_facebook_message(fb_id, message):
         })
 
     if not highlights.settings.DEBUG:
-        requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+        client.send_fb_message(post_message_url, response_msg)
     else:
-        print(response_msg)
+        logger.log(response_msg)
 
     return response_msg
 
@@ -225,7 +253,7 @@ def send_typing(fb_id):
         })
 
     if not highlights.settings.DEBUG:
-        requests.post(post_message_url, headers={"Content-Type": "application/json"}, data=response_msg)
+        client.send_fb_message(post_message_url, response_msg)
 
 
 #

@@ -1,7 +1,6 @@
 import json
 
 import dateparser
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
@@ -18,6 +17,7 @@ from fb_bot.model_managers import context_manager, user_manager, football_team_m
     highlight_stat_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
 from fb_bot.model_managers.context_manager import ContextType
+from fb_highlights import view_message_helper
 from highlights import settings
 
 
@@ -88,7 +88,7 @@ class HighlightsBotView(generic.View):
 
                     # Cancel quick reply
                     if 'cancel' in message:
-                        print("CANCEL")
+                        logger.log("CANCEL")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
@@ -98,7 +98,7 @@ class HighlightsBotView(generic.View):
 
                     # Done quick reply
                     elif 'done' in message:
-                        print("DONE")
+                        logger.log("DONE")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_done_message(sender_id))
@@ -108,13 +108,13 @@ class HighlightsBotView(generic.View):
 
                     # HELP
                     elif 'help' in message:
-                        print("HELP")
+                        logger.log("HELP")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
-                        print("THANK YOU MESSAGE")
+                        logger.log("THANK YOU MESSAGE")
                         context_manager.update_context(sender_id, ContextType.NONE)
 
                         response_msg.append(messenger_manager.send_than_you_message(sender_id))
@@ -122,7 +122,7 @@ class HighlightsBotView(generic.View):
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_tutorial_context(sender_id):
-                        print("TUTORIAL ADD TEAM")
+                        logger.log("TUTORIAL ADD TEAM")
 
                         team_to_add = message
 
@@ -163,15 +163,15 @@ class HighlightsBotView(generic.View):
                             response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
 
                     # SEARCH HIGHLIGHT OPTION
-                    elif 'search highlights' in message or 'search again' in message:
-                        print("SEARCH HIGHLIGHTS")
-                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
-
-                        response_msg.append(messenger_manager.send_search_highlights_message(sender_id))
+                    elif 'search' in message or 'search again' in message:
+                        logger.log("SEARCH HIGHLIGHTS")
+                        response_msg.append(
+                            view_message_helper.search_highlights(sender_id)
+                        )
 
                     # SEARCHING HIGHLIGHTS
                     elif context_manager.is_searching_highlights_context(sender_id):
-                        print("SEARCHING HIGHLIGHTS")
+                        logger.log("SEARCHING HIGHLIGHTS")
                         team_found = messenger_manager.has_highlight_for_team(message)
 
                         response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
@@ -187,25 +187,21 @@ class HighlightsBotView(generic.View):
 
                     # NOTIFICATION SETTING
                     elif 'my teams' in message:
-                        print("NOTIFICATION SETTING")
-                        context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
-
-                        teams = team_manager.get_teams_for_user(sender_id)
-                        # Format team names
-                        teams = [team.title() for team in teams]
-
-                        response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+                        logger.log("NOTIFICATION SETTING")
+                        response_msg.append(
+                            view_message_helper.send_notification_settings(sender_id)
+                        )
 
                     # ADD TEAM SETTING
                     elif 'add' in message and context_manager.is_notifications_setting_context(sender_id):
-                        print("ADD TEAM SETTING")
+                        logger.log("ADD TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
 
                         response_msg.append(messenger_manager.send_add_team_message(sender_id))
 
                     # REMOVE TEAM SETTING
                     elif 'remove' in message and context_manager.is_notifications_setting_context(sender_id):
-                        print("REMOVE TEAM SETTING")
+                        logger.log("REMOVE TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
                         teams = team_manager.get_teams_for_user(sender_id)
@@ -219,7 +215,7 @@ class HighlightsBotView(generic.View):
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_adding_team_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
-                        print("ADDING TEAM")
+                        logger.log("ADDING TEAM")
 
                         team_to_add = message
 
@@ -260,7 +256,7 @@ class HighlightsBotView(generic.View):
 
                     # DELETING TEAM
                     elif context_manager.is_deleting_team_context(sender_id):
-                        print("DELETING TEAM")
+                        logger.log("DELETING TEAM")
                         team_to_delete = message.lower()
 
                         if football_team_manager.has_football_team(team_to_delete):
@@ -291,20 +287,21 @@ class HighlightsBotView(generic.View):
 
                         if football_team_manager.has_football_team(message):
                             # FIXME: duplication with searching highlights
-                            print("NO MATCH - SEARCHING HIGHLIGHTS")
+                            logger.log("NO MATCH - SEARCHING HIGHLIGHTS")
                             response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
 
                             # Answer with new message what want to do
                             response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
 
                         else:
-                            print("WHAT WANT TO DO")
+                            logger.log("WHAT WANT TO DO")
                             response_msg.append(messenger_manager.send_what_do_you_want_to_do_message(sender_id))
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
+                        logger.log("GET STARTED POSTBACK")
                         user = user_manager.get_user(sender_id)
 
                         response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
@@ -312,6 +309,20 @@ class HighlightsBotView(generic.View):
 
                         # Set the user in tutorial context
                         context_manager.update_context(sender_id, ContextType.TUTORIAL_ADD_TEAM)
+
+                    # SEARCH HIGHLIGHT SETTING
+                    elif postback == 'search_highlights':
+                        logger.log("SEARCH HIGHLIGHTS POSTBACK")
+                        response_msg.append(
+                            view_message_helper.search_highlights(sender_id)
+                        )
+
+                    # NOTIFICATION SETTING
+                    elif postback == 'my_teams':
+                        logger.log("NOTIFICATION SETTING POSTBACK")
+                        response_msg.append(
+                            view_message_helper.send_notification_settings(sender_id)
+                        )
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0

@@ -68,7 +68,6 @@ def send_most_recent_highlights():
             for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
 
-            # TODO: optimise function, taking too much time to run
             # Send highlight to users
             _send_highlight_to_users(highlight)
 

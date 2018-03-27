@@ -90,35 +90,35 @@ class HighlightsBotView(generic.View):
                     # Cancel quick reply
                     if 'cancel' in message:
                         logger.log("CANCEL")
-                        context_manager.update_context(sender_id, ContextType.NONE)
+                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
-
-                        # Answer with new message what want to do
-                        response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+                        #
+                        # # Answer with new message what want to do
+                        # response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
 
                     # Done quick reply
                     elif 'done' in message:
                         logger.log("DONE")
-                        context_manager.update_context(sender_id, ContextType.NONE)
+                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                         response_msg.append(messenger_manager.send_done_message(sender_id))
-
-                        # Answer with new message what want to do
-                        response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+                        #
+                        # # Answer with new message what want to do
+                        # response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
 
                     # HELP
                     elif 'help' in message:
                         logger.log("HELP")
-                        context_manager.update_context(sender_id, ContextType.NONE)
+                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
                         logger.log("THANK YOU MESSAGE")
-                        context_manager.update_context(sender_id, ContextType.NONE)
+                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
-                        response_msg.append(messenger_manager.send_than_you_message(sender_id))
+                        response_msg.append(messenger_manager.send_thank_you_message(sender_id))
 
                     # TUTORIAL CONTEXT
                     # FIXME: duplication between tutorial and adding team
@@ -166,6 +166,7 @@ class HighlightsBotView(generic.View):
                     # SEARCH HIGHLIGHT OPTION
                     elif 'search' in message or 'search again' in message:
                         logger.log("SEARCH HIGHLIGHTS")
+
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
                         )
@@ -173,23 +174,15 @@ class HighlightsBotView(generic.View):
                     # SEARCHING HIGHLIGHTS
                     elif context_manager.is_searching_highlights_context(sender_id):
                         logger.log("SEARCHING HIGHLIGHTS")
-                        team_found = messenger_manager.has_highlight_for_team(message)
 
-                        response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
-
-                        if team_found:
-                            context_manager.update_context(sender_id, ContextType.NONE)
-
-                            # Answer with new message what want to do
-                            # TODO: delete these and keep user permanently in search highlights mode
-                            response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
-
-                        else:
-                            context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+                        response_msg.append(
+                            messenger_manager.send_highlight_message_for_team(sender_id, message)
+                        )
 
                     # NOTIFICATION SETTING
                     elif 'teams' in message:
                         logger.log("NOTIFICATION SETTING")
+
                         response_msg.append(
                             view_message_helper.send_notification_settings(sender_id)
                         )
@@ -213,7 +206,6 @@ class HighlightsBotView(generic.View):
                         response_msg.append(messenger_manager.send_delete_team_message(sender_id, teams))
 
                     # ADDING TEAM
-                    # includes case where no valid option chosen in notification menu so consider user wants to add a team
                     # FIXME: duplication between tutorial and adding team
                     elif context_manager.is_adding_team_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
@@ -282,22 +274,6 @@ class HighlightsBotView(generic.View):
                             teams = [team.title() for team in teams]
 
                             response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
-
-                    # IF NO MATCH, UNLESS NAME OF A TEAM IS TYPED, ASK WHAT WANT TO DO
-                    else:
-                        context_manager.update_context(sender_id, ContextType.NONE)
-
-                        if football_team_manager.has_football_team(message):
-                            # FIXME: duplication with searching highlights
-                            logger.log("NO MATCH - SEARCHING HIGHLIGHTS")
-                            response_msg.append(messenger_manager.send_highlight_message_for_team(sender_id, message))
-
-                            # Answer with new message what want to do
-                            response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
-
-                        else:
-                            logger.log("WHAT WANT TO DO")
-                            response_msg.append(messenger_manager.send_what_do_you_want_to_do_message(sender_id))
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']

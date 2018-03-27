@@ -35,10 +35,6 @@ HELP_MESSAGE = "Here is what you can ask me:\n\n" \
                + EMOJI_ONE + " Press \"Search highlights\" and I will give you the latest highlights videos for a team\n\n" \
                + EMOJI_TWO + " Press \"My teams\" to subscribe to teams and I will send you highlights videos as soon as the match is over!"
 
-WHAT_DO_YOU_WANT_TODO_MESSAGE = "What can I do for you? " + EMOJI_INNONCENT
-
-ANYTHING_ELSE_I_CAN_DO_MESSAGE = "Anything else I can do for you? " + EMOJI_INNONCENT
-
 CANCEL_MESSAGE = "Alright let's stop there then :)"
 
 DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your teams as soon as the videos are available. " + EMOJI_TV

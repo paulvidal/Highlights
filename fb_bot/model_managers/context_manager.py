@@ -4,7 +4,6 @@ from fb_bot.model_managers.user_manager import get_user
 
 
 class ContextType(Enum):
-    NONE = 0
     NOTIFICATIONS_SETTING = 1
     ADDING_TEAM = 2
     DELETING_TEAM = 3

@@ -3,7 +3,12 @@ NAME_MAPPING = {
     'carabao cup': 'league cup',
     'turkey cup 1': 'turkish cup',
     'turkey cup': 'turkish cup',
-    'champions laegue': 'champions league'
+    'champions laegue': 'champions league',
+    'international friendlies': 'friendly match',
+    'liga sagres': 'primeira liga',
+    'turkish super lig': 'süper lig',
+    'taca da liga': 'taça de portugal',
+
 }
 
 

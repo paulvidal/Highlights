@@ -112,7 +112,12 @@ NAME_MAPPING = {
     'ostersunds': 'ostersund',
     'ludogorets razgrad': 'ludogorets',
     'kardemir karabuk': 'karabukspor',
-    'zwolle': 'pec zwolle'
+    'zwolle': 'pec zwolle',
+    'united': 'manchester united',
+    'bayern': 'bayern munich',
+    'atletico': 'atletico madrid',
+    'milan ac': 'ac milan',
+    'milan': 'ac milan',
 }
 
 

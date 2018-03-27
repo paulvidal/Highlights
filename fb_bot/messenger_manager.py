@@ -17,8 +17,7 @@ MAX_QUICK_REPLIES = 10
 ### MESSAGES ###
 
 def send_help_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(HELP_MESSAGE, [SEARCH_HIGHLIGHTS_BUTTON,
-                                                                                       MY_TEAM_BUTTON]))
+    return send_facebook_message(fb_id, create_message(HELP_MESSAGE))
 
 
 def send_thank_you_message(fb_id):

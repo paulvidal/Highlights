@@ -12,6 +12,12 @@ class ContextType(Enum):
     TUTORIAL_ADD_TEAM = 100
 
 
+def set_default_context(fb_id):
+    user = get_user(fb_id)
+    user.context = ContextType.SEARCH_HIGHLIGHTS.value
+    user.save()
+
+
 def update_context(fb_id, context):
     if not isinstance(context, ContextType):
         raise TypeError("context should be of type ContextType")

@@ -90,7 +90,7 @@ class HighlightsBotView(generic.View):
                     # Cancel quick reply
                     if 'cancel' in message:
                         logger.log("CANCEL")
-                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+                        context_manager.set_default_context(sender_id)
 
                         response_msg.append(messenger_manager.send_cancel_message(sender_id))
                         #
@@ -100,7 +100,7 @@ class HighlightsBotView(generic.View):
                     # Done quick reply
                     elif 'done' in message:
                         logger.log("DONE")
-                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+                        context_manager.set_default_context(sender_id)
 
                         response_msg.append(messenger_manager.send_done_message(sender_id))
                         #
@@ -110,13 +110,13 @@ class HighlightsBotView(generic.View):
                     # HELP
                     elif 'help' in message:
                         logger.log("HELP")
-                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+                        context_manager.set_default_context(sender_id)
 
                         response_msg.append(messenger_manager.send_help_message(sender_id))
 
                     elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
                         logger.log("THANK YOU MESSAGE")
-                        context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
+                        context_manager.set_default_context(sender_id)
 
                         response_msg.append(messenger_manager.send_thank_you_message(sender_id))
 
@@ -162,22 +162,6 @@ class HighlightsBotView(generic.View):
                             # No team or recommendation found
 
                             response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
-
-                    # SEARCH HIGHLIGHT OPTION
-                    elif 'search' in message or 'search again' in message:
-                        logger.log("SEARCH HIGHLIGHTS")
-
-                        response_msg.append(
-                            view_message_helper.search_highlights(sender_id)
-                        )
-
-                    # SEARCHING HIGHLIGHTS
-                    elif context_manager.is_searching_highlights_context(sender_id):
-                        logger.log("SEARCHING HIGHLIGHTS")
-
-                        response_msg.append(
-                            messenger_manager.send_highlight_message_for_team(sender_id, message)
-                        )
 
                     # NOTIFICATION SETTING
                     elif 'teams' in message:
@@ -274,6 +258,22 @@ class HighlightsBotView(generic.View):
                             teams = [team.title() for team in teams]
 
                             response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
+
+                    # SEARCH HIGHLIGHT OPTION
+                    elif 'search' in message or 'search again' in message:
+                        logger.log("SEARCH HIGHLIGHTS")
+
+                        response_msg.append(
+                            view_message_helper.search_highlights(sender_id)
+                        )
+
+                    # SEARCHING HIGHLIGHTS
+                    elif context_manager.is_searching_highlights_context(sender_id):
+                        logger.log("SEARCHING HIGHLIGHTS")
+
+                        response_msg.append(
+                            messenger_manager.send_highlight_message_for_team(sender_id, message)
+                        )
 
                 elif 'postback' in message:
                     postback = message['postback']['payload']

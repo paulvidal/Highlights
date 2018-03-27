@@ -33,7 +33,7 @@
                                           "timestamp":1493911373874,
                                           "message": {
                                             "mid":"mid.$cAAXnamDTS6JiBVPQMlb1A6Hcns6f",
-                                            "seq":255027,
+                                            "seq": 255027,
                                             "text": message
                                           }
                                         }
@@ -43,8 +43,8 @@
                                 }, null, 4);
 
             $.post( "/d08fcf03937a116ab14ea30725c72d33ac715bcfa085e296cd/", request_data, function(json) {
-                $("#request").append("<pre>" + request_data + "</pre>");
-                $("#response").append("<pre>" + JSON.stringify(JSON.parse(json), null, 4) + "</pre>");
+                $("#request").prepend("<pre>" + request_data + "</pre>");
+                $("#response").prepend("<pre>" + JSON.stringify(JSON.parse(json), null, 4) + "</pre>");
             })
         }
     </script>

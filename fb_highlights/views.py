@@ -55,10 +55,11 @@ class HighlightsBotView(generic.View):
 
     # Post function to handle Facebook messages
     def post(self, request, *args, **kwargs):
-        logger.log("Message received: " + str(request.body))
 
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(request.body.decode('utf-8'))
+
+        logger.log("Message received: " + str(incoming_message))
 
         response_msg = []
 
@@ -180,13 +181,14 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.NONE)
 
                             # Answer with new message what want to do
+                            # TODO: delete these and keep user permanently in search highlights mode
                             response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
 
                         else:
                             context_manager.update_context(sender_id, ContextType.SEARCH_HIGHLIGHTS)
 
                     # NOTIFICATION SETTING
-                    elif 'my teams' in message:
+                    elif 'teams' in message:
                         logger.log("NOTIFICATION SETTING")
                         response_msg.append(
                             view_message_helper.send_notification_settings(sender_id)
@@ -330,18 +332,10 @@ class HighlightsBotView(generic.View):
         if not settings.DEBUG:
             return HttpResponse()
 
-        # For DEBUG MODE only
-        formatted_response = "["
-
-        for i in range(len(response_msg)):
-            formatted_response += response_msg[i]
-
-            if i != len(response_msg) - 1:
-                formatted_response += ", "
-
-        formatted_response += "]"
-
-        return JsonResponse(formatted_response, safe=False)
+        else:
+            # DEBUG MODE ONLY
+            formatted_response = "[" + ", ".join(response_msg) + "]"
+            return JsonResponse(formatted_response, safe=False)
 
 
 class HighlightRedirectView(generic.View):

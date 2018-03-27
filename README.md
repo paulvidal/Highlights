@@ -1,5 +1,7 @@
 # Highlights
 
+[![CircleCI](https://circleci.com/gh/paulvidal/Highlights.svg?style=svg)](https://circleci.com/gh/paulvidal/Highlights)
+
 Facebook messenger bot fetching the lastest football match highlight video
 
 You can:

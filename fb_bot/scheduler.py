@@ -171,5 +171,5 @@ def _send_highlight_for_team(highlight, ids, team_name):
         # Track highlight notification
         highlight_notification_stat_manager.add_notification_stat(user_id, highlight)
 
-        # Reset the context to none
-        context_manager.update_context(user_id, ContextType.NONE)
+        # Reset to default context
+        context_manager.set_default_context(user_id)

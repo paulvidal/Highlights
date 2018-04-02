@@ -7,7 +7,6 @@ from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressou
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
 from fb_bot.model_managers import team_manager
-from fb_bot.model_managers.context_manager import ContextType
 from fb_bot.video_providers import video_info_fetcher
 
 

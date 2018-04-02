@@ -22,7 +22,7 @@ class LoggerWrapper:
 
         if forward and settings.is_prod():
             # Only send in production mode
-            self.logger.info(log)
+            self.logger.info(message)
 
     def is_enabled(self):
         return self.enabled

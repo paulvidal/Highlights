@@ -118,6 +118,19 @@ NAME_MAPPING = {
     'atletico': 'atletico madrid',
     'milan ac': 'ac milan',
     'milan': 'ac milan',
+    'los angeles fc': 'los angeles',
+    'real': 'real madrid',
+    'fc metz': 'metz',
+    'bosnia-herzegovina': 'bosnia and herzegovina',
+    'n.ireland': 'northern ireland',
+    'hannover': 'hannover 96',
+    'wigan': 'wigan athletic',
+    'west bromw': 'west bromwich albion',
+    'plzen': 'viktoria plzen',
+    'salzburg': 'red bull salzburg',
+    'breda': 'nac breda',
+    'den haag': 'ado den haag',
+    'heerenveen‎': 'sc heerenveen‎'
 }
 
 

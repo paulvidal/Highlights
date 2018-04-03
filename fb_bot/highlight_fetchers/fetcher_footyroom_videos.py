@@ -27,7 +27,11 @@ class FootyroomVideoHighlight(Highlight):
         team2 = join(match_split[middle_index + 2:])
         score2 = match_split[middle_index + 1]
 
-        return team1, score1, team2, score2
+        def clean_team_name(team):
+            junk_index = team.find('[')
+            return team[:junk_index - 1] if junk_index > 0 else team
+
+        return clean_team_name(team1), score1, clean_team_name(team2), score2
 
     def get_source(self):
         return 'footyroom_video'

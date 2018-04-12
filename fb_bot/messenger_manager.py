@@ -136,38 +136,6 @@ def send_tutorial_highlight(fb_id, team):
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, [highlight])))
 
 
-def send_tutorial_search_highlights(fb_id, team):
-    return send_facebook_message(fb_id, get_tutorial_search_highlights(fb_id, team))
-
-
-# FIXME: duplication with real search
-def get_tutorial_search_highlights(fb_id, team):
-    highlights = latest_highlight_manager.get_highlights_for_team(team)
-
-    if highlights == []:
-        # Case no highlight found for the team
-        return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [NEW_SEARCH_HIGHLIGHTS_BUTTON])
-
-    if not highlights:
-        # Case no team name matched
-        similar_team_names = football_team_manager.similar_football_team_names(team)
-        similar_team_names = [team_name.title() for team_name in similar_team_names]
-
-        # Check if name of team was not properly written
-        if similar_team_names:
-            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:10])
-        else:
-            return create_quick_text_reply_message(NO_MATCH_FOUND, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON])
-
-    # Eliminate duplicates
-    highlights = latest_highlight_manager.get_unique_highlights(highlights)
-
-    # Order highlights by date and take the first 10
-    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:10]
-
-    return create_generic_attachment(highlights_to_json(fb_id, highlights))
-
-
 # For scheduler
 def send_highlight_messages(fb_ids, highlight_models):
     attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models)) for fb_id in fb_ids]

@@ -289,10 +289,47 @@ class MessengerBotTestCase(TestCase):
 
     def test_search_chelsea(self):
         # Given
-        json_response = self.send_message(SENDER_ID, 'search')
+        self.send_message(SENDER_ID, 'search')
 
         # When
         json_response = self.send_message(SENDER_ID, 'chelsea')
+
+        # Then
+        self.assertEqual(json_response, [
+            {
+                'message': {
+                    'attachment': {
+                        'payload': {
+                            'template_type': 'generic',
+                            'elements': [
+                                {
+                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'default_action': {
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=1119096411506599',
+                                        'webview_height_ratio': 'full',
+                                        'type': 'web_url',
+                                        'messenger_extensions': 'false'
+                                    },
+                                    'title': 'Chelsea 0 - 2 Barcelona',
+                                    'subtitle': '01 January 2018 - Champions League'
+                                }
+                            ]
+                        },
+                        'type': 'template'
+                    }
+                },
+                'recipient': {
+                    'id': '1119096411506599'
+                }
+            }
+        ])
+
+    def test_search_chelsea_with_typo(self):
+        # Given
+        self.send_message(SENDER_ID, 'search')
+
+        # When
+        json_response = self.send_message(SENDER_ID, 'chelseo')
 
         # Then
         self.assertEqual(json_response, [

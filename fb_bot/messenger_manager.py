@@ -230,17 +230,24 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
     if not highlights:
         # Case no team name matched
         similar_team_names = football_team_manager.similar_football_team_names(team)
-        similar_team_names = [team_name.title() for team_name in similar_team_names]
 
         # Check if name of team was not properly written
-        if similar_team_names:
-            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9]
-                                                   + [HELP_BUTTON,
-                                                      CANCEL_BUTTON])
-        else:
+        if len(similar_team_names) == 0:
             return create_quick_text_reply_message(NO_MATCH_FOUND, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
                                                                     HELP_BUTTON,
                                                                     CANCEL_BUTTON])
+
+        elif len(similar_team_names) == 1:
+            # Case where only one team is similar, so send the highlights for this team
+            # -> error correction as user might have done a typo
+            team = similar_team_names[0]
+            highlights = latest_highlight_manager.get_highlights_for_team(team)
+
+        elif len(similar_team_names) >= 2:
+            similar_team_names = [team_name.title() for team_name in similar_team_names]
+            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9]
+                                                   + [HELP_BUTTON,
+                                                      CANCEL_BUTTON])
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)

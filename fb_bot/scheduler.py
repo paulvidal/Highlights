@@ -6,7 +6,7 @@ from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_footyroom_videos
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
-from fb_bot.model_managers import team_manager
+from fb_bot.model_managers import registration_team_manager
 from fb_bot.video_providers import video_info_fetcher
 
 
@@ -146,8 +146,8 @@ def _send_highlight_to_users(highlight):
     team1 = highlight.team1.name.lower()
     team2 = highlight.team2.name.lower()
 
-    user_id_team1 = team_manager.get_users_for_team(team1)
-    user_id_team2 = team_manager.get_users_for_team(team2)
+    user_id_team1 = registration_team_manager.get_users_for_team(team1)
+    user_id_team2 = registration_team_manager.get_users_for_team(team2)
 
     user_id_both_team = [user_id for user_id in user_id_team1 if user_id in user_id_team2]
     for user_id in user_id_both_team:

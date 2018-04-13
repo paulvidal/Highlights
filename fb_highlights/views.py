@@ -15,7 +15,7 @@ from fb_bot import language, analytics
 from fb_bot.logger import logger
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager
-from fb_bot.model_managers import team_manager
+from fb_bot.model_managers import registration_team_manager
 from fb_bot.model_managers.context_manager import ContextType
 from fb_highlights import view_message_helper
 from highlights import settings
@@ -134,7 +134,7 @@ class HighlightsBotView(generic.View):
                         elif football_team_manager.has_football_team(team_to_add):
                             # Does team exist check
 
-                            team_manager.add_team(sender_id, team_to_add)
+                            registration_team_manager.add_team(sender_id, team_to_add)
 
                             response_msg.append(messenger_manager.send_tutorial_message(sender_id, text))
                             response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
@@ -143,7 +143,7 @@ class HighlightsBotView(generic.View):
 
                             # Send notification mode FIXME: remove duplication from notification
 
-                            teams = team_manager.get_teams_for_user(sender_id)
+                            teams = registration_team_manager.get_teams_for_user(sender_id)
                             # Format team names
                             teams = [team.title() for team in teams]
 
@@ -183,7 +183,7 @@ class HighlightsBotView(generic.View):
                         logger.log("REMOVE TEAM SETTING")
                         context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
-                        teams = team_manager.get_teams_for_user(sender_id)
+                        teams = registration_team_manager.get_teams_for_user(sender_id)
                         # Format team names
                         teams = [team.title() for team in teams]
 
@@ -207,10 +207,10 @@ class HighlightsBotView(generic.View):
                             # Does team exist check
                             context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
 
-                            team_manager.add_team(sender_id, team_to_add)
+                            registration_team_manager.add_team(sender_id, team_to_add)
                             response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
 
-                            teams = team_manager.get_teams_for_user(sender_id)
+                            teams = registration_team_manager.get_teams_for_user(sender_id)
                             # Format team names
                             teams = [team.title() for team in teams]
 
@@ -239,10 +239,10 @@ class HighlightsBotView(generic.View):
 
                         if football_team_manager.has_football_team(team_to_delete):
                             # Delete team
-                            team_manager.delete_team(sender_id, team_to_delete)
+                            registration_team_manager.delete_team(sender_id, team_to_delete)
                             response_msg.append(messenger_manager.send_team_deleted_message(sender_id, message))
 
-                            teams = team_manager.get_teams_for_user(sender_id)
+                            teams = registration_team_manager.get_teams_for_user(sender_id)
                             # Format team names
                             teams = [team.title() for team in teams]
 
@@ -253,7 +253,7 @@ class HighlightsBotView(generic.View):
                             # Team to delete not found
                             context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
 
-                            teams = team_manager.get_teams_for_user(sender_id)
+                            teams = registration_team_manager.get_teams_for_user(sender_id)
                             # Format team names
                             teams = [team.title() for team in teams]
 

@@ -6,9 +6,9 @@ NAME_MAPPING = {
     'champions laegue': 'champions league',
     'international friendlies': 'friendly match',
     'liga sagres': 'primeira liga',
-    'turkish super lig': 'süper lig',
+    'turkish super lig': 'super lig',
+    'süper lig': 'super lig',
     'taca da liga': 'taça de portugal',
-
 }
 
 

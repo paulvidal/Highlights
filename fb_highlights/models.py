@@ -92,7 +92,50 @@ class NewFootballTeam(models.Model):
         return str(self.name) + ' | ' + str(self.source)
 
 
-class Team(models.Model):
+class FootballCompetition(models.Model):
+    name = models.CharField(max_length=200, unique=True, primary_key=True)
+
+    @staticmethod
+    def to_list_display():
+        return 'name',
+
+    @staticmethod
+    def to_list_filter():
+        return ()
+
+    @staticmethod
+    def search_fields():
+        return 'name',
+
+    def __str__(self):
+        return str(self.name)
+
+
+# Competitions to potentially add to FootballCompetition
+class NewFootballCompetition(models.Model):
+    name = models.CharField(max_length=200)
+    source = models.CharField(max_length=80)
+
+    class Meta:
+        unique_together = ('name', 'source')
+
+    @staticmethod
+    def to_list_display():
+        return 'name', 'source'
+
+    @staticmethod
+    def to_list_filter():
+        return 'source',
+
+    @staticmethod
+    def search_fields():
+        return 'name',
+
+    def __str__(self):
+        return str(self.name) + ' | ' + str(self.source)
+
+
+class RegistrationTeam(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
     team_name = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team_name")
 
@@ -110,6 +153,26 @@ class Team(models.Model):
     @staticmethod
     def search_fields():
         return 'team_name__name', 'user__first_name'
+
+
+class RegistrationCompetition(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    competition_name = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, db_column="competition_name")
+
+    class Meta:
+        unique_together = ('user', 'competition_name')
+
+    @staticmethod
+    def to_list_display():
+        return 'user', 'competition_name'
+
+    @staticmethod
+    def to_list_filter():
+        return 'competition_name',
+
+    @staticmethod
+    def search_fields():
+        return 'competition_name__name', 'user__first_name'
 
 
 class LatestHighlight(models.Model):

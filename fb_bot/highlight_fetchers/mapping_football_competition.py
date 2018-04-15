@@ -15,7 +15,9 @@ NAME_MAPPING = {
     'champions': 'champions league',
     'barclays premier league': 'premier league',
     'liga': 'la liga',
-    'friendlies': 'club friendlies'
+    'friendlies': 'club friendlies',
+    'scottish premier league': 'scottish premiership',
+    'scottish league': 'scottish premiership',
 }
 
 

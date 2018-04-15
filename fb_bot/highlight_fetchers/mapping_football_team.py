@@ -104,6 +104,7 @@ NAME_MAPPING = {
     'red devils': 'manchester united',
     'citizens': 'manchester city',
     'magpies': 'newcastle united',
+    'newcastle': 'newcastle united',
     'saints': 'southampton',
     'potters': 'stoke city',
     'swans': 'swansea',
@@ -132,7 +133,8 @@ NAME_MAPPING = {
     'breda': 'nac breda',
     'den haag': 'ado den haag',
     'heerenveen‎': 'sc heerenveen‎',
-    'akhisarspor': 'akhisar belediyespor'
+    'akhisarspor': 'akhisar belediyespor',
+    'dinamo moscow': 'dynamo moscow'
 }
 
 

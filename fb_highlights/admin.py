@@ -1,6 +1,6 @@
 from django.contrib import admin
-from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballTeam, HighlightStat, \
-    HighlightNotificationStat, RegistrationCompetition, NewFootballCompetition, FootballCompetition
+from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, HighlightStat, \
+    HighlightNotificationStat, RegistrationCompetition, FootballCompetition
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -41,16 +41,10 @@ class FootballCompetitionAdmin(admin.ModelAdmin):
     search_fields = FootballCompetition.search_fields()
 
 
-class NewFootballTeamAdmin(admin.ModelAdmin):
-    list_display = NewFootballTeam.to_list_display()
-    list_filter = NewFootballTeam.to_list_filter()
-    search_fields = NewFootballTeam.search_fields()
-
-
-class NewFootballCompetitionAdmin(admin.ModelAdmin):
-    list_display = NewFootballCompetition.to_list_display()
-    list_filter = NewFootballCompetition.to_list_filter()
-    search_fields = NewFootballCompetition.search_fields()
+class NewFootballRegistrationAdmin(admin.ModelAdmin):
+    list_display = NewFootballRegistration.to_list_display()
+    list_filter = NewFootballRegistration.to_list_filter()
+    search_fields = NewFootballRegistration.search_fields()
 
 
 class HighlightStatAdmin(admin.ModelAdmin):
@@ -73,7 +67,6 @@ admin.site.register(RegistrationCompetition, RegistrationCompetitionAdmin)
 admin.site.register(LatestHighlight, LatestHighlightAdmin)
 admin.site.register(FootballTeam, FootballTeamAdmin)
 admin.site.register(FootballCompetition, FootballCompetitionAdmin)
-admin.site.register(NewFootballTeam, NewFootballTeamAdmin)
-admin.site.register(NewFootballCompetition, NewFootballCompetitionAdmin)
+admin.site.register(NewFootballRegistration, NewFootballRegistrationAdmin)
 admin.site.register(HighlightStat, HighlightStatAdmin)
 admin.site.register(HighlightNotificationStat, HighlightNotificationStatAdmin)

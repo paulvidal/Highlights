@@ -1,4 +1,6 @@
 # Mapping allowing different names for competitions to be converted to be conform to database naming for competitions
+import nltk
+
 NAME_MAPPING = {
     'carabao cup': 'league cup',
     'turkey cup 1': 'turkish cup',
@@ -9,14 +11,46 @@ NAME_MAPPING = {
     'turkish super lig': 'super lig',
     'süper lig': 'super lig',
     'taca da liga': 'taça de portugal',
+    'uefa champions league': 'champions league',
+    'champions': 'champions league',
+    'barclays premier league': 'premier league',
+    'liga': 'la liga',
+    'friendlies': 'club friendlies'
 }
 
 
-# Return the name form the mapping if in it, otherwise return the same competition name
-def get_exact_name(team_name):
-    name = NAME_MAPPING.get(team_name)
+# Return the name from the mapping if in it, otherwise return the same competition name
+def get_exact_name(competition_name):
+    name = NAME_MAPPING.get(competition_name)
 
     if not name:
-        name = team_name
+        name = competition_name
 
     return name
+
+
+# Return competitions names that start the same way as the competition name OR are close to the input competition name and has first letter in common
+def get_similar_names(competition_name, all_competition_names):
+    similar_competition_names = []
+
+    # Go through the mapping
+    for name in NAME_MAPPING:
+        if name.startswith(competition_name):
+            similar_competition_names.append(NAME_MAPPING[name])
+
+        if competition_name[0] == name[0] and nltk.edit_distance(name, competition_name) <= 2:
+            # If no more than 2 substitution, insertion or deletion are needed to obtain one string starting with the other
+            # AND if first letter are the same
+            similar_competition_names.append(NAME_MAPPING[name])
+
+    # Go through all_competition_names
+    for name in all_competition_names:
+        if name.startswith(competition_name):
+            similar_competition_names.append(name)
+
+        if competition_name[0] == name[0] and nltk.edit_distance(name, competition_name) <= 2:
+            # If no more than 2 substitution, insertion or deletion are needed to obtain one string starting with the other
+            # AND if first letter are the same
+            similar_competition_names.append(name)
+
+    return similar_competition_names

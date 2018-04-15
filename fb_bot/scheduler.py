@@ -5,17 +5,20 @@ import dateparser
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_footyroom_videos
 from fb_bot.logger import logger
-from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager
-from fb_bot.model_managers import registration_team_manager
+from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
+    registration_team_manager, registration_competition_manager
 from fb_bot.video_providers import video_info_fetcher
 
 
 # Send highlights
-def send_most_recent_highlights():
+def send_most_recent_highlights(footyroom_pagelet=1,
+                                hoofoot_pagelet=4,
+                                footyroom_videos_pagelet=3):
+
     # Footyroom + Hoofoot highlights fetching
-    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=2) \
-                 + fetcher_hoofoot.fetch_highlights(num_pagelet=4, max_days_ago=7) \
-                 + fetcher_footyroom_videos.fetch_highlights(num_pagelet=3, max_days_ago=7)
+    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=footyroom_pagelet, max_days_ago=2) \
+                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7) \
+                 + fetcher_footyroom_videos.fetch_highlights(num_pagelet=footyroom_videos_pagelet, max_days_ago=7)
 
     # Add new highlights
     for highlight in highlights:
@@ -71,6 +74,7 @@ def send_most_recent_highlights():
             _send_highlight_to_users(highlight)
 
     # Delete old highlights
+    # FIXME: try to find a way to keep old highlights
     all_highlights = latest_highlight_manager.get_all_highlights()
 
     for highlight in all_highlights:
@@ -145,23 +149,17 @@ def add_videos_info():
 def _send_highlight_to_users(highlight):
     team1 = highlight.team1.name.lower()
     team2 = highlight.team2.name.lower()
+    competition = highlight.category.name.lower()
 
     user_id_team1 = registration_team_manager.get_users_for_team(team1)
     user_id_team2 = registration_team_manager.get_users_for_team(team2)
+    user_id_competition = registration_competition_manager.get_users_for_competition(competition)
 
-    user_id_both_team = [user_id for user_id in user_id_team1 if user_id in user_id_team2]
-    for user_id in user_id_both_team:
-        user_id_team1.remove(user_id)
-        user_id_team2.remove(user_id)
+    ids = user_id_team1 + user_id_team2 + user_id_competition
+    ids = list(set(ids)) # clear duplicates
 
-    _send_highlight_for_team(highlight, user_id_team1, team1.title())
-    _send_highlight_for_team(highlight, user_id_team2, team2.title())
-    _send_highlight_for_team(highlight, user_id_both_team, None)
-
-
-def _send_highlight_for_team(highlight, ids, team_name):
     # Send introduction message to users
-    messenger_manager.send_highlight_for_team_messages(ids, team_name)
+    messenger_manager.send_highlight_introduction_message(ids, highlight)
     # Send the highlight to users
     messenger_manager.send_highlight_messages(ids, [highlight])
 

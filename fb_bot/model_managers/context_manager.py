@@ -4,18 +4,16 @@ from fb_bot.model_managers.user_manager import get_user
 
 
 class ContextType(Enum):
-    NOTIFICATIONS_SETTING = 1
-    ADDING_TEAM = 2
-    DELETING_TEAM = 3
+    SUBSCRIPTIONS_SETTING = 1
+    ADDING_REGISTRATION = 2
+    REMOVE_REGISTRATION = 3
     SEARCH_HIGHLIGHTS = 4
 
     TUTORIAL_ADD_TEAM = 100
 
 
 def set_default_context(fb_id):
-    user = get_user(fb_id)
-    user.context = ContextType.SEARCH_HIGHLIGHTS.value
-    user.save()
+    update_context(fb_id, ContextType.SEARCH_HIGHLIGHTS)
 
 
 def update_context(fb_id, context):
@@ -28,19 +26,19 @@ def update_context(fb_id, context):
 
 
 def is_notifications_setting_context(fb_id):
-    return get_user(fb_id).context == ContextType.NOTIFICATIONS_SETTING.value
+    return get_user(fb_id).context == ContextType.SUBSCRIPTIONS_SETTING.value
 
 
 def is_notifications_setting_continue_context(fb_id):
-    return get_user(fb_id).context == ContextType.NOTIFICATIONS_SETTING_CONTINUE.value
+    return get_user(fb_id).context == ContextType.SUBSCRIPTIONS_SETTING_CONTINUE.value
 
 
-def is_adding_team_context(fb_id):
-    return get_user(fb_id).context == ContextType.ADDING_TEAM.value
+def is_adding_registration_context(fb_id):
+    return get_user(fb_id).context == ContextType.ADDING_REGISTRATION.value
 
 
 def is_deleting_team_context(fb_id):
-    return get_user(fb_id).context == ContextType.DELETING_TEAM.value
+    return get_user(fb_id).context == ContextType.REMOVE_REGISTRATION.value
 
 
 def is_searching_highlights_context(fb_id):

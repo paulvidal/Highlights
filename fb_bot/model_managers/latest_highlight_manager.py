@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fb_bot.model_managers import football_team_manager, new_football_team_manager
+from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 
 
@@ -33,7 +33,7 @@ def get_highlights(team1, score1, team2, score2, date):
 
 def get_similar_sent_highlights(highlight):
     # Add team to new team if does not exists and return
-    if add_new_team_to_db(highlight):
+    if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
         return []
 
     team1 = football_team_manager.get_football_team(highlight.team1)
@@ -97,15 +97,23 @@ def get_highlight_img_link_from_footyroom(highlight_model):
 
 def add_highlight(highlight, sent=False):
     # Add team to new team if does not exists and return
-    if add_new_team_to_db(highlight):
+    if not has_teams_in_db(highlight):
+        add_new_team_to_db(highlight)
+        return
+
+    # Add competition to new competition if does not exists and return
+    if not has_competition_in_db(highlight):
+        add_new_competition_to_db(highlight)
         return
 
     team1 = football_team_manager.get_football_team(highlight.team1)
     team2 = football_team_manager.get_football_team(highlight.team2)
 
+    category = football_competition_manager.get_football_competition(highlight.category)
+
     LatestHighlight.objects.update_or_create(link=highlight.link, img_link=highlight.img_link,
                                                  time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
-                                                 team2=team2, score2=highlight.score2, category=highlight.category,
+                                                 team2=team2, score2=highlight.score2, category=category,
                                                  view_count=highlight.view_count, source=highlight.source, sent=sent)
 
 
@@ -115,16 +123,22 @@ def delete_highlight(highlight_model):
 
 # HELPERS
 
+def has_teams_in_db(highlight):
+    return football_team_manager.has_football_team(highlight.team1) and \
+           football_team_manager.has_football_team(highlight.team2)
+
+
 def add_new_team_to_db(highlight):
-    if not football_team_manager.has_football_team(highlight.team1):
-        new_football_team_manager.add_football_team(highlight.team1, highlight.source)
-        return True
+    new_football_registration_manager.add_football_registration(highlight.team1, highlight.source)
+    new_football_registration_manager.add_football_registration(highlight.team2, highlight.source)
 
-    if not football_team_manager.has_football_team(highlight.team2):
-        new_football_team_manager.add_football_team(highlight.team2, highlight.source)
-        return True
 
-    return False
+def has_competition_in_db(highlight):
+    return football_competition_manager.has_football_competition(highlight.category)
+
+
+def add_new_competition_to_db(highlight):
+    new_football_registration_manager.add_football_registration(highlight.category, highlight.source)
 
 
 def get_unique_highlights(highlight_models):

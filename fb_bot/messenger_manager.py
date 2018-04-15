@@ -1,18 +1,18 @@
 import json
+import random
 from urllib.parse import quote
 
 import highlights.settings
-import highlights.settings
-from fb_bot import client
+from fb_bot import client, registration_suggestions
 from fb_bot.logger import logger
 from fb_bot.messages import *
-from fb_bot.model_managers import latest_highlight_manager, football_team_manager, user_manager
+from fb_bot.model_managers import latest_highlight_manager, football_team_manager, new_football_registration_manager, \
+    registration_team_manager, registration_competition_manager
 from highlights import settings
 
+CLIENT = client.Client()
+
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
-
-MAX_QUICK_REPLIES = 10
-
 
 ### MESSAGES ###
 
@@ -36,55 +36,68 @@ def send_search_highlights_message(fb_id):
     return send_facebook_message(fb_id, create_message(SEARCH_HIGHLIGHTS_MESSAGE))
 
 
-def send_notification_message(fb_id, teams):
-    formatted_teams = ""
-    quick_reply_buttons = [ADD_TEAM_BUTTON, REMOVE_TEAM_BUTTON, DONE_TEAM_BUTTON]
+def send_notification_message(fb_id, teams, competitions):
+    formatted_registrations = ""
+    quick_reply_buttons = [ADD_REGISTRATION_BUTTON, REMOVE_REGISTRATION_BUTTON, DONE_REGISTRATION_BUTTON]
 
-    if len(teams) == 0:
-        formatted_teams = NO_TEAM_REGISTERED_MESSAGE
-        quick_reply_buttons.remove(REMOVE_TEAM_BUTTON)
-    elif len(teams) == MAX_QUICK_REPLIES:
-        quick_reply_buttons.remove(ADD_TEAM_BUTTON)
+    if len(teams) == 0 and len(competitions) == 0:
+        formatted_registrations = NO_REGISTRATION_MESSAGE
+        quick_reply_buttons.remove(REMOVE_REGISTRATION_BUTTON)
 
+    # Show teams registered
     for i in range(len(teams)):
         if i > 0:
-            formatted_teams += "\n"
+            formatted_registrations += "\n"
 
-        formatted_teams += "-> {}".format(teams[i])
+        formatted_registrations += "-> {}".format(teams[i])
+
+    # Separate team and competition sections
+    if len(teams) > 0 and len(competitions) > 0:
+        formatted_registrations += "\n"
+
+    # Show competitions registered
+    for i in range(len(competitions)):
+        if i > 0:
+            formatted_registrations += "\n"
+
+        formatted_registrations += "-> {}".format(competitions[i])
 
     return send_facebook_message(
-        fb_id, create_quick_text_reply_message(NOTIFICATION_MESSAGE.format(formatted_teams), quick_reply_buttons))
+        fb_id, create_quick_text_reply_message(SUBSCRIPTION_MESSAGE.format(formatted_registrations), quick_reply_buttons))
 
 
-def send_add_team_message(fb_id):
-    return send_facebook_message(fb_id, create_message(ADD_TEAM_MESSAGE))
+def send_add_registration_message(fb_id, suggestions_override=None):
+    registrations = registration_team_manager.get_teams_for_user(fb_id) \
+                    + registration_competition_manager.get_competitions_for_user(fb_id)
+
+    suggestions = registration_suggestions.get_suggestion_for_registrations(registrations) if not suggestions_override else suggestions_override
+    suggestions = [s.title() for s in suggestions]
+
+    return send_facebook_message(fb_id, create_quick_text_reply_message(ADD_REGISTRATIONS_MESSAGE, suggestions))
 
 
-def send_delete_team_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_MESSAGE, teams + [CANCEL_BUTTON]))
+def send_delete_registration_message(fb_id, registrations):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_REGISTRATION_MESSAGE, registrations[:10] + [CANCEL_BUTTON]))
 
 
-def send_recommended_team_message(fb_id, recommended):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON, CANCEL_BUTTON]))
+def send_recommended_registration_message(fb_id, recommended):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(REGISTRATION_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON, CANCEL_BUTTON]))
 
 
-def send_team_not_found_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_NOT_FOUND_MESSAGE, [TRY_AGAIN_BUTTON, CANCEL_BUTTON]))
+def send_registration_not_found_message(fb_id):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(REGISTRATION_NOT_FOUND_MESSAGE, [TRY_AGAIN_BUTTON, CANCEL_BUTTON]))
 
 
-def send_team_added_message(fb_id, success, team):
-    if success:
-        return send_facebook_message(fb_id, create_message(TEAM_ADDED_SUCCESS_MESSAGE.format(team)))
-    else:
-        return send_facebook_message(fb_id, create_message(TEAM_ADDED_FAIL_MESSAGE.format(team)))
+def send_registration_added_message(fb_id, team):
+    return send_facebook_message(fb_id, create_message(REGISTRATION_ADDED_MESSAGE.format(team)))
 
 
-def send_team_to_delete_not_found_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_TEAM_NOT_FOUND_MESSAGE, teams + [CANCEL_BUTTON]))
+def send_registration_to_delete_not_found_message(fb_id, registrations):
+    return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_REGISTRATION_NOT_FOUND_MESSAGE, registrations + [CANCEL_BUTTON]))
 
 
-def send_team_deleted_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_message(TEAM_DELETED_MESSAGE.format(teams)))
+def send_registration_deleted_message(fb_id, teams):
+    return send_facebook_message(fb_id, create_message(REGISTRATION_DELETED_MESSAGE.format(teams)))
 
 
 def send_getting_started_message(fb_id, user_name):
@@ -110,11 +123,11 @@ def send_tutorial_message(fb_id, team):
 
 
 def send_recommended_team_tutorial_message(fb_id, recommended):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(TEAM_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON]))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(REGISTRATION_RECOMMEND_MESSAGE, recommended[:9] + [OTHER_BUTTON]))
 
 
 def send_team_not_found_tutorial_message(fb_id):
-    return send_facebook_message(fb_id, create_message(TEAM_NOT_FOUND_MESSAGE))
+    return send_facebook_message(fb_id, create_message(REGISTRATION_NOT_FOUND_MESSAGE))
 
 
 # FIXME: duplication with real search
@@ -142,13 +155,27 @@ def send_highlight_messages(fb_ids, highlight_models):
     return send_batch_facebook_message(fb_ids, attachments)
 
 
-def send_highlight_for_team_messages(fb_ids, team_name=None):
-    messages = []
+def send_highlight_introduction_message(fb_ids, highlight_model):
+    message = None
 
-    for id in fb_ids:
-        user_name = user_manager.get_user(id).first_name
-        message = NEW_HIGHLIGHT_TEAM_MESSAGE.format(user_name, team_name) if team_name else NEW_HIGHLIGHT_TEAMS_MESSAGE.format(user_name)
-        messages.append(create_message(message))
+    if highlight_model.category.name == "champions league" and highlight_model.score1 + highlight_model.score2 >= 5:
+        # CHAMPIONS LEAGUE LOT OF GOALS MESSAGE
+        message = random.choice(NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_LOT_OF_GOALS_MESSAGES)
+
+    elif highlight_model.category.name == "champions league":
+        # CHAMPIONS LEAGUE MESSAGE
+        message = random.choice(NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_MESSAGES)
+
+    elif highlight_model.score1 + highlight_model.score2 >= 5:
+        # LOT OF GOALS MESSAGE
+        message = random.choice(NEW_HIGHLIGHT_LOT_OF_GOALS_MESSAGES).format(highlight_model.category.name.title())
+
+    else:
+        # NORMAL MESSAGE
+        message = random.choice(NEW_HIGHLIGHT_MESSAGES).format(highlight_model.category.name.title())
+
+    # Make as many messages as there are different fb_ids
+    messages = [message] * len(fb_ids)
 
     return send_batch_facebook_message(fb_ids, messages)
 
@@ -169,10 +196,8 @@ def send_batch_facebook_message(fb_ids, messages):
             })
         )
 
-    if not highlights.settings.DEBUG:
-        client.send_fb_messages_async(post_message_url, response_msgs)
-    else:
-        logger.log(response_msgs)
+    CLIENT.send_fb_messages_async(post_message_url, response_msgs)
+    logger.log(response_msgs)
 
     return response_msgs
 
@@ -187,10 +212,8 @@ def send_facebook_message(fb_id, message):
             "message": message
         })
 
-    if not highlights.settings.DEBUG:
-        client.send_fb_message(post_message_url, response_msg)
-    else:
-        logger.log(response_msg)
+    CLIENT.send_fb_message(post_message_url, response_msg)
+    logger.log(response_msg)
 
     return response_msg
 
@@ -205,8 +228,7 @@ def send_typing(fb_id):
             "sender_action": "typing_on"
         })
 
-    if not highlights.settings.DEBUG:
-        client.send_fb_message(post_message_url, response_msg)
+    CLIENT.send_fb_message(post_message_url, response_msg)
 
 
 #
@@ -230,6 +252,9 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
     if not highlights:
         # Case no team name matched
         similar_team_names = football_team_manager.similar_football_team_names(team)
+
+        # Register wrong search
+        new_football_registration_manager.add_football_registration(team, 'user')
 
         # Check if name of team was not properly written
         if len(similar_team_names) == 0:
@@ -271,7 +296,7 @@ def highlight_to_json(fb_id, highlight_model):
     return {
         "title": highlight_model.get_match_name(),
         "image_url": highlight_model.img_link,
-        "subtitle": highlight_model.get_formatted_date() + ' - ' + highlight_model.category.title(),
+        "subtitle": highlight_model.category.name.title(),
         "default_action": {
             "type": "web_url",
             "url": create_tracking_link(fb_id, highlight_model),
@@ -304,6 +329,22 @@ def create_tracking_link(fb_id, highlight_model):
 def create_message(text):
     return {
         "text": text
+    }
+
+
+def create_quick_text_reply_with_payload_message(text, quick_replies, payloads):
+    formatted_quick_replies = []
+
+    for i in range(len(quick_replies)):
+        formatted_quick_replies.append({
+            "content_type": "text",
+            "title": quick_replies[i],
+            "payload": payloads[i]
+        })
+
+    return {
+        "text": text,
+        "quick_replies": formatted_quick_replies
     }
 
 

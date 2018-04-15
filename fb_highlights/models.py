@@ -38,12 +38,12 @@ class User(models.Model):
     @staticmethod
     def get_default_user():
         return User(facebook_id=0,
-                    first_name="man",
-                    last_name="",
-                    image_url="",
-                    locale="",
+                    first_name="first",
+                    last_name="last",
+                    image_url="http://images/url.png",
+                    locale="en_GB",
                     timezone=0,
-                    gender="")
+                    gender="male")
 
     def __str__(self):
         return str(self.first_name) + ' ' + str(self.last_name)
@@ -68,8 +68,8 @@ class FootballTeam(models.Model):
         return str(self.name)
 
 
-# Teams to potentially add to FootballTeam
-class NewFootballTeam(models.Model):
+# Teams or competitions to potentially add
+class NewFootballRegistration(models.Model):
     name = models.CharField(max_length=200)
     source = models.CharField(max_length=80)
 
@@ -109,30 +109,6 @@ class FootballCompetition(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-
-# Competitions to potentially add to FootballCompetition
-class NewFootballCompetition(models.Model):
-    name = models.CharField(max_length=200)
-    source = models.CharField(max_length=80)
-
-    class Meta:
-        unique_together = ('name', 'source')
-
-    @staticmethod
-    def to_list_display():
-        return 'name', 'source'
-
-    @staticmethod
-    def to_list_filter():
-        return 'source',
-
-    @staticmethod
-    def search_fields():
-        return 'name',
-
-    def __str__(self):
-        return str(self.name) + ' | ' + str(self.source)
 
 
 class RegistrationTeam(models.Model):
@@ -179,7 +155,7 @@ class LatestHighlight(models.Model):
     link = models.TextField(unique=True, primary_key=True)
     img_link = models.TextField(default="")
     time_since_added = models.CharField(max_length=120)
-    category = models.CharField(max_length=120)
+    category = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, db_column="category")
     view_count = models.IntegerField(default=0)
     team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="team1")
     score1 = models.SmallIntegerField()

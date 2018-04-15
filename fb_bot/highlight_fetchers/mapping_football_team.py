@@ -131,11 +131,12 @@ NAME_MAPPING = {
     'salzburg': 'red bull salzburg',
     'breda': 'nac breda',
     'den haag': 'ado den haag',
-    'heerenveen‎': 'sc heerenveen‎'
+    'heerenveen‎': 'sc heerenveen‎',
+    'akhisarspor': 'akhisar belediyespor'
 }
 
 
-# Return the name form the mapping if in it, otherwise return the same team name
+# Return the name from the mapping if in it, otherwise return the same team name
 def get_exact_name(team_name):
     name = NAME_MAPPING.get(team_name)
 

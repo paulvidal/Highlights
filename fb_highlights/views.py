@@ -14,7 +14,8 @@ import fb_bot.messenger_manager as messenger_manager
 from fb_bot import language, analytics
 from fb_bot.logger import logger
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
-    highlight_stat_manager, highlight_notification_stat_manager
+    highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
+    registration_competition_manager, new_football_registration_manager
 from fb_bot.model_managers import registration_team_manager
 from fb_bot.model_managers.context_manager import ContextType
 from fb_highlights import view_message_helper
@@ -90,174 +91,230 @@ class HighlightsBotView(generic.View):
                     # Cancel quick reply
                     if 'cancel' in message:
                         logger.log("CANCEL")
-                        context_manager.set_default_context(sender_id)
 
-                        response_msg.append(messenger_manager.send_cancel_message(sender_id))
-                        #
-                        # # Answer with new message what want to do
-                        # response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+                        context_manager.set_default_context(sender_id)
+                        response_msg.append(
+                            messenger_manager.send_cancel_message(sender_id)
+                        )
 
                     # Done quick reply
                     elif 'done' in message:
                         logger.log("DONE")
-                        context_manager.set_default_context(sender_id)
 
-                        response_msg.append(messenger_manager.send_done_message(sender_id))
-                        #
-                        # # Answer with new message what want to do
-                        # response_msg.append(messenger_manager.send_anything_else_i_can_do_message(sender_id))
+                        context_manager.set_default_context(sender_id)
+                        response_msg.append(
+                            messenger_manager.send_done_message(sender_id)
+                        )
 
                     # HELP
                     elif 'help' in message:
                         logger.log("HELP")
-                        context_manager.set_default_context(sender_id)
 
-                        response_msg.append(messenger_manager.send_help_message(sender_id))
+                        context_manager.set_default_context(sender_id)
+                        response_msg.append(
+                            messenger_manager.send_help_message(sender_id)
+                        )
 
                     elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
                         logger.log("THANK YOU MESSAGE")
-                        context_manager.set_default_context(sender_id)
 
-                        response_msg.append(messenger_manager.send_thank_you_message(sender_id))
+                        context_manager.set_default_context(sender_id)
+                        response_msg.append(
+                            messenger_manager.send_thank_you_message(sender_id)
+                        )
 
                     # TUTORIAL CONTEXT
-                    # FIXME: duplication between tutorial and adding team
+                    # FIXME: duplication between tutorial and registration team
                     elif context_manager.is_tutorial_context(sender_id):
-                        logger.log("TUTORIAL ADD TEAM")
+                        logger.log("TUTORIAL ADD REGISTRATION")
 
-                        team_to_add = message
+                        registration_to_add = message
 
                         # Check if team exists, make a recommendation if no teams
-                        if team_to_add == 'other':
-                            response_msg.append(messenger_manager.send_add_team_message(sender_id))
+                        if registration_to_add == 'other':
 
-                        elif football_team_manager.has_football_team(team_to_add):
+                            response_msg.append(
+                                messenger_manager.send_getting_started_message_2(sender_id)
+                            )
+
+                        elif football_team_manager.has_football_team(registration_to_add):
                             # Does team exist check
 
-                            registration_team_manager.add_team(sender_id, team_to_add)
+                            registration_team_manager.add_team(sender_id, registration_to_add)
 
-                            response_msg.append(messenger_manager.send_tutorial_message(sender_id, text))
-                            response_msg.append(messenger_manager.send_tutorial_highlight(sender_id, team_to_add))
+                            response_msg.append(
+                                messenger_manager.send_tutorial_message(sender_id, text)
+                            )
 
-                            context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+                            response_msg.append(
+                                messenger_manager.send_tutorial_highlight(sender_id, registration_to_add)
+                            )
 
-                            # Send notification mode FIXME: remove duplication from notification
+                            response_msg.append(
+                                view_message_helper.send_notification_settings(sender_id)
+                            )
 
-                            teams = registration_team_manager.get_teams_for_user(sender_id)
-                            # Format team names
-                            teams = [team.title() for team in teams]
-
-                            response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
-
-                        elif football_team_manager.similar_football_team_names(team_to_add):
+                        elif football_team_manager.similar_football_team_names(registration_to_add):
                             # Team recommendation
 
-                            recommendations = football_team_manager.similar_football_team_names(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+
                             # Format recommendation names
+                            recommendations = football_team_manager.similar_football_team_names(registration_to_add)
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
-                            response_msg.append(messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations))
+                            response_msg.append(
+                                messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations)
+                            )
 
                         else:
                             # No team or recommendation found
 
-                            response_msg.append(messenger_manager.send_team_not_found_tutorial_message(sender_id))
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
 
-                    # NOTIFICATION SETTING
-                    elif 'teams' in message:
-                        logger.log("NOTIFICATION SETTING")
+                            response_msg.append(
+                                messenger_manager.send_team_not_found_tutorial_message(sender_id)
+                            )
+
+                    # SUBSCRIPTION SETTING
+                    elif 'subscriptions' in message:
+                        logger.log("SUBSCRIPTION SETTING")
 
                         response_msg.append(
                             view_message_helper.send_notification_settings(sender_id)
                         )
 
-                    # ADD TEAM SETTING
+                    # ADD REGISTRATION SETTING
                     elif 'add' in message and context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("ADD TEAM SETTING")
-                        context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+                        logger.log("ADD REGISTRATION SETTING")
 
-                        response_msg.append(messenger_manager.send_add_team_message(sender_id))
+                        context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
-                    # REMOVE TEAM SETTING
+                        response_msg.append(
+                            messenger_manager.send_add_registration_message(sender_id)
+                        )
+
+                    # REMOVE REGISTRATION SETTING
                     elif 'remove' in message and context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("REMOVE TEAM SETTING")
-                        context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
+                        logger.log("REMOVE REGISTRATION SETTING")
 
-                        teams = registration_team_manager.get_teams_for_user(sender_id)
-                        # Format team names
-                        teams = [team.title() for team in teams]
+                        context_manager.update_context(sender_id, ContextType.REMOVE_REGISTRATION)
 
-                        response_msg.append(messenger_manager.send_delete_team_message(sender_id, teams))
+                        registrations = view_message_helper.get_registrations_formatted(sender_id)
 
-                    # ADDING TEAM
-                    # FIXME: duplication between tutorial and adding team
-                    elif context_manager.is_adding_team_context(sender_id) \
+                        response_msg.append(
+                            messenger_manager.send_delete_registration_message(sender_id, registrations)
+                        )
+
+                    # ADDING REGISTRATION
+                    # FIXME: duplication between tutorial and registration
+                    elif context_manager.is_adding_registration_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("ADDING TEAM")
+                        logger.log("ADDING REGISTRATION")
 
-                        team_to_add = message
+                        registration_to_add = message
 
-                        # Check if team exists, make a recommendation if no teams
-                        if team_to_add == 'other' or team_to_add == 'try again':
-                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+                        # Check if registration exists, make a recommendation if no registration
+                        if registration_to_add == 'other' or registration_to_add == 'try again':
+                            context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
-                            response_msg.append(messenger_manager.send_add_team_message(sender_id))
+                            response_msg.append(
+                                messenger_manager.send_add_registration_message(sender_id)
+                            )
 
-                        elif football_team_manager.has_football_team(team_to_add):
+                        elif football_team_manager.has_football_team(registration_to_add):
                             # Does team exist check
-                            context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
+                            registration_team_manager.add_team(sender_id, registration_to_add)
 
-                            registration_team_manager.add_team(sender_id, team_to_add)
-                            response_msg.append(messenger_manager.send_team_added_message(sender_id, True, text))
+                            response_msg.append(
+                                messenger_manager.send_registration_added_message(sender_id, text)
+                            )
 
-                            teams = registration_team_manager.get_teams_for_user(sender_id)
-                            # Format team names
-                            teams = [team.title() for team in teams]
+                            response_msg.append(
+                                view_message_helper.send_notification_settings(sender_id)
+                            )
 
-                            response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+                        elif football_competition_manager.has_football_competition(registration_to_add):
+                            # Does competition exist check
+                            registration_competition_manager.add_competition(sender_id, registration_to_add)
 
-                        elif football_team_manager.similar_football_team_names(team_to_add):
-                            # Team recommendation
-                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+                            response_msg.append(
+                                messenger_manager.send_registration_added_message(sender_id, text)
+                            )
 
-                            recommendations = football_team_manager.similar_football_team_names(team_to_add)[:messenger_manager.MAX_QUICK_REPLIES]
+                            response_msg.append(
+                                view_message_helper.send_notification_settings(sender_id)
+                            )
+
+                        elif football_team_manager.similar_football_team_names(registration_to_add) or \
+                                football_competition_manager.similar_football_competition_names(registration_to_add):
+                            # Registration recommendation
+                            context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
+
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+
+                            recommendations = football_team_manager.similar_football_team_names(registration_to_add)\
+                                              + football_competition_manager.similar_football_competition_names(registration_to_add)
+
                             # Format recommendation names
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
-                            response_msg.append(messenger_manager.send_recommended_team_message(sender_id, recommendations))
+                            response_msg.append(
+                                messenger_manager.send_recommended_registration_message(sender_id, recommendations)
+                            )
 
                         else:
-                            # No team or recommendation found
-                            context_manager.update_context(sender_id, ContextType.ADDING_TEAM)
+                            # No registration recommendation found
+                            context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
-                            response_msg.append(messenger_manager.send_team_not_found_message(sender_id))
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
 
-                    # DELETING TEAM
+                            response_msg.append(
+                                messenger_manager.send_registration_not_found_message(sender_id)
+                            )
+
+                    # REMOVING REGISTRATION
                     elif context_manager.is_deleting_team_context(sender_id):
-                        logger.log("DELETING TEAM")
-                        team_to_delete = message.lower()
+                        logger.log("REMOVING REGISTRATION")
+                        registration_to_delete = message.lower()
 
-                        if football_team_manager.has_football_team(team_to_delete):
+                        if football_team_manager.has_football_team(registration_to_delete):
                             # Delete team
-                            registration_team_manager.delete_team(sender_id, team_to_delete)
-                            response_msg.append(messenger_manager.send_team_deleted_message(sender_id, message))
+                            registration_team_manager.delete_team(sender_id, registration_to_delete)
 
-                            teams = registration_team_manager.get_teams_for_user(sender_id)
-                            # Format team names
-                            teams = [team.title() for team in teams]
+                            response_msg.append(
+                                messenger_manager.send_registration_deleted_message(sender_id, message)
+                            )
 
-                            context_manager.update_context(sender_id, ContextType.NOTIFICATIONS_SETTING)
-                            response_msg.append(messenger_manager.send_notification_message(sender_id, teams))
+                            response_msg.append(
+                                view_message_helper.send_notification_settings(sender_id)
+                            )
+
+                        elif football_competition_manager.has_football_competition(registration_to_delete):
+                            # Delete competition
+                            registration_competition_manager.delete_competition(sender_id, registration_to_delete)
+
+                            response_msg.append(
+                                messenger_manager.send_registration_deleted_message(sender_id, message)
+                            )
+
+                            response_msg.append(
+                                view_message_helper.send_notification_settings(sender_id)
+                            )
 
                         else:
-                            # Team to delete not found
-                            context_manager.update_context(sender_id, ContextType.DELETING_TEAM)
+                            # Registration to delete not found
+                            context_manager.update_context(sender_id, ContextType.REMOVE_REGISTRATION)
 
-                            teams = registration_team_manager.get_teams_for_user(sender_id)
-                            # Format team names
-                            teams = [team.title() for team in teams]
+                            registrations = view_message_helper.get_registrations_formatted(sender_id)
 
-                            response_msg.append(messenger_manager.send_team_to_delete_not_found_message(sender_id, teams))
+                            response_msg.append(
+                                messenger_manager.send_registration_to_delete_not_found_message(sender_id, registrations)
+                            )
 
                     # SEARCH HIGHLIGHT OPTION
                     elif 'search' in message or 'search again' in message:
@@ -280,10 +337,15 @@ class HighlightsBotView(generic.View):
 
                     if postback == 'get_started':
                         logger.log("GET STARTED POSTBACK")
+
                         user = user_manager.get_user(sender_id)
 
-                        response_msg.append(messenger_manager.send_getting_started_message(sender_id, user.first_name))
-                        response_msg.append(messenger_manager.send_getting_started_message_2(sender_id))
+                        response_msg.append(
+                            messenger_manager.send_getting_started_message(sender_id, user.first_name)
+                        )
+                        response_msg.append(
+                            messenger_manager.send_getting_started_message_2(sender_id)
+                        )
 
                         # Set the user in tutorial context
                         context_manager.update_context(sender_id, ContextType.TUTORIAL_ADD_TEAM)
@@ -291,16 +353,32 @@ class HighlightsBotView(generic.View):
                     # SEARCH HIGHLIGHT SETTING
                     elif postback == 'search_highlights':
                         logger.log("SEARCH HIGHLIGHTS POSTBACK")
+
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
                         )
 
-                    # NOTIFICATION SETTING
-                    elif postback == 'my_teams':
-                        logger.log("NOTIFICATION SETTING POSTBACK")
+                    # SUBSCRIPTION SETTING
+                    elif postback == 'my_subscriptions':
+                        logger.log("SUBSCRIPTION SETTING POSTBACK")
+
                         response_msg.append(
                             view_message_helper.send_notification_settings(sender_id)
                         )
+
+                    elif postback == 'add_registration':
+                        logger.log("ADD REGISTRATION POSTBACK")
+
+                        context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
+
+                        suggestions_override = ['Champions League', 'Ligue 1', 'Premier league']
+
+                        response_msg.append(
+                            messenger_manager.send_add_registration_message(sender_id, suggestions_override=suggestions_override)
+                        )
+
+                    elif postback == 'no_action':
+                        pass
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0

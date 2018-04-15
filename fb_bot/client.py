@@ -3,20 +3,35 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 from requests import Timeout
 
-
-def send_fb_messages_async(url, messages):
-
-    def send(message):
-        return send_fb_message(url, message)
-
-    with ThreadPoolExecutor(max_workers=20) as executor:
-        responses = executor.map(send, messages)
-
-    return responses
+from highlights import settings
 
 
-def send_fb_message(url, message):
-    try:
-        return requests.post(url, headers={"Content-Type": "application/json"}, data=message)
-    except Timeout:
-        pass
+class Client:
+
+    def __init__(self):
+        self.client_send = not settings.DEBUG
+        self.messages = []
+
+    def disable(self):
+        # Used for testing
+        self.client_send = False
+
+    def send_fb_messages_async(self, url, messages):
+
+        def send(message):
+            return self.send_fb_message(url, message)
+
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            responses = executor.map(send, messages)
+
+        return responses
+
+    def send_fb_message(self, url, message):
+        if self.client_send:
+            try:
+                return requests.post(url, headers={"Content-Type": "application/json"}, data=message)
+            except Timeout:
+                pass
+
+        else:
+            self.messages.append(message)

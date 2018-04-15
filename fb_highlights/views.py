@@ -13,6 +13,7 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 from fb_bot import language, analytics
 from fb_bot.logger import logger
+from fb_bot.messages import EMOJI_TROPHY, EMOJI_CROSS, EMOJI_SMILE
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
     registration_competition_manager, new_football_registration_manager
@@ -88,8 +89,31 @@ class HighlightsBotView(generic.View):
                     # Send typing event - so user is aware received message
                     messenger_manager.send_typing(sender_id)
 
+                    # Special replies
+                    # TODO: remove at some point
+                    if message == 'add competition ' + EMOJI_TROPHY:
+                        logger.log("ADD COMPETITION")
+
+                        context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
+
+                        suggestions_override = ['champions league', 'ligue 1', 'premier league', 'europa league',
+                                                'fa cup', 'serie a', 'world cup', 'bundesliga', 'friendly match']
+
+                        response_msg.append(
+                            messenger_manager.send_add_registration_message(sender_id,
+                                                                            suggestions_override=suggestions_override)
+                        )
+
+                    # Special replies
+                    # TODO: remove at some point
+                    elif message == 'no thanks ' + EMOJI_CROSS:
+                        response_msg.append(
+                            messenger_manager.send_facebook_message(
+                                sender_id, messenger_manager.create_message("Another time! " + EMOJI_SMILE))
+                        )
+
                     # Cancel quick reply
-                    if 'cancel' in message:
+                    elif 'cancel' in message:
                         logger.log("CANCEL")
 
                         context_manager.set_default_context(sender_id)
@@ -332,7 +356,7 @@ class HighlightsBotView(generic.View):
                             messenger_manager.send_highlight_message_for_team(sender_id, message)
                         )
 
-                elif 'postback' in message:
+                if 'postback' in message:
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
@@ -365,20 +389,6 @@ class HighlightsBotView(generic.View):
                         response_msg.append(
                             view_message_helper.send_notification_settings(sender_id)
                         )
-
-                    elif postback == 'add_registration':
-                        logger.log("ADD REGISTRATION POSTBACK")
-
-                        context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
-
-                        suggestions_override = ['Champions League', 'Ligue 1', 'Premier league']
-
-                        response_msg.append(
-                            messenger_manager.send_add_registration_message(sender_id, suggestions_override=suggestions_override)
-                        )
-
-                    elif postback == 'no_action':
-                        pass
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)
                 HighlightsBotView.LATEST_SENDER_ID = 0

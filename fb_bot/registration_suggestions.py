@@ -20,18 +20,21 @@ SUGGESTIONS = {
     ],
 
     "barcelona": [
+      "champions league",
       "manchester city",
       "spain",
       "la liga",
     ],
 
     "bayern munich": [
+      "champions league",
       "monaco",
       "germany",
       "bundesliga",
     ],
 
     "chelsea": [
+      "champions league",
       "tottenham",
       "england",
       "premier league",
@@ -50,6 +53,7 @@ SUGGESTIONS = {
     ],
 
     "juventus": [
+      "champions league",
       "dortmund",
       "italy",
       "serie a",
@@ -74,6 +78,7 @@ SUGGESTIONS = {
     ],
 
     "manchester united": [
+      "champions league",
       "tottenham",
       "england",
       "premier league",
@@ -81,7 +86,7 @@ SUGGESTIONS = {
 
     "marseille": [
       "monaco",
-      "bordeau",
+      "bordeaux",
       "france",
       "ligue 1",
     ],
@@ -111,12 +116,14 @@ SUGGESTIONS = {
     ],
 
     "paris saint germain": [
+      "champions league",
       "bayern munich",
       "france",
       "ligue 1",
     ],
 
     "real madrid": [
+      "champions league",
       "barcelona",
       "spain",
       "la liga",
@@ -141,6 +148,16 @@ def get_suggestion_for_registrations(registrations):
         if SUGGESTIONS.get(r):
             suggestions += SUGGESTIONS.get(r)
 
-    suggestions += ['PSG', 'Barcelona', 'Champions league']
+    # Add default suggestions
+    suggestions += ['psg', 'arsenal', 'champions league', 'barcelona', 'manchester united', 'europa league',
+                    'world cup', 'bayern munich', 'real madrid', 'liverpool']
+    # Remove teams already in registrations
+    suggestions = [s for s in suggestions if s not in registrations]
+    # Remove duplicates while keeping order
+    suggestions = _remove_duplicates_and_keep_order(suggestions)
 
-    return suggestions
+    return suggestions[:10]
+
+
+def _remove_duplicates_and_keep_order(list):
+    return sorted(set(list), key=lambda x: list.index(x))

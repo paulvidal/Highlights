@@ -53,7 +53,7 @@ def send_notification_message(fb_id, teams, competitions):
 
     # Separate team and competition sections
     if len(teams) > 0 and len(competitions) > 0:
-        formatted_registrations += "\n"
+        formatted_registrations += "\n\n"
 
     # Show competitions registered
     for i in range(len(competitions)):
@@ -175,7 +175,7 @@ def send_highlight_introduction_message(fb_ids, highlight_model):
         message = random.choice(NEW_HIGHLIGHT_MESSAGES).format(highlight_model.category.name.title())
 
     # Make as many messages as there are different fb_ids
-    messages = [message] * len(fb_ids)
+    messages = [create_message(message)] * len(fb_ids)
 
     return send_batch_facebook_message(fb_ids, messages)
 
@@ -329,22 +329,6 @@ def create_tracking_link(fb_id, highlight_model):
 def create_message(text):
     return {
         "text": text
-    }
-
-
-def create_quick_text_reply_with_payload_message(text, quick_replies, payloads):
-    formatted_quick_replies = []
-
-    for i in range(len(quick_replies)):
-        formatted_quick_replies.append({
-            "content_type": "text",
-            "title": quick_replies[i],
-            "payload": payloads[i]
-        })
-
-    return {
-        "text": text,
-        "quick_replies": formatted_quick_replies
     }
 
 

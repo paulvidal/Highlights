@@ -37,6 +37,7 @@ EMOJI_UMBRELLA = emo(':umbrella:')
 EMOJI_SURPRISED = emo(':open_mouth:')
 EMOJI_GRIN = emo(':grin:')
 EMOJI_DIZZY_FACE = emo(':dizzy_face:')
+EMOJI_TROPHY = emo(':trophy:')
 
 
 # MESSAGES
@@ -114,20 +115,20 @@ NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_LOT_OF_GOALS_MESSAGES = [
 ]
 
 NEW_HIGHLIGHT_LOT_OF_GOALS_MESSAGES = [
-    "GOOOAAALLLS!" + EMOJI_FOOTBALL + " What a day in {}!",
+    "GOOOAAALLLS! " + EMOJI_FOOTBALL + " What a day in {}!",
     "Hallelujah! It's raining goals in {} " + EMOJI_UMBRELLA,
     "What a match in {} " + EMOJI_SURPRISED,
     "Impressive performance today in {} " + EMOJI_MUSCLE,
     "What a day for {}! " + EMOJI_SCREAM,
     "Some brilliant goals today in {}! " + EMOJI_100,
-    "Spectacular match in {}" + EMOJI_MUSCLE,
-    "Many goals scored today in {}" + EMOJI_FOOTBALL,
-    "You gotta love {} for these matches" + EMOJI_HEART_EYES,
+    "Spectacular match in {} " + EMOJI_MUSCLE,
+    "Many goals scored today in {} " + EMOJI_FOOTBALL,
+    "You gotta love {} for these matches " + EMOJI_HEART_EYES,
 ]
 
 NEW_HIGHLIGHT_MESSAGES = [
     "{} strikes again! " + EMOJI_FOOTBALL + EMOJI_100,
-    # "What goes on in {} stays in {} " + EMOJI_WINK,
+    "What goes on in {}... stays there! " + EMOJI_WINK,
     "Hope you haven't missed {} today! " + EMOJI_FOOTBALL,
     "Here's the {} highlight you've been waiting for! " + EMOJI_TV,
     "Did you miss {} today? " + EMOJI_SMILE,

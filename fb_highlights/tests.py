@@ -165,12 +165,47 @@ class MessengerBotTestCase(TestCase):
                         {
                             "content_type": "text",
                             "payload": "NO_PAYLOAD",
-                            "title": "Barcelona"
+                            "title": "Arsenal"
                         },
                         {
                             "content_type": "text",
                             "payload": "NO_PAYLOAD",
                             "title": "Champions League"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Barcelona"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Manchester United"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Europa League"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "World Cup"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Bayern Munich"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Real Madrid"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Liverpool"
                         }
                     ],
                 }

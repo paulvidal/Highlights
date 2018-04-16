@@ -44,11 +44,9 @@ EMOJI_TROPHY = emo(':trophy:')
 
 HELP_MESSAGE = "Here is what you can ask me:\n\n" \
                + EMOJI_ONE + " Press \"Search highlights\" and I will give you the latest highlights videos for a team\n\n" \
-               + EMOJI_TWO + " Press \"My teams\" to subscribe to teams and I will send you highlights videos as soon as the match is over!"
+               + EMOJI_TWO + " Press \"My subscriptions\" to subscribe to teams and competitions, I will then send you highlights videos as soon as the match is over!"
 
 CANCEL_MESSAGE = "Alright let's stop there then :)"
-
-OK_MESSAGE = ""
 
 DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your teams as soon as the videos are available. " + EMOJI_TV
 

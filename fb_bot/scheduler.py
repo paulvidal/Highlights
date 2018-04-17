@@ -159,7 +159,7 @@ def _send_highlight_to_users(highlight):
     ids = list(set(ids)) # clear duplicates
 
     # Send introduction message to users
-    messenger_manager.send_highlight_introduction_message(ids, highlight)
+    # messenger_manager.send_highlight_introduction_message(ids, highlight)
     # Send the highlight to users
     messenger_manager.send_highlight_messages(ids, [highlight])
 

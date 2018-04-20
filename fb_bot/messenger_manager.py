@@ -155,8 +155,7 @@ def send_highlight_messages(fb_ids, highlight_models):
     return send_batch_facebook_message(fb_ids, attachments)
 
 
-def send_highlight_introduction_message(fb_ids, highlight_model):
-    message = None
+def send_highlight_won_introduction_message(fb_ids, highlight_model):
 
     if highlight_model.category.name == "champions league" and highlight_model.score1 + highlight_model.score2 >= 5:
         # CHAMPIONS LEAGUE LOT OF GOALS MESSAGE
@@ -173,6 +172,16 @@ def send_highlight_introduction_message(fb_ids, highlight_model):
     else:
         # NORMAL MESSAGE
         message = random.choice(NEW_HIGHLIGHT_MESSAGES).format(highlight_model.category.name.title())
+
+    # Make as many messages as there are different fb_ids
+    messages = [create_message(message)] * len(fb_ids)
+
+    return send_batch_facebook_message(fb_ids, messages)
+
+
+def send_highlight_lost_introduction_message(fb_ids, highlight_model):
+    # LOSE MESSAGE
+    message = random.choice(NEW_HIGHLIGHT_LOST_MATCH).format(highlight_model.category.name.title())
 
     # Make as many messages as there are different fb_ids
     messages = [create_message(message)] * len(fb_ids)

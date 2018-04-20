@@ -1,17 +1,13 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
 
-import dateparser
 from django.test import TestCase, Client
 
 from fb_bot import messenger_manager, scheduler
-from fb_bot.highlight_fetchers.fetcher_hoofoot import HoofootHighlight
-from fb_bot.logger import logger
-from fb_bot.model_managers import football_team_manager, latest_highlight_manager, context_manager, football_competition_manager, \
-    registration_team_manager, registration_competition_manager
-from fb_highlights.models import User
+from fb_bot.model_managers import registration_team_manager, registration_competition_manager
+from fb_highlights import tests_helper
 
-SENDER_ID = 1119096411506599
+TEST_USER_ID = 1119096411506599
 
 
 class MessengerBotTestCase(TestCase):
@@ -22,62 +18,12 @@ class MessengerBotTestCase(TestCase):
     def setUpClass(cls):
         super(MessengerBotTestCase, cls).setUpClass()
 
-        logger.disable()
-        messenger_manager.CLIENT.disable()
-
-        # Set up test database
-        User.objects.update_or_create(facebook_id=0,
-                                      first_name="first",
-                                      last_name="last",
-                                      image_url="http://images/url.png",
-                                      locale="en_GB",
-                                      timezone=0,
-                                      gender="male")
-
-        football_team_manager.add_football_team("chelsea")
-        football_team_manager.add_football_team("barcelona")
-        football_team_manager.add_football_team("real madrid")
-        football_team_manager.add_football_team("arsenal")
-        football_team_manager.add_football_team("liverpool")
-
-        football_competition_manager.add_football_competition('champions league')
-        football_competition_manager.add_football_competition('premier league')
-
-        latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona',
-                                                                'Chelsea 0 - 2 Barcelona',
-                                                                'http://hoofoot/images?chelsea-barcelona',
-                                                                0,
-                                                                'Champions League',
-                                                                dateparser.parse('2018-01-01')))
-
-        latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-real_madrid',
-                                                                'Arsenal 1 - 0 Real Madrid',
-                                                                'http://hoofoot/images?chelsea-real_madrid',
-                                                                0,
-                                                                'Champions League',
-                                                                dateparser.parse('2018-01-02')))
-
-        latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/arsenal-liverpool',
-                                                                'Arsenal 0 - 4 Liverpool',
-                                                                'http://hoofoot/images?arsenal-liverpool',
-                                                                0,
-                                                                'Premier League',
-                                                                dateparser.parse('2018-01-03')))
-
-        latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/barcelona-liverpool',
-                                                                'Barcelona 1 - 1 Liverpool',
-                                                                'http://hoofoot/images?barcelona-liverpool',
-                                                                0,
-                                                                'Champions League',
-                                                                datetime.now()))
-
-        registration_team_manager.add_team(0, "barcelona")
-        registration_competition_manager.add_competition(0, "premier league")
+        tests_helper.class_setup()
+        tests_helper.fill_db(TEST_USER_ID)
 
     def setUp(self):
         self.client = Client()
-        context_manager.set_default_context(SENDER_ID)
-        messenger_manager.CLIENT.messages = []
+        tests_helper.set_up(TEST_USER_ID)
 
     def send_message(self, sender, message):
         m = json.dumps({
@@ -115,11 +61,14 @@ class MessengerBotTestCase(TestCase):
         # Given
 
         # When
-        json_response = self.send_message(SENDER_ID, 'subscriptions')
+        json_response = self.send_message(TEST_USER_ID, 'subscriptions')
 
         # Then
         self.assertEqual(json_response, [
             {
+                "recipient": {
+                    "id": str(TEST_USER_ID)
+                },
                 "message": {
                     "text": "I am currently sending you the highlights for the following ⚽ teams: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?",
                     "quick_replies": [
@@ -134,25 +83,22 @@ class MessengerBotTestCase(TestCase):
                             "payload": "NO_PAYLOAD"
                         }
                     ]
-                },
-                "recipient": {
-                    "id": "1119096411506599"
                 }
             }
         ])
 
     def test_add_team_subscription(self):
         # Given
-        self.send_message(SENDER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'subscriptions')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'add')
+        json_response = self.send_message(TEST_USER_ID, 'add')
 
         # Then
         self.assertEqual(json_response, [
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "text": "Tell me the name of the team or competition you want to add 🔥",
@@ -214,17 +160,17 @@ class MessengerBotTestCase(TestCase):
 
     def test_adding_chelsea(self):
         # Given
-        self.send_message(SENDER_ID, 'subscriptions')
-        self.send_message(SENDER_ID, 'add')
+        self.send_message(TEST_USER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'add')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'chelsea')
+        json_response = self.send_message(TEST_USER_ID, 'chelsea')
 
         # Then
         self.assertEqual(json_response, [
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "text": "chelsea was successfully registered 👍"
@@ -232,7 +178,7 @@ class MessengerBotTestCase(TestCase):
             },
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "quick_replies": [
@@ -259,18 +205,18 @@ class MessengerBotTestCase(TestCase):
 
     def test_remove_team(self):
         # Given
-        self.send_message(SENDER_ID, 'subscriptions')
-        self.send_message(SENDER_ID, 'add')
-        self.send_message(SENDER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'add')
+        self.send_message(TEST_USER_ID, 'chelsea')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'remove')
+        json_response = self.send_message(TEST_USER_ID, 'remove')
 
         # Then
         self.assertEqual(json_response, [
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "quick_replies": [
@@ -292,19 +238,19 @@ class MessengerBotTestCase(TestCase):
 
     def test_removing_chelsea(self):
         # Given
-        self.send_message(SENDER_ID, 'subscriptions')
-        self.send_message(SENDER_ID, 'add')
-        self.send_message(SENDER_ID, 'chelsea')
-        self.send_message(SENDER_ID, 'remove')
+        self.send_message(TEST_USER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'add')
+        self.send_message(TEST_USER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, 'remove')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'chelsea')
+        json_response = self.send_message(TEST_USER_ID, 'chelsea')
 
         # Then
         self.assertEqual(json_response, [
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "text": "chelsea successfully removed from your subscriptions 👍"
@@ -312,7 +258,7 @@ class MessengerBotTestCase(TestCase):
             },
             {
                 "recipient": {
-                    "id": "1119096411506599"
+                    "id": str(TEST_USER_ID)
                 },
                 "message": {
                     "quick_replies": [
@@ -338,11 +284,14 @@ class MessengerBotTestCase(TestCase):
         # Given
 
         # When
-        json_response = self.send_message(SENDER_ID, 'chelsea')
+        json_response = self.send_message(TEST_USER_ID, 'chelsea')
 
         # Then
         self.assertEqual(json_response, [
             {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
                 'message': {
                     'attachment': {
                         'payload': {
@@ -351,7 +300,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/images?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=1119096411506599',
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -363,9 +312,6 @@ class MessengerBotTestCase(TestCase):
                         },
                         'type': 'template'
                     }
-                },
-                'recipient': {
-                    'id': '1119096411506599'
                 }
             }
         ])
@@ -374,30 +320,33 @@ class MessengerBotTestCase(TestCase):
         # Given
 
         # When
-        json_response = self.send_message(SENDER_ID, 'search')
+        json_response = self.send_message(TEST_USER_ID, 'search')
 
         # Then
         self.assertEqual(json_response, [
             {
+                "recipient": {
+                    "id": str(TEST_USER_ID)
+                },
                 "message": {
                     "text": "Tell me for which team should I give you highlight videos? 📺"
-                },
-                "recipient": {
-                    "id": "1119096411506599"
                 }
             }
         ])
 
     def test_search_chelsea(self):
         # Given
-        self.send_message(SENDER_ID, 'search')
+        self.send_message(TEST_USER_ID, 'search')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'chelsea')
+        json_response = self.send_message(TEST_USER_ID, 'chelsea')
 
         # Then
         self.assertEqual(json_response, [
             {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
                 'message': {
                     'attachment': {
                         'payload': {
@@ -406,7 +355,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/images?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=1119096411506599',
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -418,23 +367,23 @@ class MessengerBotTestCase(TestCase):
                         },
                         'type': 'template'
                     }
-                },
-                'recipient': {
-                    'id': '1119096411506599'
                 }
             }
         ])
 
     def test_search_chelsea_with_typo(self):
         # Given
-        self.send_message(SENDER_ID, 'search')
+        self.send_message(TEST_USER_ID, 'search')
 
         # When
-        json_response = self.send_message(SENDER_ID, 'chelseo')
+        json_response = self.send_message(TEST_USER_ID, 'chelseo')
 
         # Then
         self.assertEqual(json_response, [
             {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
                 'message': {
                     'attachment': {
                         'payload': {
@@ -443,7 +392,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/images?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=1119096411506599',
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -455,14 +404,29 @@ class MessengerBotTestCase(TestCase):
                         },
                         'type': 'template'
                     }
-                },
-                'recipient': {
-                    'id': '1119096411506599'
                 }
             }
         ])
 
-    # SCHEDULER TESTS
+
+class SchedulerTestCase(TestCase):
+
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        super(SchedulerTestCase, cls).setUpClass()
+
+        tests_helper.class_setup()
+        tests_helper.fill_db(TEST_USER_ID)
+
+        # Add test registrations
+        registration_team_manager.add_team(TEST_USER_ID, "barcelona")
+        registration_competition_manager.add_competition(TEST_USER_ID, "premier league")
+
+    def setUp(self):
+        self.client = Client()
+        tests_helper.set_up(TEST_USER_ID)
 
     def test_scheduler_send_highlight_message_for_subscribed_team(self):
         # Given
@@ -477,8 +441,8 @@ class MessengerBotTestCase(TestCase):
 
         self.assertIn(
             {
-                "recipient": {
-                    "id": 0
+                'recipient': {
+                    'id': str(TEST_USER_ID)
                 },
                 "message": {
                     "attachment": {
@@ -494,7 +458,7 @@ class MessengerBotTestCase(TestCase):
                                         "type": "web_url",
                                         "messenger_extensions": "false",
                                         "webview_height_ratio": "full",
-                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=0"
+                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=" + str(TEST_USER_ID)
                                     }
                                 }
                             ]
@@ -515,8 +479,8 @@ class MessengerBotTestCase(TestCase):
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
 
         self.assertNotIn({
-            "recipient": {
-                "id": 0
+            'recipient': {
+                    'id': str(TEST_USER_ID)
             },
             "message": {
                 "attachment": {
@@ -533,7 +497,7 @@ class MessengerBotTestCase(TestCase):
                                     "messenger_extensions": "false",
                                     "webview_height_ratio": "full",
                                     "url": "http://localhost:8000/highlight?team1=barcelona&score1=1&team2=liverpool&score2=1&date="
-                                           + str(datetime.now().date()) + "&user_id=0"
+                                           + str(datetime.now().date()) + "&user_id=" + str(TEST_USER_ID)
                                 }
                             }
                         ]
@@ -555,8 +519,8 @@ class MessengerBotTestCase(TestCase):
 
         self.assertIn(
             {
-                "recipient": {
-                    "id": 0
+                'recipient': {
+                    'id': str(TEST_USER_ID)
                 },
                 "message": {
                     "attachment": {
@@ -572,7 +536,7 @@ class MessengerBotTestCase(TestCase):
                                         "type": "web_url",
                                         "messenger_extensions": "false",
                                         "webview_height_ratio": "full",
-                                        "url": "http://localhost:8000/highlight?team1=arsenal&score1=0&team2=liverpool&score2=4&date=2018-01-03&user_id=0"
+                                        "url": "http://localhost:8000/highlight?team1=arsenal&score1=0&team2=liverpool&score2=4&date=2018-01-03&user_id=" + str(TEST_USER_ID)
                                     }
                                 }
                             ]

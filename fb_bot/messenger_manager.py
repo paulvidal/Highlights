@@ -190,7 +190,7 @@ def send_batch_facebook_message(fb_ids, messages):
         response_msgs.append(json.dumps(
             {
                 "recipient": {
-                    "id": fb_ids[i]
+                    "id": str(fb_ids[i])
                 },
                 "message": messages[i]
             })

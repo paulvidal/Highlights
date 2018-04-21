@@ -162,6 +162,7 @@ class LatestHighlight(models.Model):
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="team2")
     score2 = models.SmallIntegerField()
     source = models.CharField(max_length=80)
+    priority = models.PositiveIntegerField(default=0)
     sent = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
     click_count = models.PositiveIntegerField(default=0)
@@ -170,7 +171,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'sent', 'valid', 'click_count', 'img_link', 'video_url'
+        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority', 'sent', 'valid', 'click_count', 'img_link', 'video_url'
 
     @staticmethod
     def to_list_filter():
@@ -197,14 +198,17 @@ class LatestHighlight(models.Model):
         team_name = mapping_football_team.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
-    def priority(self):
+    def get_priority(self):
         # TODO: change with function is better than
         """
-        Highlights priority:
+        Highlights priority: (can be override manually using the priority field)
         3. hoofoot
         2. footyroom_video
         1. footyroom
         """
+        if self.priority != 0:
+            return self.priority + 3 # shortcut all priorities
+
         priority = 0
 
         if self.source == 'hoofoot':

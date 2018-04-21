@@ -168,9 +168,9 @@ def get_best_highlight(highlight_models):
         h_time = h.get_parsed_time_since_added()
         current_best_time = current_best.get_parsed_time_since_added()
 
-        if h.priority() >= current_best.priority():
+        if h.get_priority() >= current_best.get_priority():
 
-            if h.priority() > current_best.priority():
+            if h.get_priority() > current_best.get_priority():
                 current_best = h
             elif h_time > current_best_time:
                 current_best = h

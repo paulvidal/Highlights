@@ -159,6 +159,7 @@ def _send_highlight_to_users(highlight):
     ids = list(set(ids)) # clear duplicates
 
     win_ids = []
+    draw_ids = []
     lose_ids = []
 
     if highlight.score1 > highlight.score2:
@@ -171,10 +172,11 @@ def _send_highlight_to_users(highlight):
 
     else:
         win_ids = [id for id in ids if id in user_id_competition]
-        lose_ids = [id for id in ids if id in user_id_team1 or user_id_team2]
+        draw_ids = [id for id in ids if id in user_id_team1 or user_id_team2]
 
     # Send introduction message to users
     messenger_manager.send_highlight_won_introduction_message(win_ids, highlight)
+    messenger_manager.send_highlight_draw_introduction_message(draw_ids, highlight)
     messenger_manager.send_highlight_lost_introduction_message(lose_ids, highlight)
 
     # Send the highlight to users

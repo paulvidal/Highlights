@@ -19,7 +19,7 @@ EMOJI_FOOTBALL = emo(':soccer:')
 EMOJI_ONE = '1)'
 EMOJI_TWO = '2)'
 EMOJI_SWEAT = emo(':cold_sweat:')
-EMOJI_INNONCENT = emo(':innocent:')
+EMOJI_INNOCENT = emo(':innocent:')
 EMOJI_HEART = emo(':heart:')
 EMOJI_BROKEN_HEART = emo(':broken_heart:')
 EMOJI_THUMBS_UP = emo(':+1:')
@@ -38,8 +38,11 @@ EMOJI_SURPRISED = emo(':open_mouth:')
 EMOJI_GRIN = emo(':grin:')
 EMOJI_DIZZY_FACE = emo(':dizzy_face:')
 EMOJI_TROPHY = emo(':trophy:')
-EMOJI_MUSIC = emo(':music:')
+EMOJI_MUSIC = emo(':notes:')
 EMOJI_SPEAKER = emo(':loudspeaker:')
+EMOJI_ANGRY = emo(':angry:')
+EMOJI_CUP_OF_TEA = emo(':coffee:')
+EMOJI_RUNNING = emo(":running:")
 
 
 # MESSAGES
@@ -93,20 +96,56 @@ THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE
 NEW_HIGHLIGHT_LOST_MATCH = [
     "Here's a new {} highlight! " + EMOJI_SMILE,
     "Latest highlight from {}! " + EMOJI_SMILE,
-    "{} strikes again! " + EMOJI_FOOTBALL + EMOJI_100,
-    "{}, here we are! " + EMOJI_HEART_EYES,
-    "Get ready for {} " + EMOJI_FOOTBALL,
     "What goes on in {}... stays there! " + EMOJI_WINK,
-    "Check out what happened today in {} " + EMOJI_FOOTBALL,
     "{} highlight ready! " + EMOJI_SMILE,
-    "New highlight for {} !" + EMOJI_TV,
+    "New highlight for {}! " + EMOJI_TV,
     "Ground Control to {} " + EMOJI_MUSIC,
-    "Just prepared you another {} highlight! " + EMOJI_SMILE,
-    "Latest match in {}" + EMOJI_FOOTBALL,
-    "It's time for {}! " + EMOJI_FOOTBALL,
+    "Just prepared you another {} highlight " + EMOJI_SMILE,
+    "Latest match in {} " + EMOJI_FOOTBALL,
+    "Back to {}! " + EMOJI_SMILE,
+    "What's new in {}? " + EMOJI_FOOTBALL,
+    "Rough fixture in {} today... " + EMOJI_FOOTBALL,
+    "{} had no mercy today! " + EMOJI_BROKEN_HEART,
+    "Let's not mention {} this week " + EMOJI_WINK,
+    "It's alright, we'll forget about {} for a bit " + EMOJI_WINK,
+    "Jesus, has {} always been that tough? " + EMOJI_SCREAM,
+    "Don't blame me, blame {}! " + EMOJI_INNOCENT,
+    "Daamn you {}! " + EMOJI_ANGRY,
+    "Oops, no one saw that! " + EMOJI_WINK,
+    "Guess you'll have to hide for a couple of days..." + EMOJI_SWEAT,
+    "Cup of tea to forget about {}? " + EMOJI_CUP_OF_TEA,
+    "I waannaa runawaaayyy " + EMOJI_MUSIC + EMOJI_RUNNING,
+    "Goodbye my lover... Goodbye {} " + EMOJI_BROKEN_HEART,
+
+]
+
+NEW_HIGHLIGHT_DRAW_MATCH = [
+    "Here's a new {} highlight! " + EMOJI_SMILE,
+    "Latest highlight from {}! " + EMOJI_SMILE,
+    "What goes on in {}... stays there! " + EMOJI_WINK,
+    "{} highlight ready! " + EMOJI_SMILE,
+    "New highlight for {}! " + EMOJI_TV,
+    "Ground Control to {} " + EMOJI_MUSIC,
+    "Just prepared you another {} highlight " + EMOJI_SMILE,
+    "Latest match in {} " + EMOJI_FOOTBALL,
+    "Back to {}! " + EMOJI_SMILE,
+    "What's new in {}? " + EMOJI_FOOTBALL,
+    "Rough fixture in {} today... " + EMOJI_FOOTBALL,
+    "{} had no mercy today! " + EMOJI_FOOTBALL,
+    "{} strikes again! " + EMOJI_FOOTBALL + EMOJI_100,
+    "Did you miss {} today? " + EMOJI_SMILE,
+    "Check out what just happened in {} " + EMOJI_FOOTBALL,
+    "Enjoy this {} highlight! " + EMOJI_SMILE,
+    "Ground Control to {} " + EMOJI_MUSIC,
+    "New highlight for {}! " + EMOJI_TV,
+    "{} highlight ready! " + EMOJI_SMILE,
+    "Latest performance in {} " + EMOJI_FOOTBALL,
+    "All you need is {} " + EMOJI_MUSIC,
     "Back to {}! " + EMOJI_SMILE,
     "{} is calling! " + EMOJI_SPEAKER,
     "What's new in {}? " + EMOJI_FOOTBALL,
+    "It's time for {}! " + EMOJI_FOOTBALL,
+    "{} made everyone happy today! " + EMOJI_WINK,
 ]
 
 NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_MESSAGES = [
@@ -119,7 +158,6 @@ NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_MESSAGES = [
     "Brace yourself, it's Champions League " + EMOJI_FIRE,
     "Are you ready for Champions League?" + EMOJI_GRIN,
     "Did I hear... Champioons Leaague?!" + EMOJI_HEART_EYES,
-
 ]
 
 NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_LOT_OF_GOALS_MESSAGES = [
@@ -154,17 +192,19 @@ NEW_HIGHLIGHT_MESSAGES = [
     "Check out what just happened in {} " + EMOJI_FOOTBALL,
     "Beautiful {} day! " + EMOJI_HEART_EYES,
     "Enjoy this {} highlight! " + EMOJI_SMILE,
-    "It has been a great {} night! " + EMOJI_FIRE,
+    "It has been a great {} day! " + EMOJI_FIRE,
     "That's {} the way we like it! " + EMOJI_HEART_EYES,
     "Ground Control to {} " + EMOJI_MUSIC,
     "New highlight for {}! " + EMOJI_TV,
     "{} highlight ready! " + EMOJI_SMILE,
     "Latest performance in {} " + EMOJI_FOOTBALL,
-    "All you need is {} " +  EMOJI_MUSIC,
+    "All you need is {} " + EMOJI_MUSIC,
     "Back to {}! " + EMOJI_SMILE,
     "{} is calling! " + EMOJI_SPEAKER,
     "What's new in {}? " + EMOJI_FOOTBALL,
+    "It's time for {}! " + EMOJI_FOOTBALL,
 ]
+
 
 # BUTTONS
 

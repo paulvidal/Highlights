@@ -179,6 +179,16 @@ def send_highlight_won_introduction_message(fb_ids, highlight_model):
     return send_batch_facebook_message(fb_ids, messages)
 
 
+def send_highlight_draw_introduction_message(fb_ids, highlight_model):
+    # DRAW MESSAGE
+    message = random.choice(NEW_HIGHLIGHT_DRAW_MATCH).format(highlight_model.category.name.title())
+
+    # Make as many messages as there are different fb_ids
+    messages = [create_message(message)] * len(fb_ids)
+
+    return send_batch_facebook_message(fb_ids, messages)
+
+
 def send_highlight_lost_introduction_message(fb_ids, highlight_model):
     # LOSE MESSAGE
     message = random.choice(NEW_HIGHLIGHT_LOST_MATCH).format(highlight_model.category.name.title())

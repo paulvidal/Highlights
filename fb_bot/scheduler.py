@@ -164,15 +164,15 @@ def _send_highlight_to_users(highlight):
 
     if highlight.score1 > highlight.score2:
         win_ids = [id for id in ids if id in user_id_team1 or user_id_competition]
-        lose_ids = [id for id in ids if id in user_id_team2]
+        lose_ids = [id for id in ids if id in user_id_team2 and id not in user_id_team1 and id not in user_id_competition]
 
     elif highlight.score2 > highlight.score1:
         win_ids = [id for id in ids if id in user_id_team2 or user_id_competition]
-        lose_ids = [id for id in ids if id in user_id_team1]
+        lose_ids = [id for id in ids if id in user_id_team1 and id not in user_id_team2 and id not in user_id_competition]
 
     else:
         win_ids = [id for id in ids if id in user_id_competition]
-        draw_ids = [id for id in ids if id in user_id_team1 or user_id_team2]
+        draw_ids = [id for id in ids if id in (user_id_team1 or user_id_team2) and id not in user_id_competition]
 
     # Send introduction message to users
     messenger_manager.send_highlight_won_introduction_message(win_ids, highlight)

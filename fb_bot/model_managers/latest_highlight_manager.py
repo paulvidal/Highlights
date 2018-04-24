@@ -129,8 +129,11 @@ def has_teams_in_db(highlight):
 
 
 def add_new_team_to_db(highlight):
-    new_football_registration_manager.add_football_registration(highlight.team1, highlight.source)
-    new_football_registration_manager.add_football_registration(highlight.team2, highlight.source)
+    if not football_team_manager.has_football_team(highlight.team1):
+        new_football_registration_manager.add_football_registration(highlight.team1, highlight.source)
+
+    if not football_team_manager.has_football_team(highlight.team2):
+        new_football_registration_manager.add_football_registration(highlight.team2, highlight.source)
 
 
 def has_competition_in_db(highlight):

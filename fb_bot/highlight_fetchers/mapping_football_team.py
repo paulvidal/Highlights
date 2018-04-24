@@ -52,7 +52,9 @@ NAME_MAPPING = {
     'formentera': 'sd formentera',
     'celta': 'celta vigo',
     'olympique marseille': 'marseille',
+    'olympique de marseille': 'marseille',
     'olympique lyonnais': 'lyon',
+    'olympique de lyon': 'lyon',
     'om': 'marseille',
     'ol': 'lyon',
     'aca': 'ajaccio',
@@ -134,7 +136,8 @@ NAME_MAPPING = {
     'den haag': 'ado den haag',
     'heerenveen‎': 'sc heerenveen‎',
     'akhisarspor': 'akhisar belediyespor',
-    'dinamo moscow': 'dynamo moscow'
+    'dinamo moscow': 'dynamo moscow',
+    'venlo': 'vvv-venlo',
 }
 
 

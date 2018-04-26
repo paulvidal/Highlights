@@ -12,6 +12,26 @@
     <!-- Boostrap JS and Jquery -->
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['bar', 'line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        {% autoescape off %}
+
+        var newUsersOverMonths = google.visualization.arrayToDataTable({{new_users_over_months}});
+        var highlightsClickOverMonths = google.visualization.arrayToDataTable({{highlight_clicks_over_months}});
+
+        {% endautoescape %}
+
+        var highlightsClickOverMonthChart = new google.charts.Bar(document.getElementById('highlights_click_over_months'));
+        highlightsClickOverMonthChart.draw(highlightsClickOverMonths);
+
+        var newUsersOverMonthsChart = new google.charts.Bar(document.getElementById('new_users_over_months'));
+        newUsersOverMonthsChart.draw(newUsersOverMonths);
+      }
+    </script>
 
     <style>
         .panel {
@@ -197,6 +217,27 @@
           </div>
           <div class="panel-body">
               <h2>{{ notification_opened_month_ratio }}%</h2> {{ notification_opened_month }} / {{ notification_month_total }}
+          </div>
+        </div>
+
+        <!-- Charts -->
+        <h3>Charts</h3>
+
+        <div class="panel panel-default col-xs-12 col-sm-12 col-md-6">
+          <div class="panel-heading">
+            <h3 class="panel-title">Highlights click over months</h3>
+          </div>
+          <div class="panel-body">
+              <div id="highlights_click_over_months"></div>
+          </div>
+        </div>
+
+        <div class="panel panel-default col-xs-12 col-sm-12 col-md-6">
+          <div class="panel-heading">
+            <h3 class="panel-title">New users over months</h3>
+          </div>
+          <div class="panel-body">
+              <div id="new_users_over_months"></div>
           </div>
         </div>
 

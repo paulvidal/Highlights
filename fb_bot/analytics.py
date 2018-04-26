@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+
 from fb_highlights.models import HighlightStat, HighlightNotificationStat, User
 
 
@@ -32,6 +35,9 @@ def get_highlight_analytics():
         'notification_opened_month_ratio': _ratio(get_notification_opened_month, get_notification_month_total),
         'notification_opened_month': get_notification_opened_month(),
         'notification_month_total': get_notification_month_total(),
+
+        'highlight_clicks_over_months': get_highlights_clicks_over_month(),
+        'new_users_over_months': get_new_users_over_months()
     }
 
 
@@ -174,3 +180,85 @@ def get_notification_month_total():
 
 def _ratio(nominator, denominator):
     return round(nominator() / float(denominator()) * 100) if denominator() != 0 else 0
+
+
+# Highlight clicks over months
+
+def get_highlights_clicks_over_month():
+    stats = []
+
+    total_counts = HighlightStat.objects \
+        .annotate(month=TruncMonth('time')) \
+        .values('month') \
+        .annotate(count=Count('id'))
+
+    notification_counts = HighlightNotificationStat.objects \
+        .filter(opened=True) \
+        .annotate(month=TruncMonth('open_time')) \
+        .values('month') \
+        .annotate(count=Count('id'))
+
+    time = datetime.today()
+
+    for i in range(5):
+        y = time.year
+        m = time.month
+
+        m_total_count = 0
+        m_notification_count = 0
+
+        for t in total_counts:
+            if t['month'].year == y and t['month'].month == m:
+                m_total_count = t['count']
+
+        for t in notification_counts:
+            if t['month'].year == y and t['month'].month == m:
+                m_notification_count = t['count']
+
+        stats.append([time.strftime("%B %Y"), m_total_count, m_notification_count, m_total_count - m_notification_count])
+
+        time = time.replace(day=1) - timedelta(days=1)
+
+    stats.reverse()
+
+    return [['Date', 'Total', 'Notification', 'Search']] + stats
+
+
+def get_new_users_over_months():
+    stats = []
+
+    new_users_counts = User.objects \
+        .annotate(month=TruncMonth('join_date')) \
+        .values('month') \
+        .annotate(count=Count('facebook_id'))
+
+    new_users_with_one_highlight_click = User.objects \
+        .filter(highlights_click_count__gte=1) \
+        .annotate(month=TruncMonth('join_date')) \
+        .values('month') \
+        .annotate(count=Count('facebook_id'))
+
+    time = datetime.today()
+
+    for i in range(5):
+        y = time.year
+        m = time.month
+
+        m_new_user_count = 0
+        m_new_user_count_one_highlight_click = 0
+
+        for t in new_users_counts:
+            if t['month'].year == y and t['month'].month == m:
+                m_new_user_count = t['count']
+
+        for t in new_users_with_one_highlight_click:
+            if t['month'].year == y and t['month'].month == m:
+                m_new_user_count_one_highlight_click = t['count']
+
+        stats.append([time.strftime("%B %Y"), m_new_user_count, m_new_user_count_one_highlight_click, m_new_user_count - m_new_user_count_one_highlight_click])
+
+        time = time.replace(day=1) - timedelta(days=1)
+
+    stats.reverse()
+
+    return [['Date', 'New users', 'New users with 1 click', 'New users without 1 click']] + stats

@@ -1,5 +1,6 @@
 import json
 import random
+from collections import OrderedDict
 from urllib.parse import quote
 
 import highlights.settings
@@ -192,15 +193,36 @@ def send_highlight_lost_introduction_message(fb_ids, highlight_model):
 
 def send_score(fb_ids, highlight_model):
     goal_data = highlight_model.goal_data
+
+    if not goal_data:
+        return
+
     team1_goals = [goal for goal in goal_data if goal['team'] == 1]
     team2_goals = [goal for goal in goal_data if goal['team'] == 2]
 
-    goal_string_1 = '\n'.join([EMOJI_FOOTBALL + ' ' + g['player'] + " [{}']".format(g['elapsed']) for g in team1_goals])
-    goal_string_2 = '\n'.join([EMOJI_FOOTBALL + ' ' + g['player'] + " [{}']".format(g['elapsed']) for g in team2_goals])
+    new_team1_goals = OrderedDict()
+    new_team2_goals = OrderedDict()
 
-    score = '{} - {}\n{}'.format(highlight_model.team1.name.title(), highlight_model.score1, goal_string_1) \
+    for g in team1_goals:
+        player = g['player']
+        if not new_team1_goals.get(player):
+            new_team1_goals[player] = [g['elapsed']]
+        else:
+            new_team1_goals.get(player).append(g['elapsed'])
+
+    for g in team2_goals:
+        player = g['player']
+        if not new_team1_goals.get(player):
+            new_team2_goals[player] = [g['elapsed']]
+        else:
+            new_team2_goals.get(player).append(g['elapsed'])
+
+    goal_string_1 = '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in new_team1_goals[player]])) for player in new_team1_goals])
+    goal_string_2 = '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in new_team2_goals[player]])) for player in new_team2_goals])
+
+    score = '{} {}\n{}'.format(highlight_model.team1.name.title(), EMOJI_FOOTBALL, goal_string_1) \
             + '\n\n' + \
-            '{} - {}\n{}'.format(highlight_model.team2.name.title(), highlight_model.score2, goal_string_2)
+            '{} {}\n{}'.format(highlight_model.team2.name.title(), EMOJI_FOOTBALL, goal_string_2)
 
     return send_batch_facebook_message(fb_ids, create_message(score))
 

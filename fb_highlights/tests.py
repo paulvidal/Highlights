@@ -559,9 +559,7 @@ class SchedulerTestCase(TestCase):
                     'id': str(TEST_USER_ID)
                 },
                 "message": {
-                    "text":
-                        "Barcelona - 3\n⚽ Lionel Messi [4']\n⚽ Luis Suarez [43']\n⚽ Lionel Messi [90']\n\n"
-                        "Real Madrid - 2\n⚽ Cristiano Ronaldo [10']\n⚽ Sergio Ramos [56']"
+                    "text": "Barcelona ⚽\nL. Messi - 4, 90\nL. Suarez - 43\n\nReal Madrid ⚽\nC. Ronaldo - 10\nS. Ramos - 56"
                 }
             },
             messages)

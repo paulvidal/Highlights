@@ -19,9 +19,8 @@ def check(link):
     elif 'streamable' in link:
         return not 'Oops!' in page
 
-    else:
-        # For all other content provider, return True by default
-        return True
+    # For all other content provider, return True by default
+    return True
 
 
 if __name__ == "__main__":

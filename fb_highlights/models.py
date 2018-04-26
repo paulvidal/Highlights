@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 
 import dateparser
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from fb_bot.highlight_fetchers import mapping_football_team
@@ -25,15 +26,15 @@ class User(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context'
+        return ['facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context']
 
     @staticmethod
     def to_list_filter():
-        return 'gender', 'locale'
+        return ['gender', 'locale']
 
     @staticmethod
     def search_fields():
-        return 'facebook_id', 'first_name', 'last_name', 'join_date'
+        return ['facebook_id', 'first_name', 'last_name', 'join_date']
 
     @staticmethod
     def get_default_user():
@@ -54,15 +55,15 @@ class FootballTeam(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'name',
+        return ['name']
 
     @staticmethod
     def to_list_filter():
-        return ()
+        return []
 
     @staticmethod
     def search_fields():
-        return 'name',
+        return ['name']
 
     def __str__(self):
         return str(self.name)
@@ -78,15 +79,15 @@ class NewFootballRegistration(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'name', 'source'
+        return ['name', 'source']
 
     @staticmethod
     def to_list_filter():
-        return 'source',
+        return ['source']
 
     @staticmethod
     def search_fields():
-        return 'name',
+        return ['name']
 
     def __str__(self):
         return str(self.name) + ' | ' + str(self.source)
@@ -97,15 +98,15 @@ class FootballCompetition(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'name',
+        return ['name']
 
     @staticmethod
     def to_list_filter():
-        return ()
+        return []
 
     @staticmethod
     def search_fields():
-        return 'name',
+        return ['name']
 
     def __str__(self):
         return str(self.name)
@@ -120,15 +121,15 @@ class RegistrationTeam(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'user', 'team_name'
+        return ['user', 'team_name']
 
     @staticmethod
     def to_list_filter():
-        return ()
+        return []
 
     @staticmethod
     def search_fields():
-        return 'team_name__name', 'user__first_name'
+        return ['team_name__name', 'user__first_name']
 
 
 class RegistrationCompetition(models.Model):
@@ -140,15 +141,15 @@ class RegistrationCompetition(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'user', 'competition_name'
+        return ['user', 'competition_name']
 
     @staticmethod
     def to_list_filter():
-        return 'competition_name',
+        return ['competition_name']
 
     @staticmethod
     def search_fields():
-        return 'competition_name__name', 'user__first_name'
+        return ['competition_name__name', 'user__first_name']
 
 
 class LatestHighlight(models.Model):
@@ -168,18 +169,19 @@ class LatestHighlight(models.Model):
     click_count = models.PositiveIntegerField(default=0)
     video_duration = models.IntegerField(default=0)
     video_url = models.TextField(null=True, blank=True)
+    goal_data = JSONField(default=[])
 
     @staticmethod
     def to_list_display():
-        return 'link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority', 'sent', 'valid', 'click_count', 'img_link', 'video_url'
+        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority', 'sent', 'valid', 'click_count', 'img_link', 'video_url']
 
     @staticmethod
     def to_list_filter():
-        return 'category', 'source', 'sent', 'valid'
+        return ['category', 'source', 'sent', 'valid']
 
     @staticmethod
     def search_fields():
-        return 'team1__name', 'team2__name'
+        return ['team1__name', 'team2__name']
 
     def get_match_name(self):
         return "{} {} - {} {}".format(self.team1.name.title(), self.score1, self.score2, self.team2.name.title())
@@ -238,15 +240,15 @@ class HighlightStat(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'user', 'team1', 'score1', 'team2', 'score2', 'time', 'link'
+        return ['user', 'team1', 'score1', 'team2', 'score2', 'time', 'link']
 
     @staticmethod
     def to_list_filter():
-        return ()
+        return []
 
     @staticmethod
     def search_fields():
-        return 'user__first_name', 'team1__name', 'team2__name'
+        return ['user__first_name', 'team1__name', 'team2__name']
 
 
 class HighlightNotificationStat(models.Model):
@@ -265,15 +267,15 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def to_list_display():
-        return 'user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time'
+        return ['user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time']
 
     @staticmethod
     def to_list_filter():
-        return 'opened',
+        return ['opened']
 
     @staticmethod
     def search_fields():
-        return 'user__first_name', 'team1__name', 'team2__name',
+        return ['user__first_name', 'team1__name', 'team2__name']
 
     def get_parsed_match_time(self):
         return dateparser.parse(str(self.match_time))

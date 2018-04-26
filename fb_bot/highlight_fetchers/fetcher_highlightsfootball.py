@@ -14,6 +14,9 @@ ROOT_URL = 'https://highlightsfootball.com/wp-admin/admin-ajax.php'
 
 class HighlightsFootballHighlight(Highlight):
 
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
+
     def get_match_info(self, match):
         match = match.replace('Highlights', '').strip()
 
@@ -58,7 +61,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     page = requests.post(ROOT_URL, data={
         'action': 'td_ajax_block',
         'block_type': 'td_block_3',
-        'td_current_page': pagelet_num
+        'td_current_page': pagelet_num + 1
     })
 
     html = json.loads(page.text)['td_data'] \
@@ -153,11 +156,14 @@ def _get_video_link(full_link):
         # Only pick video urls coming from the following websites
         if src:
             if 'dailymotion.com' in src:
-                return src
+                return src.replace('//', '')
 
             if 'streamable.com' in src:
+                base_url = src.split('/s/')[0]
+                resource_id = src.split('/s/')[1].split('/')[0]
 
-                return src
+                # Return streamable link in the format 'https://streamable.com/e/ioz1l'
+                return base_url + '/e/' + resource_id
 
     return None
 

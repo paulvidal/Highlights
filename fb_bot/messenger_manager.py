@@ -152,7 +152,7 @@ def send_tutorial_highlight(fb_id, team):
 # For scheduler
 def send_highlight_messages(fb_ids, highlight_models):
     attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models)) for fb_id in fb_ids]
-    return send_batch_facebook_message(fb_ids, attachments)
+    return send_batch_multiple_facebook_messages(fb_ids, attachments)
 
 
 def send_highlight_won_introduction_message(fb_ids, highlight_model):
@@ -173,35 +173,44 @@ def send_highlight_won_introduction_message(fb_ids, highlight_model):
         # NORMAL MESSAGE
         message = random.choice(NEW_HIGHLIGHT_MESSAGES).format(highlight_model.category.name.title())
 
-    # Make as many messages as there are different fb_ids
-    messages = [create_message(message)] * len(fb_ids)
-
-    return send_batch_facebook_message(fb_ids, messages)
+    return send_batch_facebook_message(fb_ids, create_message(message))
 
 
 def send_highlight_draw_introduction_message(fb_ids, highlight_model):
     # DRAW MESSAGE
     message = random.choice(NEW_HIGHLIGHT_DRAW_MATCH).format(highlight_model.category.name.title())
 
-    # Make as many messages as there are different fb_ids
-    messages = [create_message(message)] * len(fb_ids)
-
-    return send_batch_facebook_message(fb_ids, messages)
+    return send_batch_facebook_message(fb_ids, create_message(message))
 
 
 def send_highlight_lost_introduction_message(fb_ids, highlight_model):
     # LOSE MESSAGE
     message = random.choice(NEW_HIGHLIGHT_LOST_MATCH).format(highlight_model.category.name.title())
 
-    # Make as many messages as there are different fb_ids
-    messages = [create_message(message)] * len(fb_ids)
+    return send_batch_facebook_message(fb_ids, create_message(message))
 
-    return send_batch_facebook_message(fb_ids, messages)
+
+def send_score(fb_ids, highlight_model):
+    goal_data = highlight_model.goal_data
+    team1_goals = [goal for goal in goal_data if goal['team'] == 1]
+    team2_goals = [goal for goal in goal_data if goal['team'] == 2]
+
+    goal_string_1 = '\n'.join([EMOJI_FOOTBALL + ' ' + g['player'] + " [{}']".format(g['elapsed']) for g in team1_goals])
+    goal_string_2 = '\n'.join([EMOJI_FOOTBALL + ' ' + g['player'] + " [{}']".format(g['elapsed']) for g in team2_goals])
+
+    score = '{} - {}\n{}'.format(highlight_model.team1.name.title(), highlight_model.score1, goal_string_1) \
+            + '\n\n' + \
+            '{} - {}\n{}'.format(highlight_model.team2.name.title(), highlight_model.score2, goal_string_2)
+
+    return send_batch_facebook_message(fb_ids, create_message(score))
 
 
 ### MAIN METHOD ###
 
-def send_batch_facebook_message(fb_ids, messages):
+def send_batch_multiple_facebook_messages(fb_ids, messages):
+    """
+    Send different messages to all fb_id
+    """
     post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msgs = []
 
@@ -212,6 +221,29 @@ def send_batch_facebook_message(fb_ids, messages):
                     "id": str(fb_ids[i])
                 },
                 "message": messages[i]
+            })
+        )
+
+    CLIENT.send_fb_messages_async(post_message_url, response_msgs)
+    logger.log(response_msgs)
+
+    return response_msgs
+
+
+def send_batch_facebook_message(fb_ids, message):
+    """
+    Send same message to all fb_id
+    """
+    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
+    response_msgs = []
+
+    for i in range(len(fb_ids)):
+        response_msgs.append(json.dumps(
+            {
+                "recipient": {
+                    "id": str(fb_ids[i])
+                },
+                "message": message
             })
         )
 

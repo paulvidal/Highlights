@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import admin
 from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, HighlightStat, \
     HighlightNotificationStat, RegistrationCompetition, FootballCompetition
@@ -23,10 +25,14 @@ class RegistrationCompetitionAdmin(admin.ModelAdmin):
 
 
 class LatestHighlightAdmin(admin.ModelAdmin):
-    list_display = LatestHighlight.to_list_display()
+    list_display = LatestHighlight.to_list_display() + ['goal_data_formatted']
     list_filter = LatestHighlight.to_list_filter()
     search_fields = LatestHighlight.search_fields()
     ordering = '-time_since_added',
+
+    def goal_data_formatted(self, instance):
+        goal_data = sorted(instance.goal_data, key=lambda d: d['elapsed'])
+        return '__'.join([g['player'] for g in goal_data]).replace(' ', '_')
 
 
 class FootballTeamAdmin(admin.ModelAdmin):

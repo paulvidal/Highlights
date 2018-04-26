@@ -433,8 +433,7 @@ class SchedulerTestCase(TestCase):
 
         # When
         scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0,
-                                              footyroom_videos_pagelet=0)
+                                              hoofoot_pagelet=0)
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -472,8 +471,7 @@ class SchedulerTestCase(TestCase):
 
         # When
         scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0,
-                                              footyroom_videos_pagelet=0)
+                                              hoofoot_pagelet=0)
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -511,8 +509,7 @@ class SchedulerTestCase(TestCase):
 
         # When
         scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0,
-                                              footyroom_videos_pagelet=0)
+                                              hoofoot_pagelet=0)
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -542,6 +539,29 @@ class SchedulerTestCase(TestCase):
                             ]
                         }
                     }
+                }
+            },
+            messages)
+
+    def test_scheduler_send_highlight_goals(self):
+        # Given
+
+        # When
+        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
+                                              hoofoot_pagelet=0)
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "message": {
+                    "text":
+                        "Barcelona - 3\n⚽ Lionel Messi [4']\n⚽ Luis Suarez [43']\n⚽ Lionel Messi [90']\n\n"
+                        "Real Madrid - 2\n⚽ Cristiano Ronaldo [10']\n⚽ Sergio Ramos [56']"
                 }
             },
             messages)

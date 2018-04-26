@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import dateparser
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_footyroom_videos
+from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager
@@ -11,14 +11,14 @@ from fb_bot.video_providers import video_info_fetcher
 
 
 # Send highlights
-def send_most_recent_highlights(footyroom_pagelet=1,
-                                hoofoot_pagelet=4,
-                                footyroom_videos_pagelet=3):
+def send_most_recent_highlights(footyroom_pagelet=3,
+                                hoofoot_pagelet=4):
 
-    # Footyroom + Hoofoot highlights fetching
-    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=footyroom_pagelet, max_days_ago=2) \
-                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7) \
-                 + fetcher_footyroom_videos.fetch_highlights(num_pagelet=footyroom_videos_pagelet, max_days_ago=7)
+    # - Footyroom
+    # - Hoofoot
+    # highlights fetching
+    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=footyroom_pagelet, max_days_ago=7) \
+                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7)
 
     # Add new highlights
     for highlight in highlights:
@@ -37,14 +37,15 @@ def send_most_recent_highlights(footyroom_pagelet=1,
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
-    # Set Footyroom images for hoofoot highlights
+    # Set Footyroom infos for hoofoot highlights
     for hoofoot_highlight in latest_highlight_manager.get_all_highlights_from_source(source='hoofoot'):
-        img_link = latest_highlight_manager.get_highlight_img_link_from_footyroom(hoofoot_highlight)
+        footyroom_highlight = latest_highlight_manager.get_same_highlight_footyroom(hoofoot_highlight)
 
-        if not img_link:
+        if not footyroom_highlight:
             continue
 
-        latest_highlight_manager.set_img_link(hoofoot_highlight, img_link)
+        latest_highlight_manager.set_img_link(hoofoot_highlight, footyroom_highlight.img_link)
+        latest_highlight_manager.set_goal_data(hoofoot_highlight, footyroom_highlight.goal_data)
 
     # Send highlights not already sent
     not_sent_highlights = latest_highlight_manager.get_not_sent_highlights()
@@ -181,6 +182,9 @@ def _send_highlight_to_users(highlight):
 
     # Send the highlight to users
     messenger_manager.send_highlight_messages(ids, [highlight])
+
+    # Send the score to users
+    messenger_manager.send_score(ids, highlight)
 
     # TODO: do batch update on database
     for user_id in ids:

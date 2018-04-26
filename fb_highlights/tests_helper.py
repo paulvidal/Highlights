@@ -3,6 +3,7 @@ from datetime import datetime
 import dateparser
 
 from fb_bot import messenger_manager
+from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight
 from fb_bot.highlight_fetchers.fetcher_hoofoot import HoofootHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import football_team_manager, football_competition_manager, latest_highlight_manager, \
@@ -42,6 +43,7 @@ def fill_db(test_user_id):
     # Add competitions
     football_competition_manager.add_football_competition('champions league')
     football_competition_manager.add_football_competition('premier league')
+    football_competition_manager.add_football_competition('la liga')
 
     # Add highlights
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona',
@@ -71,3 +73,17 @@ def fill_db(test_user_id):
                                                             0,
                                                             'Champions League',
                                                             datetime.now()))
+
+    latest_highlight_manager.add_highlight(FootyroomVideoHighlight('http://hoofoot/barcelona-real_madrid',
+                                                                   'Barcelona 3 - 2 Real Madrid',
+                                                                   'http://footyroom/images?barcelona-real_madrid',
+                                                                   0,
+                                                                   'La Liga',
+                                                                   dateparser.parse('2018-01-05'),
+                                                                   [
+                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 4},
+                                                                       {'team': 2, 'player': 'Cristiano Ronaldo', 'elapsed': 10},
+                                                                       {'team': 1, 'player': 'Luis Suarez', 'elapsed': 43},
+                                                                       {'team': 2, 'player': 'Sergio Ramos', 'elapsed': 56},
+                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 90}
+                                                                   ]))

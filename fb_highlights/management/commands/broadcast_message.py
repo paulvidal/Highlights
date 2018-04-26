@@ -21,5 +21,5 @@ class Command(CustomCommand):
             ['Add competition ' + EMOJI_TROPHY, 'No thanks ' + EMOJI_CROSS],
         )
 
-        messenger_manager.send_batch_facebook_message(all_ids, [message] * len(all_ids))
+        messenger_manager.send_batch_facebook_message(all_ids, message)
 

@@ -1,6 +1,11 @@
+import json
+
+import re
 import requests
 import dateparser
 import time
+
+from fb_bot.highlight_fetchers import mapping_football_team, score_fetcher_footyroom
 from fb_bot.highlight_fetchers.Highlight import Highlight
 
 from bs4 import BeautifulSoup
@@ -12,6 +17,9 @@ PAGELET_EXTENSION = 'posts-pagelet?page='
 
 
 class FootyroomHighlight(Highlight):
+
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
 
     def get_match_info(self, match):
         match_split = match.split()
@@ -31,12 +39,41 @@ class FootyroomHighlight(Highlight):
 
         return clean_team_name(team1), score1, clean_team_name(team2), score2
 
+    def set_goal_data(self, goal_data):
+        self.goal_data = goal_data
+
     def is_match_of(self, team):
         team = team.lower()
         return self.team1.lower().startswith(team) or self.team2.lower().startswith(team)
 
     def get_source(self):
         return 'footyroom'
+
+
+class FootyroomVideoHighlight(Highlight):
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, goal_data):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data)
+
+    def get_match_info(self, match):
+        match_split = match.split()
+        middle_index = match_split.index('-')
+
+        def join(l):
+            return " ".join(l)
+
+        team1 = join(match_split[:middle_index - 1])
+        score1 = match_split[middle_index - 1]
+        team2 = join(match_split[middle_index + 2:])
+        score2 = match_split[middle_index + 1]
+
+        def clean_team_name(team):
+            junk_index = team.find('[')
+            return team[:junk_index - 1] if junk_index > 0 else team
+
+        return clean_team_name(team1), score1, clean_team_name(team2), score2
+
+    def get_source(self):
+        return 'footyroom_video'
 
 
 def fetch_highlights(num_pagelet=3, max_days_ago=7):
@@ -118,7 +155,28 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not _is_recent(time_since_added_date, max_days_ago):
             continue
 
-        highlights.append(FootyroomHighlight(link, match_name, img_link, view_count, category, time_since_added))
+        highlight = FootyroomHighlight(link, match_name, img_link, view_count, category, time_since_added)
+        highlights.append(highlight)
+
+        # Get highlight page HTML
+        page = requests.get(link)
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        # Get and set goal information
+        try:
+            goal_data = score_fetcher_footyroom.get_goal_data(soup)
+        except Exception:
+            goal_data = []
+
+        highlight.set_goal_data(goal_data)
+
+        # Get video information
+        video_link = _get_video_link(soup)
+
+        if not video_link:
+            continue
+
+        highlights.append(FootyroomVideoHighlight(video_link, match_name, img_link, view_count, category, time_since_added, goal_data))
 
     return highlights
 
@@ -145,6 +203,72 @@ def _is_valid_link(link):
     return link.startswith("matches/") and link.endswith("/review")
 
 
+# Get video link from page HTML
+def _get_video_link(soup):
+    for script in soup.find_all('script'):
+        script_text = script.text
+
+        if 'dailymotion' in script_text:
+            regex = 'src=\\\\"\\\/\\\/(www.dailymotion.com\\\/embed\\\/video\\\/.*?)\\\"'
+            search_result = re.compile(regex, 0).search(script_text)
+
+            if not search_result:
+                return None
+
+            link = search_result.groups()[0].replace('\\', '')
+
+            return 'https://' + link
+
+        elif 'streamable' in script_text:
+            regex = 'src=\\\\"(https:\\\/\\\/streamable.com.*?)\\"'
+            search_result = re.compile(regex, 0).search(script_text)
+
+            if not search_result:
+                return None
+
+            link = search_result.groups()[0].replace('\\', '')
+            base_url = link.split('/s/')[0]
+            resource_id = link.split('/s/')[1].split('/')[0]
+
+            # Return streamable link in the format 'https://streamable.com/e/ioz1l'
+            return base_url + '/e/' + resource_id
+
+        elif 'ok.ru' in script_text:
+            regex = 'src=\\\\"\\\/\\\/(ok.ru.*?)\\\"'
+            search_result = re.compile(regex, 0).search(script_text)
+
+            if not search_result:
+                return None
+
+            link = search_result.groups()[0].replace('\\', '')
+
+            return 'https://' + link
+
+        elif 'youtube' in script_text:
+            regex = 'src=\\\\"(https:\\\/\\\/www.youtube.com.*?)\\\"'
+            search_result = re.compile(regex, 0).search(script_text)
+
+            if not search_result:
+                return None
+
+            link = search_result.groups()[0].replace('\\', '')
+
+            return link
+
+        elif 'rutube.ru' in script_text:
+            regex = 'src=\\\\"\\\/\\\/(rutube.ru.*?)\\\"'
+            search_result = re.compile(regex, 0).search(script_text)
+
+            if not search_result:
+                return None
+
+            link = search_result.groups()[0].replace('\\', '')
+
+            return 'https://' + link
+
+    return None
+
+
 if __name__ == "__main__":
 
     print("\nFetch highlights ------------------------------ \n")
@@ -152,8 +276,17 @@ if __name__ == "__main__":
     start_time = time.time()
     highlights = fetch_highlights()
 
-    for highlight in highlights:
-        print(highlight)
+    footyroom_highlights = [h for h in highlights if isinstance(h, FootyroomHighlight)]
+    footyroom_video_highlights = [h for h in highlights if isinstance(h, FootyroomVideoHighlight)]
 
-    print("Number of highlights: " + str(len(highlights)))
-    print("Time taken: " + str(round(time.time() - start_time, 2)) + "s")
+    for h in footyroom_highlights:
+        print(h)
+
+    print("\nNumber of Footyroom highlights: " + str(len(footyroom_highlights)) + "\n")
+
+    for h in footyroom_video_highlights:
+        print(h)
+
+    print("\nNumber of Footyroom video highlights: " + str(len(footyroom_video_highlights)))
+
+    print("\nTime taken: " + str(round(time.time() - start_time, 2)) + "s")

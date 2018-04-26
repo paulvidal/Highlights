@@ -82,17 +82,22 @@ def set_video_url(highlight_model, video_url):
     highlight_model.save()
 
 
+def set_goal_data(highlight_model, goal_data):
+    highlight_model.goal_data = goal_data
+    highlight_model.save()
+
+
 def get_not_sent_highlights():
     return LatestHighlight.objects.filter(sent=False, valid=True)
 
 
-def get_highlight_img_link_from_footyroom(highlight_model):
+def get_same_highlight_footyroom(highlight_model):
     highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2,
                                                            score1=highlight_model.score1, score2=highlight_model.score2,
                                                            source='footyroom')
                  if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
-    return highlight[0].img_link if len(highlight) > 0 else None
+    return highlight[0] if len(highlight) > 0 else None
 
 
 def add_highlight(highlight, sent=False):
@@ -112,9 +117,10 @@ def add_highlight(highlight, sent=False):
     category = football_competition_manager.get_football_competition(highlight.category)
 
     LatestHighlight.objects.update_or_create(link=highlight.link, img_link=highlight.img_link,
-                                                 time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
-                                                 team2=team2, score2=highlight.score2, category=category,
-                                                 view_count=highlight.view_count, source=highlight.source, sent=sent)
+                                             time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
+                                             team2=team2, score2=highlight.score2, category=category,
+                                             view_count=highlight.view_count, source=highlight.source,
+                                             sent=sent, goal_data=highlight.goal_data)
 
 
 def delete_highlight(highlight_model):

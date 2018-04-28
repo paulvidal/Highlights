@@ -194,37 +194,45 @@ def send_highlight_lost_introduction_message(fb_ids, highlight_model):
 def send_score(fb_ids, highlight_model):
     goal_data = highlight_model.goal_data
 
+    # Do not send a message if no goal data
     if not goal_data:
         return
 
     team1_goals = [goal for goal in goal_data if goal['team'] == 1]
     team2_goals = [goal for goal in goal_data if goal['team'] == 2]
 
-    new_team1_goals = OrderedDict()
-    new_team2_goals = OrderedDict()
+    goals_message = _format_goals_message(highlight_model.team1.name.title(),
+                                         team1_goals,
+                                         highlight_model.team2.name.title(),
+                                         team2_goals)
 
-    for g in team1_goals:
+    return send_batch_facebook_message(fb_ids, create_message(goals_message))
+
+
+def _format_goals_message(team1, team1_goals, team2, team2_goals):
+    formatted_team1_goals = _format_team_goals(team1_goals)
+    formatted_team2_goals = _format_team_goals(team2_goals)
+
+    p1 = '{} {}\n{}'.format(team1, EMOJI_FOOTBALL, formatted_team1_goals) if team1_goals else ''
+    p2 = '\n\n' if team1_goals and team2_goals else ''
+    p3 = '{} {}\n{}'.format(team2, EMOJI_FOOTBALL, formatted_team2_goals) if team2_goals else ''
+
+    return p1 + p2 + p3
+
+
+def _format_team_goals(team_goals):
+    goals = OrderedDict()
+
+    for g in team_goals:
         player = g['player']
-        if not new_team1_goals.get(player):
-            new_team1_goals[player] = [g['elapsed']]
+        if not goals.get(player):
+            goals[player] = [g['elapsed']]
         else:
-            new_team1_goals.get(player).append(g['elapsed'])
+            goals.get(player).append(g['elapsed'])
 
-    for g in team2_goals:
-        player = g['player']
-        if not new_team1_goals.get(player):
-            new_team2_goals[player] = [g['elapsed']]
-        else:
-            new_team2_goals.get(player).append(g['elapsed'])
-
-    goal_string_1 = '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in new_team1_goals[player]])) for player in new_team1_goals])
-    goal_string_2 = '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in new_team2_goals[player]])) for player in new_team2_goals])
-
-    score = '{} {}\n{}'.format(highlight_model.team1.name.title(), EMOJI_FOOTBALL, goal_string_1) \
-            + '\n\n' + \
-            '{} {}\n{}'.format(highlight_model.team2.name.title(), EMOJI_FOOTBALL, goal_string_2)
-
-    return send_batch_facebook_message(fb_ids, create_message(score))
+    return '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(
+        player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in goals[player]])) for player in
+                      goals])
 
 
 ### MAIN METHOD ###

@@ -156,8 +156,8 @@ NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_MESSAGES = [
     "Here's the Champions League highlight you've been waiting for! " + EMOJI_TV,
     "Champions League is back! " + EMOJI_HEART_EYES,
     "Brace yourself, it's Champions League " + EMOJI_FIRE,
-    "Are you ready for Champions League?" + EMOJI_GRIN,
-    "Did I hear... Champioons Leaague?!" + EMOJI_HEART_EYES,
+    "Are you ready for Champions League? " + EMOJI_GRIN,
+    "Did I hear... Champioons Leaague?! " + EMOJI_HEART_EYES,
 ]
 
 NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_LOT_OF_GOALS_MESSAGES = [

@@ -87,3 +87,13 @@ def fill_db(test_user_id):
                                                                        {'team': 2, 'player': 'Sergio Ramos', 'elapsed': 56},
                                                                        {'team': 1, 'player': 'Lionel Messi', 'elapsed': 90}
                                                                    ]))
+
+    latest_highlight_manager.add_highlight(FootyroomVideoHighlight('http://hoofoot/barcelona-arsenal',
+                                                                   'Barcelona 0 - 1 Arsenal',
+                                                                   'http://footyroom/images?barcelona-arsenal',
+                                                                   0,
+                                                                   'Champions League',
+                                                                   dateparser.parse('2018-01-06'),
+                                                                   [
+                                                                       {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15}
+                                                                   ]))

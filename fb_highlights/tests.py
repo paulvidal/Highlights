@@ -563,3 +563,24 @@ class SchedulerTestCase(TestCase):
                 }
             },
             messages)
+
+    def test_scheduler_send_highlight_goals_only_1_team_scored(self):
+        # Given
+
+        # When
+        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
+                                              hoofoot_pagelet=0)
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "message": {
+                    "text": "Arsenal ⚽\nO. Giroud - 15"
+                }
+            },
+            messages)

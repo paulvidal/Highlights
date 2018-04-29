@@ -213,26 +213,37 @@ def _format_goals_message(team1, team1_goals, team2, team2_goals):
     formatted_team1_goals = _format_team_goals(team1_goals)
     formatted_team2_goals = _format_team_goals(team2_goals)
 
-    p1 = '{} {}\n{}'.format(team1, EMOJI_FOOTBALL, formatted_team1_goals) if team1_goals else ''
-    p2 = '\n\n' if team1_goals and team2_goals else ''
-    p3 = '{} {}\n{}'.format(team2, EMOJI_FOOTBALL, formatted_team2_goals) if team2_goals else ''
+    t1 = '{} {}\n{}'.format(team1, EMOJI_FOOTBALL, formatted_team1_goals) if team1_goals else ''
+    separator = '\n\n' if team1_goals and team2_goals else ''
+    t2 = '{} {}\n{}'.format(team2, EMOJI_FOOTBALL, formatted_team2_goals) if team2_goals else ''
 
-    return p1 + p2 + p3
+    return t1 + separator + t2
 
 
-def _format_team_goals(team_goals):
+def _format_team_goals(goals_formatted):
     goals = OrderedDict()
 
-    for g in team_goals:
+    for g in goals_formatted:
         player = g['player']
-        if not goals.get(player):
-            goals[player] = [g['elapsed']]
-        else:
-            goals.get(player).append(g['elapsed'])
+        time = str(g['elapsed'])
 
-    return '\n'.join([((player[0] + '. ' + ' '.join(player.split()[1:])) if len(
-        player.split()) > 1 else player) + " - {}".format(', '.join([str(e) for e in goals[player]])) for player in
-                      goals])
+        goal_type = g.get('goal_type')
+
+        # Add goal type indicator
+        if goal_type == 'penalty':
+            time += ' (p)'
+        elif goal_type == 'own goal':
+            time += ' (o.g)'
+
+        if not goals.get(player):
+            goals[player] = [time]
+        else:
+            goals.get(player).append(time)
+
+    goals_formatted = [((player[0] + '. ' + ' '.join(player.split()[1:])) if len(player.split()) > 1 else player)
+                       + " - {}".format(', '.join(goals[player])) for player in goals]
+
+    return '\n'.join(goals_formatted)
 
 
 ### MAIN METHOD ###

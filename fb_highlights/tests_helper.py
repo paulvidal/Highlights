@@ -81,11 +81,11 @@ def fill_db(test_user_id):
                                                                    'La Liga',
                                                                    dateparser.parse('2018-01-05'),
                                                                    [
-                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 4},
-                                                                       {'team': 2, 'player': 'Cristiano Ronaldo', 'elapsed': 10},
-                                                                       {'team': 1, 'player': 'Luis Suarez', 'elapsed': 43},
-                                                                       {'team': 2, 'player': 'Sergio Ramos', 'elapsed': 56},
-                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 90}
+                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 4, 'goal_type': 'penalty'},
+                                                                       {'team': 2, 'player': 'Cristiano Ronaldo', 'elapsed': 10, 'goal_type': 'goal'},
+                                                                       {'team': 1, 'player': 'Luis Suarez', 'elapsed': 43, 'goal_type': 'goal'},
+                                                                       {'team': 2, 'player': 'Gerard Pique', 'elapsed': 56, 'goal_type': 'own goal'},
+                                                                       {'team': 1, 'player': 'Lionel Messi', 'elapsed': 90, 'goal_type': 'goal'}
                                                                    ]))
 
     latest_highlight_manager.add_highlight(FootyroomVideoHighlight('http://hoofoot/barcelona-arsenal',
@@ -95,5 +95,5 @@ def fill_db(test_user_id):
                                                                    'Champions League',
                                                                    dateparser.parse('2018-01-06'),
                                                                    [
-                                                                       {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15}
+                                                                       {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15, 'goal_type': 'goal'}
                                                                    ]))

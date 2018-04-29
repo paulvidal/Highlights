@@ -72,6 +72,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "text": "I am currently sending you the highlights for the following ⚽ teams: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?",
                     "quick_replies": [
@@ -103,6 +104,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "text": "Tell me the name of the team or competition you want to add 🔥",
                     "quick_replies": [
@@ -175,6 +177,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "text": "chelsea was successfully registered 👍"
                 }
@@ -183,6 +186,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "quick_replies": [
                         {
@@ -221,6 +225,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "quick_replies": [
                         {
@@ -255,6 +260,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "text": "chelsea successfully removed from your subscriptions 👍"
                 }
@@ -263,6 +269,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "quick_replies": [
                         {
@@ -295,6 +302,7 @@ class MessengerBotTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 'message': {
                     'attachment': {
                         'payload': {
@@ -331,6 +339,7 @@ class MessengerBotTestCase(TestCase):
                 "recipient": {
                     "id": str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 "message": {
                     "text": "Tell me for which team should I give you highlight videos? 📺"
                 }
@@ -350,6 +359,7 @@ class MessengerBotTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 'message': {
                     'attachment': {
                         'payload': {
@@ -387,6 +397,7 @@ class MessengerBotTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "RESPONSE",
                 'message': {
                     'attachment': {
                         'payload': {
@@ -422,11 +433,9 @@ class MessengerBotTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "RESPONSE",
             'message': {
-                'text': 'Do you want to receive match results (score, goal '
-                        'scorers...) in your highlight messages, or hide them?\n'
-                        '\n'
-                        ' Currently: Showing results',
+                'text': 'Do you want to receive match results/spoiler (score, goal scorers...) along with your highlight messages, or hide them?\n\nCurrently: Showing results',
                 'quick_replies': [
                     {
                         'content_type': 'text',
@@ -459,6 +468,7 @@ class MessengerBotTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "RESPONSE",
             'message': {
                 'text': "Setting successfully changed 👍"
             }
@@ -477,11 +487,9 @@ class MessengerBotTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "RESPONSE",
             'message': {
-                'text': 'Do you want to receive match results (score, goal '
-                        'scorers...) in your highlight messages, or hide them?\n'
-                        '\n'
-                        ' Currently: Hiding results',
+                'text': 'Do you want to receive match results/spoiler (score, goal scorers...) along with your highlight messages, or hide them?\n\nCurrently: Hiding results',
                 'quick_replies': [
                     {
                         'content_type': 'text',
@@ -516,6 +524,7 @@ class MessengerBotTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "RESPONSE",
             'message': {
                 'text': "I'm counting on you to make me grow! 💪"
             }
@@ -523,6 +532,7 @@ class MessengerBotTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "RESPONSE",
             'message': {
                 "attachment": {
                     "type": "template",
@@ -605,6 +615,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "attachment": {
                         "type": "template",
@@ -642,6 +654,8 @@ class SchedulerTestCase(TestCase):
             'recipient': {
                     'id': str(TEST_USER_ID)
             },
+            "messaging_type": "MESSAGE_TAG",
+            "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
             "message": {
                 "attachment": {
                     "type": "template",
@@ -683,6 +697,8 @@ class SchedulerTestCase(TestCase):
             'recipient': {
                 'id': str(TEST_USER_ID)
             },
+            "messaging_type": "MESSAGE_TAG",
+            "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
             "message": {
                 "attachment": {
                     "type": "template",
@@ -726,6 +742,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "attachment": {
                         "type": "template",
@@ -765,6 +783,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "text": "Barcelona ⚽\nL. Messi - 4 (p), 90\nL. Suarez - 43\n\nReal Madrid ⚽\nC. Ronaldo - 10\nG. Pique - 56 (o.g)"
                 }
@@ -786,6 +806,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "text": "Arsenal ⚽\nO. Giroud - 15"
                 }
@@ -810,6 +832,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "attachment": {
                         "type": "template",
@@ -839,6 +863,8 @@ class SchedulerTestCase(TestCase):
                 'recipient': {
                     'id': str(TEST_USER_ID)
                 },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": {
                     "text": "Barcelona ⚽\nL. Messi - 4 (p), 90\nL. Suarez - 43\n\nReal Madrid ⚽\nC. Ronaldo - 10\nG. Pique - 56 (o.g)"
                 }

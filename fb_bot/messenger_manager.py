@@ -291,6 +291,8 @@ def send_batch_multiple_facebook_messages(fb_ids, messages):
                 "recipient": {
                     "id": str(fb_ids[i])
                 },
+                "messaging_type": "MESSAGE_TAG",  # Messaging type is MESSAGE_TAG, NON_PROMOTIONAL_SUBSCRIPTION
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": messages[i]
             })
         )
@@ -316,6 +318,8 @@ def send_batch_facebook_message(fb_ids, message):
                 "recipient": {
                     "id": str(fb_ids[i])
                 },
+                "messaging_type": "MESSAGE_TAG",  # Messaging type is MESSAGE_TAG, NON_PROMOTIONAL_SUBSCRIPTION
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
                 "message": message
             })
         )
@@ -335,6 +339,7 @@ def send_facebook_message(fb_id, message):
             "recipient": {
                 "id": fb_id
             },
+            "messaging_type": "RESPONSE", # Messaging type is RESPONSE
             "message": message
         })
 
@@ -353,6 +358,7 @@ def send_typing(fb_id):
             "recipient": {
                 "id": fb_id
             },
+            "messaging_type": "RESPONSE", # Messaging type is RESPONSE
             "sender_action": "typing_on"
         })
 

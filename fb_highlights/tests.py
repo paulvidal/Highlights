@@ -6,6 +6,7 @@ from django.test import TestCase, Client
 from fb_bot import messenger_manager, scheduler
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager
 from fb_highlights import tests_helper
+from fb_highlights.models import LatestHighlight
 
 TEST_USER_ID = 1119096411506599
 
@@ -503,6 +504,51 @@ class SchedulerTestCase(TestCase):
                 }
             }
         }, messages)
+
+    def test_scheduler_sends_highlight_message_for_subscribed_team_when_too_recent_but_priority_is_set(self):
+        # Given
+        h = LatestHighlight.objects.filter(link='http://hoofoot/barcelona-liverpool')[0]
+        h.priority = 1
+        h.save()
+
+        # When
+        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
+                                              hoofoot_pagelet=0)
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertIn({
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            "message": {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [
+                            {
+                                "title": "Barcelona 1 - 1 Liverpool",
+                                "subtitle": "Champions League",
+                                "image_url": "http://hoofoot/images?barcelona-liverpool",
+                                "default_action": {
+                                    "type": "web_url",
+                                    "messenger_extensions": "false",
+                                    "webview_height_ratio": "full",
+                                    "url": "http://localhost:8000/highlight?team1=barcelona&score1=1&team2=liverpool&score2=1&date="
+                                           + str(datetime.now().date()) + "&user_id=" + str(TEST_USER_ID)
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        }, messages)
+
+        # Put back original priority
+        h.priority = 0
+        h.save()
 
     def test_scheduler_send_highlight_message_for_subscribed_competition(self):
         # Given

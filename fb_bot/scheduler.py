@@ -4,6 +4,7 @@ import dateparser
 
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker
+from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager
@@ -11,6 +12,7 @@ from fb_bot.video_providers import video_info_fetcher
 
 
 # Send highlights
+
 def send_most_recent_highlights(footyroom_pagelet=3,
                                 hoofoot_pagelet=4):
 
@@ -111,8 +113,14 @@ def check_scrapping_status():
 
     highlights_footyroom = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
+    highlights_footyroom_video = [h for h in highlights_footyroom if isinstance(h, FootyroomVideoHighlight)]
+    highlights_footyroom = [h for h in highlights_footyroom if isinstance(h, FootyroomHighlight)]
+
     if not highlights_footyroom:
         scrapping_problems.append('FOOTYROOM')
+
+    if not highlights_footyroom_video:
+        scrapping_problems.append('FOOTYROOM VIDEOS')
 
     highlights_hoofoot = fetcher_hoofoot.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 

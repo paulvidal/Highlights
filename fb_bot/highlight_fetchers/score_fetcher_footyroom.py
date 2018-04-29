@@ -43,7 +43,7 @@ def _extract_goals(match_data):
 
         elapsed = incident.get('elapsed')
 
-        if category == 'g' and id in ['g', 'p']: # goal
+        if category == 'g' and id in ['g', 'p', 'og']: # goal
             goals.append({
                 'team': 1 if side == 'home' else 2,
                 'player': player,

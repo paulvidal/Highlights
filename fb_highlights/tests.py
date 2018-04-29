@@ -513,6 +513,50 @@ class MessengerBotTestCase(TestCase):
         # Set back to default state
         self.send_message(TEST_USER_ID, CANCEL_BUTTON)
 
+    def test_search_see_result_hidden(self):
+        # Given
+        user = user_manager.get_user(TEST_USER_ID)
+        user.see_result = False
+        user.save()
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'chelsea')
+
+        # Then
+        self.assertEqual(json_response, [
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "RESPONSE",
+                'message': {
+                    'attachment': {
+                        'payload': {
+                            'template_type': 'generic',
+                            'elements': [
+                                {
+                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'default_action': {
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=' + str(TEST_USER_ID),
+                                        'webview_height_ratio': 'full',
+                                        'type': 'web_url',
+                                        'messenger_extensions': 'false'
+                                    },
+                                    'title': 'Chelsea - Barcelona',
+                                    'subtitle': 'Champions League'
+                                }
+                            ]
+                        },
+                        'type': 'template'
+                    }
+                }
+            }
+        ])
+
+        # Set back old properties
+        user.see_result = True
+        user.save()
+
     def test_share(self):
         # Given
 

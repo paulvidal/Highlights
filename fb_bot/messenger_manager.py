@@ -414,7 +414,10 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
     # Order highlights by date and take the first 10
     highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:highlight_count]
 
-    return create_generic_attachment(highlights_to_json(fb_id, highlights))
+    # Check if user has see result activated
+    see_result_setting = user_manager.get_see_result_setting(fb_id)
+
+    return create_generic_attachment(highlights_to_json(fb_id, highlights, see_result=see_result_setting))
 
 
 #

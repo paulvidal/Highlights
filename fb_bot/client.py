@@ -21,7 +21,7 @@ class Client:
         def send(message):
             return self.send_fb_message(url, message)
 
-        with ThreadPoolExecutor(max_workers=20) as executor:
+        with ThreadPoolExecutor(max_workers=50) as executor:
             responses = executor.map(send, messages)
 
         return responses

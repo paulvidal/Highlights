@@ -11,6 +11,8 @@ class ContextType(Enum):
 
     TUTORIAL_ADD_TEAM = 100
 
+    SETTING_SEE_RESULT = 200
+
 
 def set_default_context(fb_id):
     update_context(fb_id, ContextType.SEARCH_HIGHLIGHTS)
@@ -43,6 +45,10 @@ def is_deleting_team_context(fb_id):
 
 def is_searching_highlights_context(fb_id):
     return get_user(fb_id).context == ContextType.SEARCH_HIGHLIGHTS.value
+
+
+def is_see_result_setting_context(fb_id):
+    return get_user(fb_id).context == ContextType.SETTING_SEE_RESULT.value
 
 
 # TUTORIAL CONTEXT

@@ -59,3 +59,20 @@ def _insert_user(fb_id):
                                   gender=gender)
 
     return True
+
+
+# User settings
+
+def get_user_ids_see_result_setting_disabled():
+    users = User.objects.filter(see_result=False)
+    return set([u.facebook_id for u in users])
+
+
+def get_see_result_setting(fb_id):
+    return get_user(fb_id).see_result
+
+
+def set_see_result_setting(fb_id, see_result):
+    user = get_user(fb_id)
+    user.see_result = see_result
+    user.save()

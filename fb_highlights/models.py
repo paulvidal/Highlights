@@ -18,6 +18,7 @@ class User(models.Model):
     timezone = models.SmallIntegerField()
     gender = models.CharField(max_length=20)
     context = models.SmallIntegerField(default=1)
+    see_result = models.BooleanField(default=True)
 
     # Stats
     join_date = models.DateTimeField(default=datetime.now)
@@ -26,7 +27,7 @@ class User(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context']
+        return ['facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context', 'see_result']
 
     @staticmethod
     def to_list_filter():
@@ -185,6 +186,9 @@ class LatestHighlight(models.Model):
 
     def get_match_name(self):
         return "{} {} - {} {}".format(self.team1.name.title(), self.score1, self.score2, self.team2.name.title())
+
+    def get_match_name_no_result(self):
+        return "{} - {}".format(self.team1.name.title(), self.team2.name.title())
 
     def get_parsed_time_since_added(self):
         return dateparser.parse(str(self.time_since_added))

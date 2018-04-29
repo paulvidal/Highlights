@@ -8,14 +8,16 @@ from fb_bot import client, registration_suggestions
 from fb_bot.logger import logger
 from fb_bot.messages import *
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager, new_football_registration_manager, \
-    registration_team_manager, registration_competition_manager
+    registration_team_manager, registration_competition_manager, user_manager
 from highlights import settings
 
 CLIENT = client.Client()
 
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
 
-### MESSAGES ###
+#
+#  MESSAGES
+#
 
 def send_help_message(fb_id):
     return send_facebook_message(fb_id, create_message(HELP_MESSAGE))
@@ -117,6 +119,22 @@ def send_highlight_message_for_team(fb_id, team):
     return send_facebook_message(fb_id, get_highlights_for_team(fb_id, team))
 
 
+def send_see_result_setting(fb_id):
+    see_result_setting_value = user_manager.get_see_result_setting(fb_id)
+    see_result_setting_value = SEE_RESULT_YES if see_result_setting_value else SEE_RESULT_NO
+
+    return send_facebook_message(fb_id, create_quick_text_reply_message(SEE_RESULT_SETTING_MESSAGE.format(see_result_setting_value),
+                                                                        [SHOW_BUTTON, HIDE_BUTTON, CANCEL_BUTTON]))
+
+
+def send_setting_invalid(fb_id):
+    return send_facebook_message(fb_id, create_message(SETTING_INVALID_MESSAGE))
+
+
+def send_setting_changed(fb_id):
+    return send_facebook_message(fb_id, create_message(SETTING_CHANGED_MESSAGE))
+
+
 # For TUTORIAL
 
 def send_tutorial_message(fb_id, team):
@@ -150,9 +168,12 @@ def send_tutorial_highlight(fb_id, team):
     return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, [highlight])))
 
 
-# For scheduler
-def send_highlight_messages(fb_ids, highlight_models):
-    attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models)) for fb_id in fb_ids]
+#
+#  For SCHEDULER
+#
+
+def send_highlight_messages(fb_ids, highlight_models, see_result):
+    attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models, see_result=see_result)) for fb_id in fb_ids]
     return send_batch_multiple_facebook_messages(fb_ids, attachments)
 
 
@@ -187,6 +208,13 @@ def send_highlight_draw_introduction_message(fb_ids, highlight_model):
 def send_highlight_lost_introduction_message(fb_ids, highlight_model):
     # LOSE MESSAGE
     message = random.choice(NEW_HIGHLIGHT_LOST_MATCH).format(highlight_model.category.name.title())
+
+    return send_batch_facebook_message(fb_ids, create_message(message))
+
+
+def send_highlight_neutral_introduction_message(fb_ids, highlight_model):
+    # NEUTRAL MESSAGE
+    message = random.choice(NEW_HIGHLIGHT_NEUTRAL_MATCH).format(highlight_model.category.name.title())
 
     return send_batch_facebook_message(fb_ids, create_message(message))
 
@@ -246,7 +274,9 @@ def _format_team_goals(goals_formatted):
     return '\n'.join(goals_formatted)
 
 
-### MAIN METHOD ###
+#
+#  SEND METHODS
+#
 
 def send_batch_multiple_facebook_messages(fb_ids, messages):
     """
@@ -380,13 +410,13 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
 #
 
 
-def highlights_to_json(fb_id, highlight_models):
-    return list(map(lambda h: highlight_to_json(fb_id, h), highlight_models))
+def highlights_to_json(fb_id, highlight_models, see_result=True):
+    return list(map(lambda h: highlight_to_json(fb_id, h, see_result), highlight_models))
 
 
-def highlight_to_json(fb_id, highlight_model):
+def highlight_to_json(fb_id, highlight_model, see_result):
     return {
-        "title": highlight_model.get_match_name(),
+        "title": highlight_model.get_match_name() if see_result else highlight_model.get_match_name_no_result(),
         "image_url": highlight_model.img_link,
         "subtitle": highlight_model.category.name.title(),
         "default_action": {

@@ -9,13 +9,19 @@ def search_highlights(sender_id):
     return messenger_manager.send_search_highlights_message(sender_id)
 
 
-def send_notification_settings(sender_id):
+def send_subscriptions_settings(sender_id):
     context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
 
     teams = get_teams_formatted(sender_id)
     competitions = get_competitions_formatted(sender_id)
 
     return messenger_manager.send_notification_message(sender_id, teams, competitions)
+
+
+def send_send_see_result_settings(sender_id):
+    context_manager.update_context(sender_id, ContextType.SETTING_SEE_RESULT)
+
+    return messenger_manager.send_see_result_setting(sender_id)
 
 
 def get_registrations_formatted(sender_id):

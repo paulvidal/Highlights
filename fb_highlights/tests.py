@@ -4,7 +4,7 @@ from datetime import datetime
 from django.test import TestCase, Client
 
 from fb_bot import messenger_manager, scheduler
-from fb_bot.model_managers import registration_team_manager, registration_competition_manager
+from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
 from fb_highlights import tests_helper
 from fb_highlights.models import LatestHighlight
 
@@ -546,7 +546,7 @@ class SchedulerTestCase(TestCase):
             }
         }, messages)
 
-        # Put back original priority
+        # Set back old properties
         h.priority = 0
         h.save()
 
@@ -630,3 +630,60 @@ class SchedulerTestCase(TestCase):
                 }
             },
             messages)
+
+    def test_scheduler_send_highlight_with_see_result_disabled(self):
+        # Given
+        user = user_manager.get_user(TEST_USER_ID)
+        user.see_result = False
+        user.save()
+
+        # When
+        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
+                                              hoofoot_pagelet=0)
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Chelsea - Barcelona",
+                                    "subtitle": "Champions League",
+                                    "image_url": "http://hoofoot/images?chelsea-barcelona",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&user_id=" + str(
+                                            TEST_USER_ID)
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)
+
+        self.assertNotIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "message": {
+                    "text": "Barcelona ⚽\nL. Messi - 4 (p), 90\nL. Suarez - 43\n\nReal Madrid ⚽\nC. Ronaldo - 10\nG. Pique - 56 (o.g)"
+                }
+            },
+            messages)
+
+        # Set back old properties
+        user.see_result = True
+        user.save()

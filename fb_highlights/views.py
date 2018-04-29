@@ -13,7 +13,7 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 from fb_bot import language, analytics
 from fb_bot.logger import logger
-from fb_bot.messages import EMOJI_TROPHY, EMOJI_CROSS, EMOJI_SMILE
+from fb_bot.messages import EMOJI_TROPHY, EMOJI_CROSS, EMOJI_SMILE, SETTING_CHANGED_MESSAGE, SHOW_BUTTON, HIDE_BUTTON
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
     registration_competition_manager, new_football_registration_manager
@@ -175,7 +175,7 @@ class HighlightsBotView(generic.View):
                             )
 
                             response_msg.append(
-                                view_message_helper.send_notification_settings(sender_id)
+                                view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
                         elif football_team_manager.similar_football_team_names(registration_to_add):
@@ -202,12 +202,32 @@ class HighlightsBotView(generic.View):
                                 messenger_manager.send_team_not_found_tutorial_message(sender_id)
                             )
 
+                    # SEE RESULT CHANGE SETTING
+                    elif context_manager.is_see_result_setting_context(sender_id):
+                        logger.log("SEE RESULT CHANGE SETTING")
+
+                        if text == [SHOW_BUTTON, HIDE_BUTTON]:
+                            user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
+
+                            response_msg.append(
+                                messenger_manager.send_setting_changed(sender_id)
+                            )
+
+                        else:
+                            response_msg.append(
+                                messenger_manager.send_setting_invalid(sender_id)
+                            )
+
+                            response_msg.append(
+                                messenger_manager.send_see_result_setting(sender_id)
+                            )
+
                     # SUBSCRIPTION SETTING
                     elif 'subscriptions' in message:
                         logger.log("SUBSCRIPTION SETTING")
 
                         response_msg.append(
-                            view_message_helper.send_notification_settings(sender_id)
+                            view_message_helper.send_subscriptions_settings(sender_id)
                         )
 
                     # ADD REGISTRATION SETTING
@@ -257,7 +277,7 @@ class HighlightsBotView(generic.View):
                             )
 
                             response_msg.append(
-                                view_message_helper.send_notification_settings(sender_id)
+                                view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
                         elif football_competition_manager.has_football_competition(registration_to_add):
@@ -269,7 +289,7 @@ class HighlightsBotView(generic.View):
                             )
 
                             response_msg.append(
-                                view_message_helper.send_notification_settings(sender_id)
+                                view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
                         elif football_team_manager.similar_football_team_names(registration_to_add) or \
@@ -315,7 +335,7 @@ class HighlightsBotView(generic.View):
                             )
 
                             response_msg.append(
-                                view_message_helper.send_notification_settings(sender_id)
+                                view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
                         elif football_competition_manager.has_football_competition(registration_to_delete):
@@ -327,7 +347,7 @@ class HighlightsBotView(generic.View):
                             )
 
                             response_msg.append(
-                                view_message_helper.send_notification_settings(sender_id)
+                                view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
                         else:
@@ -356,6 +376,14 @@ class HighlightsBotView(generic.View):
                             messenger_manager.send_highlight_message_for_team(sender_id, message)
                         )
 
+                    # SEE RESULT SETTING
+                    elif 'see result setting' in message:
+                        logger.log("SEE RESULT SETTING")
+
+                        response_msg.append(
+                            view_message_helper.send_send_see_result_settings(sender_id)
+                        )
+
                 if 'postback' in message:
                     postback = message['postback']['payload']
 
@@ -374,7 +402,7 @@ class HighlightsBotView(generic.View):
                         # Set the user in tutorial context
                         context_manager.update_context(sender_id, ContextType.TUTORIAL_ADD_TEAM)
 
-                    # SEARCH HIGHLIGHT SETTING
+                    # SEARCH HIGHLIGHT SETTING POSTBACK
                     elif postback == 'search_highlights':
                         logger.log("SEARCH HIGHLIGHTS POSTBACK")
 
@@ -382,12 +410,20 @@ class HighlightsBotView(generic.View):
                             view_message_helper.search_highlights(sender_id)
                         )
 
-                    # SUBSCRIPTION SETTING
+                    # SUBSCRIPTION SETTING POSTBACK
                     elif postback == 'my_subscriptions':
                         logger.log("SUBSCRIPTION SETTING POSTBACK")
 
                         response_msg.append(
-                            view_message_helper.send_notification_settings(sender_id)
+                            view_message_helper.send_subscriptions_settings(sender_id)
+                        )
+
+                    # SEE RESULT SETTING POSTBACK
+                    elif postback == 'see_result_setting':
+                        logger.log("SEE RESULT SETTING POSTBACK")
+
+                        response_msg.append(
+                            view_message_helper.send_send_see_result_settings(sender_id)
                         )
 
                 logger.log_for_user("Message sent: " + str(response_msg), sender_id)

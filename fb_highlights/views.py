@@ -206,12 +206,14 @@ class HighlightsBotView(generic.View):
                     elif context_manager.is_see_result_setting_context(sender_id):
                         logger.log("SEE RESULT CHANGE SETTING")
 
-                        if text == [SHOW_BUTTON, HIDE_BUTTON]:
+                        if text in [SHOW_BUTTON, HIDE_BUTTON]:
                             user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
 
                             response_msg.append(
                                 messenger_manager.send_setting_changed(sender_id)
                             )
+
+                            context_manager.set_default_context(sender_id)
 
                         else:
                             response_msg.append(
@@ -360,6 +362,25 @@ class HighlightsBotView(generic.View):
                                 messenger_manager.send_registration_to_delete_not_found_message(sender_id, registrations)
                             )
 
+                    # SEE RESULT SETTING
+                    elif 'see result setting' in message:
+                        logger.log("SEE RESULT SETTING")
+
+                        response_msg.append(
+                            view_message_helper.send_send_see_result_settings(sender_id)
+                        )
+
+                    # SHARE
+                    elif 'share' in message:
+                        logger.log("SHARE")
+
+                        response_msg.append(
+                            messenger_manager.send_share_introduction_message(sender_id)
+                        )
+                        response_msg.append(
+                            messenger_manager.send_share_message(sender_id)
+                        )
+
                     # SEARCH HIGHLIGHT OPTION
                     elif 'search' in message or 'search again' in message:
                         logger.log("SEARCH HIGHLIGHTS")
@@ -374,14 +395,6 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(
                             messenger_manager.send_highlight_message_for_team(sender_id, message)
-                        )
-
-                    # SEE RESULT SETTING
-                    elif 'see result setting' in message:
-                        logger.log("SEE RESULT SETTING")
-
-                        response_msg.append(
-                            view_message_helper.send_send_see_result_settings(sender_id)
                         )
 
                 if 'postback' in message:
@@ -416,6 +429,17 @@ class HighlightsBotView(generic.View):
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
+                        )
+
+                    # SHARE POSTBACK
+                    elif postback == 'share':
+                        logger.log("SHARE POSTBACK")
+
+                        response_msg.append(
+                            messenger_manager.send_share_introduction_message(sender_id)
+                        )
+                        response_msg.append(
+                            messenger_manager.send_share_message(sender_id)
                         )
 
                     # SEE RESULT SETTING POSTBACK

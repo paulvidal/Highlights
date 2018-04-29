@@ -4,9 +4,11 @@ from datetime import datetime
 from django.test import TestCase, Client
 
 from fb_bot import messenger_manager, scheduler
+from fb_bot.messages import *
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
 from fb_highlights import tests_helper
 from fb_highlights.models import LatestHighlight
+from highlights import settings
 
 TEST_USER_ID = 1119096411506599
 
@@ -408,6 +410,165 @@ class MessengerBotTestCase(TestCase):
                 }
             }
         ])
+
+    def test_change_see_result_setting(self):
+        # Given
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'see result setting')
+
+        # Then
+        self.assertEqual(json_response, [{
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            'message': {
+                'text': 'Do you want to receive match results (score, goal '
+                        'scorers...) in your highlight messages, or hide them?\n'
+                        '\n'
+                        ' Currently: Showing results',
+                'quick_replies': [
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': 'Show'
+                    },
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': 'Hide'
+                    },
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': '❌ Cancel'
+                    }
+                ]
+            }
+        }])
+
+    def test_change_see_result_setting_to_hide_result(self):
+        # Given
+        self.send_message(TEST_USER_ID, 'see result setting')
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, HIDE_BUTTON)
+
+        # Then
+        self.assertEqual(json_response, [{
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            'message': {
+                'text': "Setting successfully changed 👍"
+            }
+        }])
+
+    def test_change_see_result_setting_to_hide_result_changes_permanently(self):
+        # Given
+        self.send_message(TEST_USER_ID, 'see result setting')
+        self.send_message(TEST_USER_ID, HIDE_BUTTON)
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'see result setting')
+
+        # Then
+        self.assertEqual(json_response, [{
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            'message': {
+                'text': 'Do you want to receive match results (score, goal '
+                        'scorers...) in your highlight messages, or hide them?\n'
+                        '\n'
+                        ' Currently: Hiding results',
+                'quick_replies': [
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': 'Show'
+                    },
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': 'Hide'
+                    },
+                    {
+                        'content_type': 'text',
+                        'payload': 'NO_PAYLOAD',
+                        'title': '❌ Cancel'
+                    }
+                ]
+            }
+        }])
+
+        # Set back to default state
+        self.send_message(TEST_USER_ID, CANCEL_BUTTON)
+
+    def test_share(self):
+        # Given
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'share')
+
+        # Then
+        self.assertEqual(json_response, [{
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            'message': {
+                'text': "I'm counting on you to make me grow! 💪"
+            }
+        }, {
+            'recipient': {
+                'id': str(TEST_USER_ID)
+            },
+            'message': {
+                "attachment": {
+                    "type": "template",
+                    "payload": {
+                        "template_type": "generic",
+                        "elements": [{
+                            "title": "Highlights straight in your inbox!",
+                            "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
+                            "image_url": settings.BASE_URL + "/static/images/logo.png",
+                            "buttons": [
+                                {
+                                    "type": "element_share",
+                                    "share_contents": {
+                                        "attachment": {
+                                            "type": "template",
+                                            "payload": {
+                                                "template_type": "generic",
+                                                "elements": [{
+                                                    "title": "Highlights straight in your inbox!",
+                                                    "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
+                                                    "image_url": settings.BASE_URL + "/static/images/logo.png",
+                                                    "default_action": {
+                                                        "type": "web_url",
+                                                        "url": "https://m.me/highlightsSportBot/"
+                                                    },
+                                                    "buttons": [
+                                                        {
+                                                            "type": "web_url",
+                                                            "url": "https://m.me/highlightsSportBot/",
+                                                            "title": "Start"
+                                                        }
+                                                    ]
+                                                }]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }]
+                    }
+                }
+            }
+        }])
+
+        # Set back to default state
+        self.send_message(TEST_USER_ID, CANCEL_BUTTON)
 
 
 class SchedulerTestCase(TestCase):

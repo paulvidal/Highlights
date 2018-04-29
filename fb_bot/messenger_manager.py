@@ -296,7 +296,9 @@ def send_batch_multiple_facebook_messages(fb_ids, messages):
         )
 
     CLIENT.send_fb_messages_async(post_message_url, response_msgs)
-    logger.log(response_msgs)
+
+    if not settings.is_prod():
+        logger.log(response_msgs)
 
     return response_msgs
 
@@ -319,7 +321,9 @@ def send_batch_facebook_message(fb_ids, message):
         )
 
     CLIENT.send_fb_messages_async(post_message_url, response_msgs)
-    logger.log(response_msgs)
+
+    if not settings.is_prod():
+        logger.log(response_msgs)
 
     return response_msgs
 
@@ -335,7 +339,9 @@ def send_facebook_message(fb_id, message):
         })
 
     CLIENT.send_fb_message(post_message_url, response_msg)
-    logger.log(response_msg)
+
+    if not settings.is_prod():
+        logger.log(response_msg)
 
     return response_msg
 
@@ -406,6 +412,50 @@ def get_highlights_for_team(fb_id, team, highlight_count=10):
 
 
 #
+# SHARE MESSAGE
+#
+
+def send_share_introduction_message(fb_id):
+    return send_facebook_message(fb_id, create_message(SHARE_INTRODUCTION_MESSAGE))
+
+
+def send_share_message(fb_id):
+    return send_facebook_message(fb_id, create_share_message())
+
+
+def create_share_message():
+    return create_generic_attachment([
+        {
+            "title": "Highlights straight in your inbox!",
+            "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
+            "image_url": settings.BASE_URL + "/static/images/logo.png",
+            "buttons": [
+                {
+                    "type": "element_share",
+                    "share_contents": create_generic_attachment([
+                        {
+                            "title": "Highlights straight in your inbox!",
+                            "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
+                            "image_url": settings.BASE_URL + "/static/images/logo.png",
+                            "default_action": {
+                                "type": "web_url",
+                                "url": "https://m.me/highlightsSportBot/"
+                            },
+                            "buttons": [
+                                {
+                                    "type": "web_url",
+                                    "url": "https://m.me/highlightsSportBot/",
+                                    "title": "Start"
+                                }
+                            ]
+                        }
+                    ])
+                }
+            ]
+        }
+    ])
+
+#
 # Highlights to json
 #
 
@@ -470,7 +520,7 @@ def create_quick_text_reply_message(text, quick_replies):
     }
 
 
-def create_list_attachement(elements):
+def create_list_attachment(elements):
     return {
         "attachment": {
             "type": "template",

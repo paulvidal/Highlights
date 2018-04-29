@@ -1,6 +1,5 @@
 import emoji
 
-
 #
 #  EMOJIS
 #
@@ -95,13 +94,15 @@ TUTORIAL_MESSAGE = "Awesome " + EMOJI_CLAP * 2 + " I will now send you the lates
 
 THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE
 
-SEE_RESULT_SETTING_MESSAGE = "Do you want to receive match results (score, goal scorers...) in your highlight messages, or hide them?\n\n Currently: {}"
+SEE_RESULT_SETTING_MESSAGE = "Do you want to receive match results/spoiler (score, goal scorers...) along with your highlight messages, or hide them?\n\nCurrently: {}"
 SEE_RESULT_YES = 'Showing results'
 SEE_RESULT_NO  = 'Hiding results'
 
 SETTING_INVALID_MESSAGE = "Invalid option " + EMOJI_CROSS + " Please choose one of the suggested options."
 
 SETTING_CHANGED_MESSAGE = "Setting successfully changed " + EMOJI_THUMBS_UP
+
+SHARE_INTRODUCTION_MESSAGE = "I'm counting on you to make me grow! " + EMOJI_MUSCLE
 
 #
 #  BUTTONS

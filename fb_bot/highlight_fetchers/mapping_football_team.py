@@ -138,6 +138,9 @@ NAME_MAPPING = {
     'akhisarspor': 'akhisar belediyespor',
     'dinamo moscow': 'dynamo moscow',
     'venlo': 'vvv-venlo',
+    'juve': 'juventus',
+    'angers sco': 'angers',
+    'sco': 'angers'
 }
 
 

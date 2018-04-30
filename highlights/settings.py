@@ -165,7 +165,7 @@ STATICFILES_DIRS = (
 # Raven config for sentry logging
 
 RAVEN_CONFIG = {
-    'dsn': 'https://f36f69a6c1144ff08577ada9e27dcf85:4cc732fc03fd44dea2beb78b23a72145@sentry.io/163242',
+    'dsn': get_env_var('SENTRY_URL'),
 }
 
 # Simplified static file serving.

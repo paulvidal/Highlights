@@ -431,21 +431,20 @@ def send_share_introduction_message(fb_id):
 def send_share_message(fb_id):
     return send_facebook_message(fb_id, create_share_message())
 
-
 def create_share_message():
     return create_generic_attachment([
         {
-            "title": "Highlights straight in your inbox!",
-            "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
-            "image_url": settings.BASE_URL + "/static/images/logo.png",
+            "title": "Start a conversation with me!",
+            "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
+            "image_url": settings.BASE_URL + "/static/images/share.png",
             "buttons": [
                 {
                     "type": "element_share",
                     "share_contents": create_generic_attachment([
                         {
-                            "title": "Highlights straight in your inbox!",
-                            "subtitle": "Highlights bot sends you the latests highlights for your favourite football teams",
-                            "image_url": settings.BASE_URL + "/static/images/logo.png",
+                            "title": "Start a conversation with me!",
+                            "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
+                            "image_url": settings.BASE_URL + "/static/images/share.png",
                             "default_action": {
                                 "type": "web_url",
                                 "url": "https://m.me/highlightsSportBot/"
@@ -454,7 +453,7 @@ def create_share_message():
                                 {
                                     "type": "web_url",
                                     "url": "https://m.me/highlightsSportBot/",
-                                    "title": "Start"
+                                    "title": "Start " + EMOJI_HEART
                                 }
                             ]
                         }

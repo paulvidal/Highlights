@@ -74,7 +74,7 @@ class MessengerBotTestCase(TestCase):
                 },
                 "messaging_type": "RESPONSE",
                 "message": {
-                    "text": "I am currently sending you the highlights for the following ⚽ teams: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?",
+                    "text": "I am currently sending you the highlights for the following ⚽ subscriptions: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?",
                     "quick_replies": [
                         {
                             "title": "➕ Add",
@@ -205,7 +205,7 @@ class MessengerBotTestCase(TestCase):
                             "content_type": "text"
                         }
                     ],
-                    "text": "I am currently sending you the highlights for the following ⚽ teams: \n\n-> Chelsea\n\nDo you want to ADD or REMOVE a team?"
+                    "text": "I am currently sending you the highlights for the following ⚽ subscriptions: \n\n-> Chelsea\n\nDo you want to ADD or REMOVE a team?"
                 }
             }
         ])
@@ -283,7 +283,7 @@ class MessengerBotTestCase(TestCase):
                             "content_type": "text"
                         }
                     ],
-                    "text": "I am currently sending you the highlights for the following ⚽ teams: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?"
+                    "text": "I am currently sending you the highlights for the following ⚽ subscriptions: \n\n-> No team or competition registered\n\nDo you want to ADD or REMOVE a team?"
                 }
             }
         ])

@@ -1,6 +1,6 @@
 from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
 from fb_bot.logger import logger
-from fb_bot.video_providers import dailymotion
+from fb_bot.video_providers import dailymotion, ok_ru
 from fb_bot.video_providers import streamable
 
 ALL_VIDEO_INFO_FETCHER = [
@@ -11,6 +11,10 @@ ALL_VIDEO_INFO_FETCHER = [
     {
         'name': 'streamable',
         'fetch': streamable.get_video_info
+    },
+    {
+        'name': 'ok.ru',
+        'fetch': ok_ru.get_video_info
     }
 ]
 
@@ -28,9 +32,12 @@ def get_info(link):
 
         try:
             info = fetcher['fetch'](link)
+
         except TooManyRequestsException:
+
             # remove temporarily fetcher for which too many request
             for fetcher_from_list in ALL_VIDEO_INFO_FETCHER:
+
                 if fetcher['name'] == fetcher_from_list['name']:
                     logger.log('REMOVING fetcher: ' + fetcher['name'], forward=True)
                     ALL_VIDEO_INFO_FETCHER.remove(fetcher_from_list)

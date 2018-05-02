@@ -6,7 +6,7 @@ import requests
 from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
 from fb_bot.logger import logger
 
-VIDEO_INFO_ENDPOINT =  'https://ajax.streamable.com/extract?url={}'
+VIDEO_INFO_ENDPOINT = 'https://ajax.streamable.com/extract?url={}'
 
 
 def get_video_info(link):

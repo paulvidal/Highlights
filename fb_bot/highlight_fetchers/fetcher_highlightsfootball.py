@@ -27,9 +27,9 @@ class HighlightsFootballHighlight(Highlight):
             return " ".join(l)
 
         team1 = join(match_split[:middle_index])
-        score1 = 0
+        score1 = -1
         team2 = join(match_split[middle_index + 1:])
-        score2 = 0
+        score2 = -1
 
         return team1, score1, team2, score2
 
@@ -44,7 +44,7 @@ def fetch_highlights(num_pagelet=4, max_days_ago=7):
 
     :param num_pagelet: number of pagelet to consider
     :param max_days_ago: max age of a highlight (after this age, we don't consider the highlight)
-    :return: the latests highlights available on hoofooot
+    :return: the latests highlights available on highlightsfootball
     """
 
     highlights = []
@@ -106,7 +106,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not time_since_added_date:
             continue
 
-        if not fetcher_footyroom._is_recent(time_since_added_date, max_days_ago):
+        if not fetcher_footyroom.is_recent(time_since_added_date, max_days_ago):
             continue
 
         # Extract image link
@@ -164,6 +164,9 @@ def _get_video_link(full_link):
 
                 # Return streamable link in the format 'https://streamable.com/e/ioz1l'
                 return base_url + '/e/' + resource_id
+
+            if 'ok.ru' in src:
+                return 'https://' + src.replace('//', '')
 
     return None
 

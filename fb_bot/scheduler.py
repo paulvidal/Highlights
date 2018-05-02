@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import dateparser
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker
+from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_highlightsfootball, fetcher_sportyhl
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
@@ -13,14 +13,24 @@ from fb_bot.video_providers import video_info_fetcher
 
 # Send highlights
 
-def send_most_recent_highlights(footyroom_pagelet=3,
-                                hoofoot_pagelet=4):
+AVAILABLE_SOURCES=[
+    'footyroom',
+    'footyroom_video',
+    'hoofoot',
+    # 'highlightsfootball',
+    # 'sportyhl'
+]
 
-    # - Footyroom
-    # - Hoofoot
-    # highlights fetching
+def send_most_recent_highlights(footyroom_pagelet=3,
+                                hoofoot_pagelet=4,
+                                highlightsfootball_pagelet=3,
+                                sportyhl_pagelet=3):
+
+    # Fetch highlights from multiple sources
     highlights = fetcher_footyroom.fetch_highlights(num_pagelet=footyroom_pagelet, max_days_ago=7) \
-                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7)
+                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7) \
+                 + fetcher_highlightsfootball.fetch_highlights(num_pagelet=highlightsfootball_pagelet, max_days_ago=7) \
+                 + fetcher_sportyhl.fetch_highlights(num_pagelet=sportyhl_pagelet, max_days_ago=7)
 
     # Add new highlights
     for highlight in highlights:
@@ -39,18 +49,22 @@ def send_most_recent_highlights(footyroom_pagelet=3,
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
-    # Set Footyroom infos for hoofoot highlights
-    for hoofoot_highlight in latest_highlight_manager.get_all_highlights_from_source(source='hoofoot'):
-        footyroom_highlight = latest_highlight_manager.get_same_highlight_footyroom(hoofoot_highlight)
+    # Set Footyroom infos
+    for h in latest_highlight_manager.get_all_highlights_from_source(sources=['hoofoot', 'sportyhl', 'highlightsfootball']):
+        footyroom_highlight = latest_highlight_manager.get_same_highlight_footyroom(h)
 
         if not footyroom_highlight:
             continue
 
-        latest_highlight_manager.set_img_link(hoofoot_highlight, footyroom_highlight.img_link)
-        latest_highlight_manager.set_goal_data(hoofoot_highlight, footyroom_highlight.goal_data)
+        latest_highlight_manager.set_img_link(h, footyroom_highlight.img_link)
+        latest_highlight_manager.set_goal_data(h, footyroom_highlight.goal_data)
+
+        # Also add game score for specific sources
+        if h.source in ['sportyhl', 'highlightsfootball']:
+            latest_highlight_manager.set_score(h, footyroom_highlight.score1, footyroom_highlight.score2)
 
     # Send highlights not already sent
-    not_sent_highlights = latest_highlight_manager.get_not_sent_highlights()
+    not_sent_highlights = latest_highlight_manager.get_not_sent_highlights(AVAILABLE_SOURCES)
 
     today = datetime.today()
 
@@ -62,6 +76,11 @@ def send_most_recent_highlights(footyroom_pagelet=3,
 
             if highlight.sent:
                 # highlight has already been sent
+                continue
+
+            if highlight.score1 < 0 or highlight.score2 < 0:
+                # score was not set as no similar video - invalid
+                latest_highlight_manager.set_invalid(highlight)
                 continue
 
             # Log highlights sent
@@ -88,11 +107,10 @@ def send_most_recent_highlights(footyroom_pagelet=3,
             latest_highlight_manager.delete_highlight(highlight)
 
 
-# Check if highlight links are still alive (not taken down) and remove it if so
+# Check if highlight links are still alive (not taken down) and set it to invalid if so
 
 def check_highlight_validity():
-    highlights = latest_highlight_manager.get_all_highlights_from_source(source='hoofoot') \
-                 + latest_highlight_manager.get_all_highlights_from_source(source='footyroom_video')
+    highlights = latest_highlight_manager.get_all_highlights()
 
     for h in highlights:
         is_valid = ressource_checker.check(h.link)
@@ -126,6 +144,16 @@ def check_scrapping_status():
 
     if not highlights_hoofoot:
         scrapping_problems.append('HOOFOOT')
+
+    highlights_highlightsfootball = fetcher_highlightsfootball.fetch_highlights(num_pagelet=1, max_days_ago=1000)
+
+    if not highlights_highlightsfootball:
+        scrapping_problems.append('HIGHLIGHTS FOOTBALL')
+
+    highlights_sportyhl = fetcher_sportyhl.fetch_highlights(num_pagelet=1, max_days_ago=1000)
+
+    if not highlights_sportyhl:
+        scrapping_problems.append('SPORTYHL')
 
     if scrapping_problems:
         raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))

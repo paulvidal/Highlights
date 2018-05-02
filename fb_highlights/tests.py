@@ -14,7 +14,6 @@ TEST_USER_ID = 1119096411506599
 
 
 class MessengerBotTestCase(TestCase):
-
     maxDiff = None
 
     @classmethod
@@ -626,7 +625,6 @@ class MessengerBotTestCase(TestCase):
 
 
 class SchedulerTestCase(TestCase):
-
     maxDiff = None
 
     @classmethod
@@ -644,12 +642,17 @@ class SchedulerTestCase(TestCase):
         self.client = Client()
         tests_helper.set_up(TEST_USER_ID)
 
+    def send_most_recent_highlights(self):
+        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
+                                              hoofoot_pagelet=0,
+                                              highlightsfootball_pagelet=0,
+                                              sportyhl_pagelet=0)
+
     def test_scheduler_send_highlight_message_for_subscribed_team(self):
         # Given
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -688,15 +691,14 @@ class SchedulerTestCase(TestCase):
         # Given
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
 
         self.assertNotIn({
             'recipient': {
-                    'id': str(TEST_USER_ID)
+                'id': str(TEST_USER_ID)
             },
             "messaging_type": "MESSAGE_TAG",
             "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
@@ -731,8 +733,7 @@ class SchedulerTestCase(TestCase):
         h.save()
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -775,8 +776,7 @@ class SchedulerTestCase(TestCase):
         # Given
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -816,8 +816,7 @@ class SchedulerTestCase(TestCase):
         # Given
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -839,8 +838,7 @@ class SchedulerTestCase(TestCase):
         # Given
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
@@ -865,8 +863,7 @@ class SchedulerTestCase(TestCase):
         user.save()
 
         # When
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0)
+        self.send_most_recent_highlights()
 
         # Then
         messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]

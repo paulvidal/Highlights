@@ -8,9 +8,8 @@ def get_all_highlights():
     return LatestHighlight.objects.all()
 
 
-# FIXME: improve query performance
-def get_all_highlights_from_source(source):
-    return [h for h in LatestHighlight.objects.all() if h.source == source]
+def get_all_highlights_from_source(sources):
+    return LatestHighlight.objects.filter(source__in=sources)
 
 
 def get_all_highlights_without_info():
@@ -39,7 +38,7 @@ def get_similar_sent_highlights(highlight):
     team1 = football_team_manager.get_football_team(highlight.team1)
     team2 = football_team_manager.get_football_team(highlight.team2)
 
-    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=highlight.score1, score2=highlight.score2, sent=True)
+    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, sent=True)
             if abs(highlight.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2) ]
 
 
@@ -82,19 +81,23 @@ def set_video_url(highlight_model, video_url):
     highlight_model.save()
 
 
+def set_score(highlight_model, score1, score2):
+    highlight_model.score1 = score1
+    highlight_model.score2 = score2
+    highlight_model.save()
+
+
 def set_goal_data(highlight_model, goal_data):
     highlight_model.goal_data = goal_data
     highlight_model.save()
 
 
-def get_not_sent_highlights():
-    return LatestHighlight.objects.filter(sent=False, valid=True)
+def get_not_sent_highlights(available_sources):
+    return LatestHighlight.objects.filter(sent=False, valid=True, source__in=available_sources)
 
 
 def get_same_highlight_footyroom(highlight_model):
-    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2,
-                                                           score1=highlight_model.score1, score2=highlight_model.score2,
-                                                           source='footyroom')
+    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2, source='footyroom')
                  if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
     return highlight[0] if len(highlight) > 0 else None

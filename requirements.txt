@@ -8,6 +8,7 @@ dj-database-url==0.4.2
 Django==1.10.5
 emoji==0.4.5
 gunicorn==19.7.1
+html5lib==1.0.1
 Logentries==0.17
 nltk==3.2.5
 psycopg2==2.7.1
@@ -19,5 +20,6 @@ requests==2.13.0
 ruamel.yaml==0.14.10
 six==1.10.0
 tzlocal==1.4
+webencodings==0.5.1
 whitenoise==3.3.0
 zope.interface==4.4.0

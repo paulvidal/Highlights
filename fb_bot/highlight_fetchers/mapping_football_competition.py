@@ -18,6 +18,8 @@ NAME_MAPPING = {
     'friendlies': 'club friendlies',
     'scottish premier league': 'scottish premiership',
     'scottish league': 'scottish premiership',
+    'efl championship': 'championship',
+    'spl': 'scottish premiership',
 }
 
 

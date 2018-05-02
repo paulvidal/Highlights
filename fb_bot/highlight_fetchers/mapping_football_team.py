@@ -140,7 +140,10 @@ NAME_MAPPING = {
     'venlo': 'vvv-venlo',
     'juve': 'juventus',
     'angers sco': 'angers',
-    'sco': 'angers'
+    'sco': 'angers',
+    'vitoria guimaraes': 'vitoria',
+    'vitoria sc': 'vitoria',
+    'vitoria s.c.': 'vitoria',
 }
 
 

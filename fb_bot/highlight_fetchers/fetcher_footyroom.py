@@ -227,11 +227,10 @@ def _get_video_link(soup):
                 return None
 
             link = search_result.groups()[0].replace('\\', '')
-            base_url = link.split('/s/')[0]
             resource_id = link.split('/s/')[1].split('/')[0]
 
             # Return streamable link in the format 'https://streamable.com/e/ioz1l'
-            return base_url + '/e/' + resource_id
+            return 'https://streamable.com/e/' + resource_id
 
         elif 'ok.ru' in script_text:
             regex = 'src=\\\\"\\\/\\\/(ok.ru.*?)\\\"'

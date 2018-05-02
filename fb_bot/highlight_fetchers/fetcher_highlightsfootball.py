@@ -160,14 +160,13 @@ def _get_video_link(full_link):
         # Only pick video urls coming from the following websites
         if src:
             if 'dailymotion.com' in src:
-                return src.replace('//', '')
+                return 'https://' + src.replace('//', '')
 
             if 'streamable.com' in src:
-                base_url = src.split('/s/')[0]
                 resource_id = src.split('/s/')[1].split('/')[0]
 
                 # Return streamable link in the format 'https://streamable.com/e/ioz1l'
-                return base_url + '/e/' + resource_id
+                return 'https://streamable.com/e/' + resource_id
 
             if 'ok.ru' in src:
                 return 'https://' + src.replace('//', '')

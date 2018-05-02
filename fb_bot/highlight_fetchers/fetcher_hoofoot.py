@@ -146,9 +146,14 @@ def _get_video_link(full_link):
     for iframe in soup.find_all("iframe"):
         src = iframe.get("src")
 
+        if not src:
+            continue
+
         # Only pick video urls coming from the following websites
-        if src and ('dailymotion.com' in src
-                    or 'streamable.com' in src):
+        if 'dailymotion.com' in src:
+            return src.replace('http://', 'https://')
+
+        elif 'streamable.com' in src:
             return src
 
     return None

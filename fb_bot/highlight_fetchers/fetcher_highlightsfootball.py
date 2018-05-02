@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import requests
 import dateparser
@@ -98,8 +99,11 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not date:
             continue
 
+        now = datetime.now()
+
         time_since_added = str(date.get_text())
-        time_since_added_date = dateparser.parse(time_since_added)
+        time_since_added_date = dateparser.parse(time_since_added).replace(hour=now.hour, minute=now.minute)
+        time_since_added = str(time_since_added_date)
 
         # If error occur while parsing date, skip
         # TODO: handle case where date malformed (special string field)

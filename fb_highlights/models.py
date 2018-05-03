@@ -182,7 +182,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['team1__name', 'team2__name']
+        return ['link', 'team1__name', 'team2__name']
 
     def get_match_name(self):
         return "{} {} - {} {}".format(self.team1.name.title(), self.score1, self.score2, self.team2.name.title())

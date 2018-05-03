@@ -43,7 +43,9 @@ def _extract_goals(match_data):
 
         elapsed = incident.get('elapsed')
 
-        if category == 'g' and id in ['g', 'p', 'og']: # goal
+        print(incident)
+
+        if category == 'g': # goal
             goal_type = 'goal'
 
             if id == 'p':
@@ -69,7 +71,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    page = requests.get("http://footyroom.com/matches/79950605/liverpool-vs-roma/review")
+    page = requests.get("http://footyroom.com/matches/79950601/salzburg-vs-marseille/review")
     soup = BeautifulSoup(page.content, 'html.parser')
 
     goals = get_goal_data(soup)

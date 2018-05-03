@@ -17,6 +17,8 @@ class CustomCommand(BaseCommand):
             logger.log("Task " + str(self.get_task_name()) + " executed in " + str(round(time.time() - start_time, 2)) + "s", forward=True)
         except Exception as error:
             if not settings.DEBUG:
+                # Say if PROD or PRE-PROD
+                client.user_context({ 'prod_status': settings.PROD_STATUS })
                 # Report to sentry if problem detected
                 client.captureException()
                 # Report task had a problem

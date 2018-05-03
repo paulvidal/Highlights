@@ -151,7 +151,7 @@ def _get_video_link(full_link):
 
         # Only pick video urls coming from the following websites
         if 'dailymotion.com' in src:
-            return src.replace('http://', 'https://')
+            return 'https://' + src.replace('http://', '') if not 'https://' in src else src
 
         elif 'streamable.com' in src:
             return src

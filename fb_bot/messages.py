@@ -56,7 +56,7 @@ HELP_MESSAGE = "Here is what you can ask me:\n\n" \
 
 CANCEL_MESSAGE = "Alright let's stop there then :)"
 
-DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your sunscriptions as soon as videos are available. " + EMOJI_TV
+DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your subscriptions as soon as videos are available. " + EMOJI_TV
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
@@ -66,7 +66,7 @@ GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + "\n\nI am the smart bot that fetc
 
 GET_STARTED_MESSAGE_2 = "To get started, enter the name of a " + EMOJI_FOOTBALL + " team you would love to subscribe to."
 
-SUBSCRIPTION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " subscriptions: \n\n{}\n\nDo you want to ADD or REMOVE a team?"
+SUBSCRIPTION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " subscriptions: \n\n{}\n\nDo you want to ADD or REMOVE a subscription?"
 
 ADD_REGISTRATIONS_MESSAGE = "Tell me the name of the team or competition you want to add " + EMOJI_FIRE
 

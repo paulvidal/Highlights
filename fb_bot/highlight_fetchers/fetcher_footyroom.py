@@ -220,22 +220,22 @@ def _get_video_link(soup):
             if 'dailymotion' in link:
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            elif 'streamable' in script_text:
+            elif 'streamable' in link:
                 resource_id = link.split('/s/')[1].split('/')[0]
 
                 # Return streamable link in the format 'https://streamable.com/e/ioz1l'
                 return 'https://streamable.com/e/' + resource_id
 
-            elif 'ok.ru' in script_text:
+            elif 'ok.ru' in link:
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            elif 'matchat.online' in script_text:
+            elif 'matchat.online' in link:
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            elif 'youtube' in script_text:
+            elif 'youtube' in link:
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            elif 'rutube.ru' in script_text:
+            elif 'rutube.ru' in link:
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
     return None

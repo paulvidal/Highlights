@@ -219,7 +219,7 @@ def _send_highlight_to_users(highlight):
     lose_ids = [_id for _id in lose_ids if _id not in user_ids_see_result_disable]
 
     user_ids_see_result = win_ids + draw_ids + lose_ids
-    user_ids_see_result_disable = list(user_ids_see_result_disable)
+    user_ids_see_result_disable = [_id for _id in ids if _id in user_ids_see_result_disable]
 
     # Send introduction message to users
     messenger_manager.send_highlight_won_introduction_message(win_ids, highlight)

@@ -17,7 +17,7 @@ http://m.me/highlightsSportBot
 
 Start screen          |  Search - no spoiler   |  Search - spoiler
 :-------------------------:|:-------------------------:|:-------------------------:
-![](https://highlights-bot.herokuapp.com/static/images/preview-1.png)  |  ![](https://highlights-bot.herokuapp.com/static/images/preview-3.png) | ![](https://highlights-bot.herokuapp.com/static/images/preview-2.png)
+![](https://highlights-bot.herokuapp.com/static/images/preview-1.png)  |  ![](https://highlights-bot.herokuapp.com/static/images/preview-2.png) | ![](https://highlights-bot.herokuapp.com/static/images/preview-3.png)
 
 Notification - no spoiler  |  Notification - spoiler   |  Redirected video
 :-------------------------:|:-------------------------:|:-------------------------:

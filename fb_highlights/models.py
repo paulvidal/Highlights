@@ -208,21 +208,37 @@ class LatestHighlight(models.Model):
         # TODO: change with function is better than
         """
         Highlights priority: (can be override manually using the priority field)
-        3. hoofoot
-        2. footyroom_video
-        1. footyroom
         """
         if self.priority != 0:
-            return self.priority + 3 # shortcut all priorities
+            return self.priority + 5 # shortcut all priorities
 
         priority = 0
 
         if self.source == 'hoofoot':
+            priority = 5
+
+            if 'matchat.online' in self.link:
+                priority = 2
+
+        elif self.source == 'sportyhl':
+            priority = 4
+
+            if self.video_duration <= 0 or self.video_duration >= 600:
+                priority = 1
+        elif self.source == 'highlightsfootball':
             priority = 3
+
+            if self.video_duration <= 0 or self.video_duration >= 600:
+                priority = 1
+
         elif self.source == 'footyroom_video':
             priority = 2
+
+            if 'streamable' in self.link and self.video_duration >= 120:
+                priority = 4
+
         elif self.source == 'footyroom':
-            priority = 1
+            priority = 0
 
         return priority
 

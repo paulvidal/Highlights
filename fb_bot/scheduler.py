@@ -17,8 +17,8 @@ AVAILABLE_SOURCES=[
     'footyroom',
     'footyroom_video',
     'hoofoot',
-    # 'highlightsfootball',
-    # 'sportyhl'
+    'highlightsfootball',
+    'sportyhl'
 ]
 
 def send_most_recent_highlights(footyroom_pagelet=3,

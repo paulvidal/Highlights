@@ -208,8 +208,8 @@ def _get_video_link(soup):
     for script in soup.find_all('script'):
         script_text = script.text
 
-        if 'dailymotion' in script_text:
-            regex = 'src=\\\\"\\\/\\\/(www.dailymotion.com\\\/embed\\\/video\\\/.*?)\\\"'
+        if 'DataStore.media' in script_text:
+            regex = "\"source\":\"(.*?)\""
             search_result = re.compile(regex, 0).search(script_text)
 
             if not search_result:
@@ -217,53 +217,26 @@ def _get_video_link(soup):
 
             link = search_result.groups()[0].replace('\\', '')
 
-            return 'https://' + link
+            if 'dailymotion' in link:
+                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-        elif 'streamable' in script_text:
-            regex = 'src=\\\\"(https:\\\/\\\/streamable.com.*?)\\"'
-            search_result = re.compile(regex, 0).search(script_text)
+            elif 'streamable' in script_text:
+                resource_id = link.split('/s/')[1].split('/')[0]
 
-            if not search_result:
-                return None
+                # Return streamable link in the format 'https://streamable.com/e/ioz1l'
+                return 'https://streamable.com/e/' + resource_id
 
-            link = search_result.groups()[0].replace('\\', '')
-            resource_id = link.split('/s/')[1].split('/')[0]
+            elif 'ok.ru' in script_text:
+                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            # Return streamable link in the format 'https://streamable.com/e/ioz1l'
-            return 'https://streamable.com/e/' + resource_id
+            elif 'matchat.online' in script_text:
+                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-        elif 'ok.ru' in script_text:
-            regex = 'src=\\\\"\\\/\\\/(ok.ru.*?)\\\"'
-            search_result = re.compile(regex, 0).search(script_text)
+            elif 'youtube' in script_text:
+                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-            if not search_result:
-                return None
-
-            link = search_result.groups()[0].replace('\\', '')
-
-            return 'https://' + link
-
-        elif 'youtube' in script_text:
-            regex = 'src=\\\\"(https:\\\/\\\/www.youtube.com.*?)\\\"'
-            search_result = re.compile(regex, 0).search(script_text)
-
-            if not search_result:
-                return None
-
-            link = search_result.groups()[0].replace('\\', '')
-
-            return link
-
-        elif 'rutube.ru' in script_text:
-            regex = 'src=\\\\"\\\/\\\/(rutube.ru.*?)\\\"'
-            search_result = re.compile(regex, 0).search(script_text)
-
-            if not search_result:
-                return None
-
-            link = search_result.groups()[0].replace('\\', '')
-
-            return 'https://' + link
+            elif 'rutube.ru' in script_text:
+                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
     return None
 

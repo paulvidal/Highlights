@@ -156,6 +156,10 @@ def _get_video_link(full_link):
         elif 'streamable.com' in src:
             return src
 
+        elif 'matchat.online' in src:
+            src = src.replace('//', '')
+            return 'https://' + src.replace('http://', '') if not 'https://' in src else src
+
     return None
 
 

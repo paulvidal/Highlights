@@ -43,8 +43,6 @@ def _extract_goals(match_data):
 
         elapsed = incident.get('elapsed')
 
-        print(incident)
-
         if category == 'g': # goal
             goal_type = 'goal'
 

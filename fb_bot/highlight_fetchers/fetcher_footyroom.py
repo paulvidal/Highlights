@@ -221,7 +221,10 @@ def _get_video_link(soup):
                 return 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
             elif 'streamable' in link:
-                resource_id = link.split('/s/')[1].split('/')[0]
+                if '/s/' in link:
+                    resource_id = link.split('/s/')[1].split('/')[0]
+                else:
+                    resource_id = link.split('/')[-1]
 
                 # Return streamable link in the format 'https://streamable.com/e/ioz1l'
                 return 'https://streamable.com/e/' + resource_id

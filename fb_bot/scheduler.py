@@ -72,7 +72,7 @@ def send_most_recent_highlights(footyroom_pagelet=3,
         time_since_added = highlight.get_parsed_time_since_added()
 
         # Add time to make sure video is good
-        if timedelta(minutes=30) < abs(today - time_since_added) or highlight.priority > 0:
+        if timedelta(minutes=30) < abs(today - time_since_added) or highlight.priority_short > 0:
 
             if highlight.sent:
                 # highlight has already been sent

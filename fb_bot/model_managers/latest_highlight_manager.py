@@ -187,6 +187,11 @@ def get_best_highlight(highlight_models, extended=False):
             current_best = h
             continue
 
+        # Priority short-circuiting
+        if current_best.priority_short > 0 or h.priority_short > 0:
+            current_best = h if h.priority_short > current_best.priority_short else current_best
+            continue
+
         current_best = determine_best_highlight(current_best, h, current_best.score1 + current_best.score2)
 
     # Extended highlight is always based on the short highlight
@@ -201,6 +206,11 @@ def get_best_highlight(highlight_models, extended=False):
         for h in highlight_models_extended:
             if not current_best_extended:
                 current_best_extended = h
+                continue
+
+            # Priority short-circuiting
+            if current_best_extended.priority_extended > 0 or h.priority_extended > 0:
+                current_best_extended = h if h.priority_extended > current_best_extended.priority_extended else current_best_extended
                 continue
 
             current_best_extended = determine_best_highlight_extended(current_best_extended, h, current_best.video_duration)

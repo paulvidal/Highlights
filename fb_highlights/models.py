@@ -164,7 +164,8 @@ class LatestHighlight(models.Model):
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="team2")
     score2 = models.SmallIntegerField()
     source = models.CharField(max_length=80)
-    priority = models.PositiveIntegerField(default=0)
+    priority_short = models.PositiveIntegerField(default=0)
+    priority_extended = models.PositiveIntegerField(default=0)
     sent = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
     click_count = models.PositiveIntegerField(default=0)
@@ -174,7 +175,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority', 'sent', 'valid', 'click_count', 'img_link', 'video_url']
+        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority_short', 'priority_extended', 'sent', 'valid', 'click_count', 'img_link', 'video_url']
 
     @staticmethod
     def to_list_filter():
@@ -221,45 +222,6 @@ class LatestHighlight(models.Model):
 
         elif 'footyroom' in self.link:
             priority = 1
-
-        return priority
-
-
-    def get_priority(self):
-        # TODO: change with function is better than
-        """
-        Highlights priority: (can be override manually using the priority field)
-        """
-        if self.priority != 0:
-            return self.priority + 5 # shortcut all priorities
-
-        priority = 0
-
-        if self.source == 'hoofoot':
-            priority = 5
-
-            if 'matchat.online' in self.link:
-                priority = 2
-
-        elif self.source == 'sportyhl':
-            priority = 4
-
-            if self.video_duration <= 0 or self.video_duration >= 600:
-                priority = 1
-        elif self.source == 'highlightsfootball':
-            priority = 3
-
-            if self.video_duration <= 0 or self.video_duration >= 600:
-                priority = 1
-
-        elif self.source == 'footyroom_video':
-            priority = 2
-
-            if 'streamable' in self.link and self.video_duration >= 120:
-                priority = 4
-
-        elif self.source == 'footyroom':
-            priority = 0
 
         return priority
 

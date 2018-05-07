@@ -803,7 +803,7 @@ class SchedulerTestCase(TestCase):
     def test_scheduler_sends_highlight_message_for_subscribed_team_when_too_recent_but_priority_is_set(self):
         # Given
         h = LatestHighlight.objects.filter(link='http://hoofoot/barcelona-liverpool')[0]
-        h.priority = 1
+        h.priority_short = 1
         h.save()
 
         # When
@@ -854,7 +854,7 @@ class SchedulerTestCase(TestCase):
         }, messages)
 
         # Set back old properties
-        h.priority = 0
+        h.priority_short = 0
         h.save()
 
     def test_scheduler_send_highlight_message_for_subscribed_competition(self):

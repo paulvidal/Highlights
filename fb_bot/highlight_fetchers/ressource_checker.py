@@ -24,18 +24,18 @@ def check(link):
         page = requests.get(link).text
         return not ('vp_video_stub_txt' in page or 'page-not-found' in page) # first is for content deleted, second for content not found
 
-    elif 'matchat.online' in link:
-        page = None
-        browser = None
-
-        try:
-            browser = Browser()
-            page = browser.get(link).get_html()
-        finally:
-            if browser:
-                browser.close()
-
-        return not 'rmp-no-play-text' in page
+    # elif 'matchat.online' in link:
+    #     page = None
+    #     browser = None
+    #
+    #     try:
+    #         browser = Browser()
+    #         page = browser.get(link).get_html()
+    #     finally:
+    #         if browser:
+    #             browser.close()
+    #
+    #     return not 'rmp-no-play-text' in page
 
     # For all other content provider, return True by default
     return True

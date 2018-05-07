@@ -163,11 +163,21 @@ def get_unique_highlights(highlight_models):
     return unique
 
 
-def get_best_highlight(highlight_models):
+def get_similar_highlights(highlight, highlights_model):
+    return [h for h in highlights_model if is_same_match_highlight(highlight, h)]
+
+
+def is_same_match_highlight(h1, h2):
+    return h1.team1 == h2.team1 and h1.team2 == h2.team2 \
+           and abs(h1.get_parsed_time_since_added() - h2.get_parsed_time_since_added()) < timedelta(days=2)
+
+
+def get_best_highlight(highlight_models, extended=False):
     """
     Get the most relevant highlight to send to the user (depending on the priority the highlight source)
 
     :param highlight_models: list of highlights for a match, coming from different sources
+    :param extended: parameter to determine if should egt extended highlight or not
     :return: the most relevant highlight (most recent with highest priority)
     """
     current_best = None
@@ -177,23 +187,103 @@ def get_best_highlight(highlight_models):
             current_best = h
             continue
 
-        h_time = h.get_parsed_time_since_added()
-        current_best_time = current_best.get_parsed_time_since_added()
+        current_best = determine_best_highlight(current_best, h, current_best.score1 + current_best.score2)
 
-        if h.get_priority() >= current_best.get_priority():
+    # Extended highlight is always based on the short highlight
+    if extended:
+        highlight_models_extended = [h for h in highlight_models if current_best.video_duration > 0 and h.video_duration > current_best.video_duration]
 
-            if h.get_priority() > current_best.get_priority():
-                current_best = h
-            elif h_time > current_best_time:
-                current_best = h
+        if len(highlight_models_extended) == 0:
+            return current_best
+
+        current_best_extended = None
+
+        for h in highlight_models_extended:
+            if not current_best_extended:
+                current_best_extended = h
+                continue
+
+            current_best_extended = determine_best_highlight_extended(current_best_extended, h, current_best.video_duration)
+
+        return current_best_extended
 
     return current_best
 
 
-def get_similar_highlights(highlight, highlights_model):
-    return [h for h in highlights_model if is_same_match_highlight(highlight, h)]
+def determine_best_highlight(h1, h2, total_goals):
+    if h1.video_duration > 0 and h2.video_duration > 0:
+
+        # CASE NO GOALS
+        if total_goals == 0:
+            return choose(h1, h2, [180, 300, 360, 420, 480, 600], min_threshold=30)
+
+        # CASE 1 or 2 GOALS
+        elif total_goals <= 2:
+            return choose(h1, h2, [240, 360, 420, 480, 600], min_threshold=60)
+
+        # CASE 3 or 4 GOALS
+        elif total_goals <= 4:
+            return choose(h1, h2, [300, 360, 420, 480, 600], min_threshold=120)
+
+        # CASE 5 or 6 GOALS
+        elif total_goals <= 6:
+            return choose(h1, h2, [360, 420, 480, 600], min_threshold=200)
+
+        # CASE 7 or more GOALS
+        else:
+            return choose(h1, h2, [480, 600], min_threshold=300)
+
+    elif h1.video_duration > 0:
+        return h1
+
+    elif h2.video_duration > 0:
+        return h2
+
+    else:
+        # return most recent as might be the most complete
+        return h1 if h1.get_parsed_time_since_added() > h2.get_parsed_time_since_added() else h2
 
 
-def is_same_match_highlight(h1, h2):
-    return h1.team1 == h2.team1 and h1.team2 == h2.team2 \
-           and abs(h1.get_parsed_time_since_added() - h2.get_parsed_time_since_added()) < timedelta(days=2)
+def choose(h1, h2, thresholds, min_threshold):
+    for threshold in thresholds:
+        if h1.video_duration >= min_threshold and h1.video_duration <= threshold and h1.provider_priority() > h2.provider_priority():
+            return h1
+
+        elif h2.video_duration >= min_threshold and h2.video_duration <= threshold and h2.provider_priority() > h1.provider_priority():
+            return h2
+
+        elif h1.video_duration >= min_threshold and h2.video_duration >= min_threshold \
+                and h1.video_duration <= threshold and h2.video_duration <= threshold and h1.provider_priority() == h2.provider_priority():
+
+            if threshold == thresholds[0]:
+                return h1 if h1.video_duration >= h2.video_duration else h2
+            else:
+                return h1 if h1.video_duration <= h2.video_duration else h2
+
+    return h1 if h1.provider_priority() >= h2.provider_priority() else h2
+
+
+def determine_best_highlight_extended(h1, h2, short_best_highlight_duration):
+    if short_best_highlight_duration <= 300:
+        max_threshold = 600
+    elif short_best_highlight_duration <= 450:
+        max_threshold = 900
+    else:
+        max_threshold = 1200
+
+    return choose_extended(h1, h2, [1100, 1000, 900, 800, 700, 600], max_threshold=max_threshold)
+
+
+def choose_extended(h1, h2, thresholds, max_threshold):
+    for threshold in thresholds:
+        if h1.video_duration <= max_threshold and h1.video_duration >= threshold:
+            return h1
+
+        elif h2.video_duration <= max_threshold and h2.video_duration >= threshold:
+            return h2
+
+        elif h1.video_duration <= max_threshold and h2.video_duration <= max_threshold \
+                and h1.video_duration >= threshold and h2.video_duration >= threshold:
+            return h1 if h1.video_duration >= h2.video_duration else h2
+
+    return h1 if h1.provider_priority() >= h2.provider_priority() else h2

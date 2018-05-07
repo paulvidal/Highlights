@@ -204,6 +204,27 @@ class LatestHighlight(models.Model):
         team_name = mapping_football_team.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
+    def provider_priority(self):
+        priority = 0
+
+        if 'streamable' in self.link:
+            priority = 5
+
+        elif 'dailymotion' in self.link:
+            priority = 4
+
+        elif 'ok.ru' in self.link:
+            priority = 3
+
+        elif 'matchat.online' in self.link:
+            priority = 2
+
+        elif 'footyroom' in self.link:
+            priority = 1
+
+        return priority
+
+
     def get_priority(self):
         # TODO: change with function is better than
         """

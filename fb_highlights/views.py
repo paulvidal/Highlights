@@ -489,7 +489,9 @@ class HighlightRedirectView(generic.View):
 
         highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
 
-        if type == 'extended':
+        extended = type == 'extended'
+
+        if extended:
             # Extended
             highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=True)
         else:
@@ -500,7 +502,7 @@ class HighlightRedirectView(generic.View):
         latest_highlight_manager.increment_click_count(highlight_to_send)
 
         # Highlight event tracking
-        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send)
+        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
         highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
 
         return redirect(highlight_to_send.link)

@@ -237,13 +237,15 @@ class HighlightStat(models.Model):
     score2 = models.SmallIntegerField()
     link = models.TextField()
     time = models.DateTimeField()
+    extended = models.BooleanField(default=False)
+    video_duration = models.IntegerField(default=-2)
 
     class Meta:
         unique_together = ('user', 'time')
 
     @staticmethod
     def to_list_display():
-        return ['user', 'team1', 'score1', 'team2', 'score2', 'time', 'link']
+        return ['user', 'team1', 'score1', 'team2', 'score2', 'time', 'link', 'extended', 'video_duration']
 
     @staticmethod
     def to_list_filter():

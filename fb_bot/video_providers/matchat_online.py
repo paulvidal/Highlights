@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from raven.contrib.django.raven_compat.models import client, settings
+from selenium.common.exceptions import NoSuchElementException
 
 from fb_bot.highlight_fetchers.drivers.browser import Browser
 from fb_bot.logger import logger
@@ -23,6 +24,12 @@ def get_video_info(link):
         browser.wait(4)
 
         response = browser.get_html()
+
+    except NoSuchElementException:
+        return {
+            'duration': -1,
+            'video_url': None
+        }
 
     except Exception:
         client.captureException()

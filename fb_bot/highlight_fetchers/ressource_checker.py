@@ -1,6 +1,8 @@
 import requests
 import time
 
+from fb_bot.highlight_fetchers.drivers.browser import Browser
+
 
 def check(link):
     """
@@ -10,16 +12,30 @@ def check(link):
     :return: True if the video is still available
     """
 
-    page = requests.get(link).text
-
     if 'dailymotion' in link:
+        page = requests.get(link).text
         return not ('Content rejected.' in page or 'Content deleted.' in page)
 
     elif 'streamable' in link:
+        page = requests.get(link).text
         return not 'Oops!' in page
 
     elif 'ok.ru' in link:
+        page = requests.get(link).text
         return not ('vp_video_stub_txt' in page or 'page-not-found' in page) # first is for content deleted, second for content not found
+
+    elif 'matchat.online' in link:
+        page = None
+        browser = None
+
+        try:
+            browser = Browser()
+            page = browser.get(link).get_html()
+        finally:
+            if browser:
+                browser.close()
+
+        return not 'rmp-no-play-text' in page
 
     # For all other content provider, return True by default
     return True
@@ -38,7 +54,10 @@ if __name__ == "__main__":
                   'https://ok.ru/videoembed/87798dafad', # False
                   'https://ok.ru/videoembed/877984746086', # False
                   'https://ok.ru/videoembed/703334517448', # True
-                  'https://ok.ru/videoembed/871972342374'  # True
+                  'https://ok.ru/videoembed/871972342374',  # True
+                  'https://hfoot.matchat.online/player/49500354',  # False
+                  'https://hfoot.matchat.online/player/49422',  # True
+                  'https://footy1.matchat.online/player/49639',  # True
                   ]
 
     for highlight in highlights:

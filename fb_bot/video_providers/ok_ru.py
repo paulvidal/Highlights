@@ -1,5 +1,6 @@
 import re
 import requests
+from raven.contrib.django.models import client
 
 from fb_bot.logger import logger
 
@@ -15,6 +16,7 @@ def get_video_info(link):
     try:
         response = requests.get(link)
     except Exception:
+        client.captureException()
         logger.log('Ok.ru status: error | Error url: ' + link, forward=True)
         return None
 

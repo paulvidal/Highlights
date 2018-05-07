@@ -469,7 +469,7 @@ class HighlightRedirectView(generic.View):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        param_keys = ['team1', 'score1', 'team2', 'score2', 'date', 'user_id', 'type']
+        param_keys = ['team1', 'score1', 'team2', 'score2', 'date', 'user_id']
 
         for param_key in param_keys:
             if param_key not in request.GET:
@@ -480,8 +480,9 @@ class HighlightRedirectView(generic.View):
         team2 = request.GET['team2'].lower()
         score2 = int(request.GET['score2'])
         date = dateparser.parse(request.GET['date'])
-        type = request.GET['type']
         user_id = int(request.GET['user_id'])
+
+        type = request.GET.get('type')
 
         # user tracking recording if user clicked on link
         user_manager.increment_user_highlight_click_count(user_id)

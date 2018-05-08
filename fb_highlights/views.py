@@ -20,6 +20,7 @@ from fb_bot.model_managers import context_manager, user_manager, football_team_m
 from fb_bot.model_managers import registration_team_manager
 from fb_bot.model_managers.context_manager import ContextType
 from fb_highlights import view_message_helper
+from fb_highlights.view_message_helper import accepted_messages
 from highlights import settings
 
 
@@ -139,7 +140,8 @@ class HighlightsBotView(generic.View):
                             messenger_manager.send_help_message(sender_id)
                         )
 
-                    elif 'thank you' in message or 'thanks' in message or 'cheers' in message or 'merci' in message:
+                    elif accepted_messages(message, ['thank you', 'thanks', 'cheers', 'merci', 'cimer',
+                                                     'good job', 'good bot']):
                         logger.log("THANK YOU MESSAGE")
 
                         context_manager.set_default_context(sender_id)
@@ -225,7 +227,7 @@ class HighlightsBotView(generic.View):
                             )
 
                     # SUBSCRIPTION SETTING
-                    elif 'subscriptions' in message:
+                    elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification']):
                         logger.log("SUBSCRIPTION SETTING")
 
                         response_msg.append(
@@ -233,7 +235,7 @@ class HighlightsBotView(generic.View):
                         )
 
                     # ADD REGISTRATION SETTING
-                    elif 'add' in message and context_manager.is_notifications_setting_context(sender_id):
+                    elif accepted_messages(message, ['add']) and context_manager.is_notifications_setting_context(sender_id):
                         logger.log("ADD REGISTRATION SETTING")
 
                         context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
@@ -243,7 +245,7 @@ class HighlightsBotView(generic.View):
                         )
 
                     # REMOVE REGISTRATION SETTING
-                    elif 'remove' in message and context_manager.is_notifications_setting_context(sender_id):
+                    elif accepted_messages(message, ['remove']) and context_manager.is_notifications_setting_context(sender_id):
                         logger.log("REMOVE REGISTRATION SETTING")
 
                         context_manager.update_context(sender_id, ContextType.REMOVE_REGISTRATION)
@@ -363,7 +365,8 @@ class HighlightsBotView(generic.View):
                             )
 
                     # SEE RESULT SETTING
-                    elif 'see result setting' in message:
+                    elif accepted_messages(message, ['see result setting', 'spoiler', 'show result', 'hide result',
+                                                     'show score', 'hide score']):
                         logger.log("SEE RESULT SETTING")
 
                         response_msg.append(
@@ -371,7 +374,7 @@ class HighlightsBotView(generic.View):
                         )
 
                     # SHARE
-                    elif 'share' in message:
+                    elif accepted_messages(message, ['share', 'send to a friend']):
                         logger.log("SHARE")
 
                         response_msg.append(
@@ -382,7 +385,7 @@ class HighlightsBotView(generic.View):
                         )
 
                     # SEARCH HIGHLIGHT OPTION
-                    elif 'search' in message or 'search again' in message:
+                    elif accepted_messages(message, ['search', 'search again']):
                         logger.log("SEARCH HIGHLIGHTS")
 
                         response_msg.append(

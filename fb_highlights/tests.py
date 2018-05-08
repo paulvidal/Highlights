@@ -461,7 +461,7 @@ class MessengerBotTestCase(TestCase):
         # Given
 
         # When
-        json_response = self.send_message(TEST_USER_ID, 'see result setting')
+        json_response = self.send_message(TEST_USER_ID, 'spoiler')
 
         # Then
         self.assertEqual(json_response, [{

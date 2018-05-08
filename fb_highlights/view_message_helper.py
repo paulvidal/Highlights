@@ -36,3 +36,11 @@ def get_teams_formatted(sender_id):
 def get_competitions_formatted(sender_id):
     competitions = registration_competition_manager.get_competitions_for_user(sender_id)
     return [competition.title() for competition in competitions]
+
+
+def accepted_messages(message, accepted_words):
+    for words in accepted_words:
+        if words in message:
+            return True
+
+    return False

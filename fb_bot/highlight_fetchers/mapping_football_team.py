@@ -144,6 +144,21 @@ NAME_MAPPING = {
     'vitoria guimaraes': 'vitoria',
     'vitoria sc': 'vitoria',
     'vitoria s.c.': 'vitoria',
+    'fc schalke 04': 'schalke 04',
+    'schalke': 'schalke 04',
+    'herbiers': 'les herbiers',
+    'les herbiers vf': 'les herbiers',
+    '1899 hoffenheim': 'hoffenheim',
+    'hamburger': 'hamburger	sv',
+    'bayer 04 leverkusen': 'bayer leverkusen',
+    'heart of midlothian fc': 'heart of midlothian',
+    'birmingham': 'birmingham city',
+    'birmingham city fc': 'birmingham city',
+    'preston': 'preston north end',
+    'preston north': 'preston north end',
+    'derby county fc': 'derby county',
+    'deportivo alaves': 'alaves',
+    'chievo verona': 'chievoverona'
 }
 
 

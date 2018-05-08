@@ -20,6 +20,7 @@ NAME_MAPPING = {
     'scottish league': 'scottish premiership',
     'efl championship': 'championship',
     'spl': 'scottish premiership',
+    'major league soccer': 'mls'
 }
 
 

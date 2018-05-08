@@ -158,7 +158,8 @@ NAME_MAPPING = {
     'preston north': 'preston north end',
     'derby county fc': 'derby county',
     'deportivo alaves': 'alaves',
-    'chievo verona': 'chievoverona'
+    'chievo verona': 'chievoverona',
+    'la fc': 'los angeles',
 }
 
 

@@ -38,9 +38,9 @@ class User(models.Model):
         return ['facebook_id', 'first_name', 'last_name', 'join_date']
 
     @staticmethod
-    def get_default_user():
-        return User(facebook_id=0,
-                    first_name="first",
+    def get_default_user(facebook_id=0):
+        return User(facebook_id=facebook_id,
+                    first_name="user",
                     last_name="last",
                     image_url="http://images/url.png",
                     locale="en_GB",

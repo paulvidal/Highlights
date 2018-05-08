@@ -11,7 +11,9 @@ def get_user(fb_id):
         success = _insert_user(fb_id)
 
         if not success:
-            return User.get_default_user()
+            default_user = User.get_default_user(facebook_id=fb_id)
+            default_user.save()
+            return default_user
 
     return User.objects.get(facebook_id=fb_id)
 

@@ -14,6 +14,8 @@ NAME_MAPPING = {
     'uefa champions league': 'champions league',
     'champions': 'champions league',
     'barclays premier league': 'premier league',
+    'english premier league': 'premier league',
+    'epl': 'premier league',
     'liga': 'la liga',
     'friendlies': 'club friendlies',
     'scottish premier league': 'scottish premiership',

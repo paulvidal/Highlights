@@ -13,7 +13,10 @@ from highlights import settings
 
 CLIENT = client.Client()
 
+GRAPH_VERSION = 'v2.12'
 ACCESS_TOKEN = highlights.settings.get_env_var('MESSENGER_ACCESS_TOKEN')
+
+GRAPH_URL = 'https://graph.facebook.com/{}/me/messages?access_token={}'.format(GRAPH_VERSION, ACCESS_TOKEN)
 
 #
 #  MESSAGES
@@ -282,7 +285,6 @@ def send_batch_multiple_facebook_messages(fb_ids, messages):
     """
     Send different messages to all fb_id
     """
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msgs = []
 
     for i in range(len(fb_ids)):
@@ -297,7 +299,7 @@ def send_batch_multiple_facebook_messages(fb_ids, messages):
             })
         )
 
-    CLIENT.send_fb_messages_async(post_message_url, response_msgs)
+    CLIENT.send_fb_messages_async(GRAPH_URL, response_msgs)
 
     if not settings.is_prod():
         logger.log(response_msgs)
@@ -309,7 +311,6 @@ def send_batch_facebook_message(fb_ids, message):
     """
     Send same message to all fb_id
     """
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msgs = []
 
     for i in range(len(fb_ids)):
@@ -324,7 +325,7 @@ def send_batch_facebook_message(fb_ids, message):
             })
         )
 
-    CLIENT.send_fb_messages_async(post_message_url, response_msgs)
+    CLIENT.send_fb_messages_async(GRAPH_URL, response_msgs)
 
     if not settings.is_prod():
         logger.log(response_msgs)
@@ -333,7 +334,6 @@ def send_batch_facebook_message(fb_ids, message):
 
 
 def send_facebook_message(fb_id, message):
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msg = json.dumps(
         {
             "recipient": {
@@ -343,7 +343,7 @@ def send_facebook_message(fb_id, message):
             "message": message
         })
 
-    CLIENT.send_fb_message(post_message_url, response_msg)
+    CLIENT.send_fb_message(GRAPH_URL, response_msg)
 
     if not settings.is_prod():
         logger.log(response_msg)
@@ -352,7 +352,6 @@ def send_facebook_message(fb_id, message):
 
 
 def send_typing(fb_id):
-    post_message_url = 'https://graph.facebook.com/v2.6/me/messages?access_token=' + ACCESS_TOKEN
     response_msg = json.dumps(
         {
             "recipient": {
@@ -362,7 +361,7 @@ def send_typing(fb_id):
             "sender_action": "typing_on"
         })
 
-    CLIENT.send_fb_message(post_message_url, response_msg)
+    CLIENT.send_fb_message(GRAPH_URL, response_msg)
 
 
 #

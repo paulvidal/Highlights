@@ -22,11 +22,11 @@ def format_streamable_link(link):
 
 
 def format_link(link):
-    # remove double // if present
-    link = link.replace('//', '')
+    # remove double // at start if present
+    if link[:2] == '//':
+        link = link[2:]
 
     # remove http
-    if not 'https://':
-        link = link.replace('http://', '')
+    link = 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
-    return 'https://' + link
+    return link

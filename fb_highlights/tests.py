@@ -607,6 +607,42 @@ class MessengerBotTestCase(TestCase):
         user.see_result = True
         user.save()
 
+    def test_search_does_not_show_not_sent_result(self):
+        # Given
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'tottenham')
+
+        # Then
+        self.assertEqual(json_response, [
+            {
+                "recipient": {
+                    "id": str(TEST_USER_ID)
+                },
+                "messaging_type": "RESPONSE",
+                "message": {
+                    "quick_replies": [
+                        {
+                            "title": "🔍 Search again",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        },
+                        {
+                            "title": "❓ Help",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        },
+                        {
+                            "title": "❌ Cancel",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        }
+                    ],
+                    "text": "I'm so sorry but I could not find any recent highlight video for your team 💔"
+                }
+            }
+        ])
+
     def test_share(self):
         # Given
 

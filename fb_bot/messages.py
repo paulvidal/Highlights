@@ -60,7 +60,7 @@ DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for yo
 
 SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
 
-NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team " + EMOJI_BROKEN_HEART + " They must have not play for a long time."
+NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team " + EMOJI_BROKEN_HEART
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + "\n\nI am the smart bot that fetches the latest football highlights for you."
 

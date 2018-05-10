@@ -218,7 +218,10 @@ def _get_video_link(soup):
             link = search_result.groups()[0].replace('\\', '')
 
             if 'dailymotion' in link:
-                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                link = 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                link = link.replace('/video/', '/embed/video/') if not '/embed/' in link else link
+
+                return link
 
             elif 'streamable' in link:
                 if '/s/' in link:

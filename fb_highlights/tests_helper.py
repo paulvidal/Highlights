@@ -39,6 +39,8 @@ def fill_db(test_user_id):
     football_team_manager.add_football_team("real madrid")
     football_team_manager.add_football_team("arsenal")
     football_team_manager.add_football_team("liverpool")
+    football_team_manager.add_football_team("burnley")
+    football_team_manager.add_football_team("tottenham")
 
     # Add competitions
     football_competition_manager.add_football_competition('champions league')
@@ -51,7 +53,14 @@ def fill_db(test_user_id):
                                                             'http://hoofoot/images?chelsea-barcelona',
                                                             0,
                                                             'Champions League',
-                                                            dateparser.parse('2018-01-01')))
+                                                            dateparser.parse('2018-01-01')), sent=True)
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona2',
+                                                            'Chelsea 0 - 2 Barcelona',
+                                                            'http://hoofoot/images?chelsea-barcelona',
+                                                            0,
+                                                            'Champions League',
+                                                            dateparser.parse('2018-01-01')), sent=False)
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-real_madrid',
                                                             'Arsenal 1 - 0 Real Madrid',
@@ -97,3 +106,10 @@ def fill_db(test_user_id):
                                                                    [
                                                                        {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15, 'goal_type': 'goal'}
                                                                    ]))
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/burnley-tottenham',
+                                                            'Burnley 1 - 2 Tottenham',
+                                                            'http://hoofoot/images?burley-tottenham',
+                                                            0,
+                                                            'Premier League',
+                                                            dateparser.parse('2018-01-07')), sent=False)

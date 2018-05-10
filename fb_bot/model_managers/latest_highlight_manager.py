@@ -48,8 +48,8 @@ def get_highlights_for_team(team_name):
 
     team = football_team_manager.get_football_team(team_name)
 
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team, valid=True)] \
-                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team, valid=True)]
+    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team, valid=True, sent=True)] \
+                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team, valid=True, sent=True)]
 
     return highlights
 

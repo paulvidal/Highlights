@@ -31,7 +31,7 @@ class User(models.Model):
 
     @staticmethod
     def to_list_filter():
-        return ['gender', 'locale']
+        return ['gender', 'locale', 'see_result']
 
     @staticmethod
     def search_fields():

@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.Highlight import Highlight
+from fb_bot.highlight_fetchers.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 
 ROOT_URL = 'http://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
@@ -151,14 +152,13 @@ def _get_video_link(full_link):
 
         # Only pick video urls coming from the following websites
         if 'dailymotion.com' in src:
-            return 'https://' + src.replace('http://', '') if not 'https://' in src else src
+            return format_dailymotion_link(src)
 
         elif 'streamable.com' in src:
-            return src
+            return format_streamable_link(src)
 
         elif 'matchat.online' in src:
-            src = src.replace('//', '')
-            return 'https://' + src.replace('http://', '') if not 'https://' in src else src
+            return format_link(src)
 
     return None
 

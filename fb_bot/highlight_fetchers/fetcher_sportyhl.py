@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.Highlight import Highlight
+from fb_bot.highlight_fetchers.link_formatter import format_streamable_link, format_link, format_dailymotion_link
 
 ROOT_URL = 'https://sportyhl.com/wp-admin/admin-ajax.php'
 
@@ -215,16 +216,16 @@ def _get_video_links(full_link):
                 video_link = ''
 
                 if 'dailymotion.com' in src:
-                    video_link = 'https://' + src.replace('//', '')
+                    video_link = format_dailymotion_link(src)
 
                 elif 'streamable.com' in src:
-                    resource_id = src.split('/s/')[1].split('/')[0]
-
-                    # Return streamable link in the format 'https://streamable.com/e/ioz1l'
-                    video_link = 'https://streamable.com/e/' + resource_id
+                    video_link = format_streamable_link(src)
 
                 elif 'ok.ru' in src:
-                    video_link = 'https://' + src.replace('//', '')
+                    video_link = format_link(src)
+
+                elif 'matchat.online' in src:
+                    video_link = format_link(src)
 
                 if video_link:
                     video_links.append(video_link)

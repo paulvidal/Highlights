@@ -12,6 +12,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from datetime import timedelta
 
+from fb_bot.highlight_fetchers.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+
 ROOT_URL = 'http://footyroom.com/'
 PAGELET_EXTENSION = 'posts-pagelet?page='
 
@@ -218,31 +220,25 @@ def _get_video_link(soup):
             link = search_result.groups()[0].replace('\\', '')
 
             if 'dailymotion' in link:
-                link = 'https://' + link.replace('http://', '') if not 'https://' in link else link
-                link = link.replace('/video/', '/embed/video/') if not '/embed/' in link else link
-
-                return link
+                return format_dailymotion_link(link)
 
             elif 'streamable' in link:
-                if '/s/' in link:
-                    resource_id = link.split('/s/')[1].split('/')[0]
-                else:
-                    resource_id = link.split('/')[-1]
-
-                # Return streamable link in the format 'https://streamable.com/e/ioz1l'
-                return 'https://streamable.com/e/' + resource_id
+                return format_streamable_link(link)
 
             elif 'ok.ru' in link:
-                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                return format_link(link)
 
             elif 'matchat.online' in link:
-                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                return format_link(link)
 
             elif 'youtube' in link:
-                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                return format_link(link)
 
             elif 'rutube.ru' in link:
-                return 'https://' + link.replace('http://', '') if not 'https://' in link else link
+                return format_link(link)
+
+            elif 'mlssoccer.com' in link:
+                return format_link(link)
 
     return None
 

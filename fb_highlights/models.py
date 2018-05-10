@@ -171,7 +171,7 @@ class LatestHighlight(models.Model):
     click_count = models.PositiveIntegerField(default=0)
     video_duration = models.IntegerField(default=0)
     video_url = models.TextField(null=True, blank=True)
-    goal_data = JSONField(default=[])
+    goal_data = JSONField(default=list, blank=True, null=True)
 
     @staticmethod
     def to_list_display():

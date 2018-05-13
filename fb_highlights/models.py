@@ -180,7 +180,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_filter():
-        return ['category', 'source', 'sent', 'valid']
+        return ['category', 'source', 'sent', 'valid', 'ready']
 
     @staticmethod
     def search_fields():

@@ -221,7 +221,7 @@ def get_best_highlight(highlight_models, extended=False):
 
     # Extended highlight is always based on the short highlight
     if extended:
-        highlight_models_extended = [h for h in highlight_models if current_best.video_duration > 0 and h.video_duration > current_best.video_duration]
+        highlight_models_extended = [h for h in highlight_models if current_best.video_duration > 0 and h.video_duration > current_best.video_duration + 90]
 
         if len(highlight_models_extended) == 0:
             return current_best

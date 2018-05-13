@@ -168,6 +168,7 @@ class LatestHighlight(models.Model):
     priority_extended = models.PositiveIntegerField(default=0)
     sent = models.BooleanField(default=False)
     valid = models.BooleanField(default=True)
+    ready = models.BooleanField(default=True)
     click_count = models.PositiveIntegerField(default=0)
     video_duration = models.IntegerField(default=0)
     video_url = models.TextField(null=True, blank=True)
@@ -175,7 +176,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority_short', 'priority_extended', 'sent', 'valid', 'click_count', 'img_link', 'video_url']
+        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'priority_short', 'priority_extended', 'sent', 'valid', 'ready', 'click_count', 'img_link', 'video_url']
 
     @staticmethod
     def to_list_filter():

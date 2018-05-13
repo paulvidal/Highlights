@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
@@ -16,6 +16,16 @@ def get_all_highlights_without_info():
     return LatestHighlight.objects.filter(video_duration=0)
 
 
+def get_recent_highlight(minutes):
+    return LatestHighlight.objects.filter(
+        time_since_added__gt=datetime.today() - timedelta(minutes=minutes)
+    )
+
+
+def get_not_ready_highlights():
+    return LatestHighlight.objects.filter(ready=False)
+
+
 def has_highlight(highlight):
     return LatestHighlight.objects.filter(link=highlight.link)
 
@@ -26,7 +36,7 @@ def increment_click_count(highlight_model):
 
 
 def get_highlights(team1, score1, team2, score2, date):
-    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2, valid=True)
+    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2, valid=True, ready=True)
             if abs(date - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
 
@@ -52,6 +62,44 @@ def get_highlights_for_team(team_name):
                  + [highlight for highlight in LatestHighlight.objects.filter(team2=team, valid=True, sent=True)]
 
     return highlights
+
+
+def get_not_sent_highlights(available_sources):
+    return LatestHighlight.objects.filter(sent=False, valid=True, ready=True, source__in=available_sources)
+
+
+def get_same_highlight_footyroom(highlight_model):
+    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2, source='footyroom')
+                 if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
+
+    return highlight[0] if len(highlight) > 0 else None
+
+
+def add_highlight(highlight, sent=False):
+    # Add team to new team if does not exists and return
+    if not has_teams_in_db(highlight):
+        add_new_team_to_db(highlight)
+        return
+
+    # Add competition to new competition if does not exists and return
+    if not has_competition_in_db(highlight):
+        add_new_competition_to_db(highlight)
+        return
+
+    team1 = football_team_manager.get_football_team(highlight.team1)
+    team2 = football_team_manager.get_football_team(highlight.team2)
+
+    category = football_competition_manager.get_football_competition(highlight.category)
+
+    LatestHighlight.objects.update_or_create(link=highlight.link, img_link=highlight.img_link,
+                                             time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
+                                             team2=team2, score2=highlight.score2, category=category,
+                                             view_count=highlight.view_count, source=highlight.source,
+                                             sent=sent, goal_data=highlight.goal_data)
+
+
+def delete_highlight(highlight_model):
+    LatestHighlight.objects.filter(link=highlight_model.link).delete()
 
 
 # Setters
@@ -92,42 +140,19 @@ def set_goal_data(highlight_model, goal_data):
     highlight_model.save()
 
 
-def get_not_sent_highlights(available_sources):
-    return LatestHighlight.objects.filter(sent=False, valid=True, source__in=available_sources)
+def set_ready(highlight_model):
+    highlight_model.ready = True
+    highlight_model.save()
 
 
-def get_same_highlight_footyroom(highlight_model):
-    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2, source='footyroom')
-                 if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
-
-    return highlight[0] if len(highlight) > 0 else None
-
-
-def add_highlight(highlight, sent=False):
-    # Add team to new team if does not exists and return
-    if not has_teams_in_db(highlight):
-        add_new_team_to_db(highlight)
-        return
-
-    # Add competition to new competition if does not exists and return
-    if not has_competition_in_db(highlight):
-        add_new_competition_to_db(highlight)
-        return
-
-    team1 = football_team_manager.get_football_team(highlight.team1)
-    team2 = football_team_manager.get_football_team(highlight.team2)
-
-    category = football_competition_manager.get_football_competition(highlight.category)
-
-    LatestHighlight.objects.update_or_create(link=highlight.link, img_link=highlight.img_link,
-                                             time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
-                                             team2=team2, score2=highlight.score2, category=category,
-                                             view_count=highlight.view_count, source=highlight.source,
-                                             sent=sent, goal_data=highlight.goal_data)
-
-
-def delete_highlight(highlight_model):
-    LatestHighlight.objects.filter(link=highlight_model.link).delete()
+def convert_highlight(highlight_model, new_link, new_source):
+    # create a new highlight with information changed
+    LatestHighlight.objects.update_or_create(link=new_link, img_link=highlight_model.img_link,
+                                             time_since_added=highlight_model.time_since_added, team1=highlight_model.team1,
+                                             score1=highlight_model.score1, team2=highlight_model.team2,
+                                             score2=highlight_model.score2, category=highlight_model.category,
+                                             view_count=highlight_model.view_count, source=new_source,
+                                             sent=highlight_model.sent, ready=False, goal_data=highlight_model.goal_data)
 
 
 # HELPERS

@@ -1,14 +1,17 @@
 from datetime import datetime, timedelta
 
 import dateparser
+import requests
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_highlightsfootball, fetcher_sportyhl
+from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_highlightsfootball, \
+    fetcher_sportyhl, streamable_converter
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager
 from fb_bot.video_providers import video_info_fetcher
+from raven.contrib.django.raven_compat.models import client
 
 
 # Send highlights
@@ -18,7 +21,8 @@ AVAILABLE_SOURCES=[
     'footyroom_video',
     'hoofoot',
     'highlightsfootball',
-    'sportyhl'
+    'sportyhl',
+    'bot'
 ]
 
 def send_most_recent_highlights(footyroom_pagelet=3,
@@ -179,6 +183,37 @@ def add_videos_info():
 
         if video_url:
             latest_highlight_manager.set_video_url(h, video_url)
+
+
+# Create streamable video from matchat.online video
+def create_streamable_videos():
+    highlights = latest_highlight_manager.get_recent_highlight(minutes=60)
+    highlights_time_since_added = [h.time_since_added for h in highlights]
+
+    # remove all highlight with same date, as already converted videos
+    highlights = [h for h in highlights if not highlights_time_since_added.count(h.time_since_added) == 2]
+
+    for h in highlights:
+        # Create similar streamable video and replace it in the database
+        if 'matchat.online' in h.link:
+            streamable_link = streamable_converter.convert(h.link)
+
+            if streamable_link:
+                latest_highlight_manager.convert_highlight(h, new_link=streamable_link, new_source='bot')
+
+
+# Check if streamable video is ready
+def check_streamable_videos_ready():
+    highlights = latest_highlight_manager.get_not_ready_highlights()
+
+    for h in highlights:
+        link = h.link.replace('/e/', '/')
+        page = requests.get(link).text
+
+        if 'Oops!' in page:
+            latest_highlight_manager.delete_highlight(h)
+        elif not 'Processing Video' in page:
+            latest_highlight_manager.set_ready(h)
 
 
 # HELPERS

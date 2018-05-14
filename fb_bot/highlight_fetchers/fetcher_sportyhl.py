@@ -3,11 +3,12 @@ import time
 from datetime import datetime
 
 import dateparser
+import nltk
 import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_streamable_link, format_link, format_dailymotion_link
 
@@ -163,8 +164,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not video_links:
             continue
 
+        # Add multiple video links
         for v in video_links:
-            # Add multiple video links
             highlights.append(SportyHLHighlight(v, match_name, img_link, view_count, category, time_since_added))
 
     return highlights
@@ -200,35 +201,38 @@ def _get_video_links(full_link):
         )
 
     for type, id in tab_mapping:
-        if type in ['Highlights', 'Highlights (ENG)', 'Extended HL', 'MOTD HL']:
 
-            # Get the iframe
-            div = soup.find(id=id)
-            iframe = div.find('iframe') if div else None
+        for accepted in ['highlights', 'extended hl', 'moth hl', 'motd highlights']:
+            # Do distance to be more robust against site typing errors
+            if nltk.edit_distance(type.lower(), accepted) <= 2 or accepted in type.lower():
 
-            if not iframe:
-                continue
+                # Get the iframe
+                div = soup.find(id=id)
+                iframe = div.find('iframe') if div else None
 
-            src = iframe.get("src")
+                if not iframe:
+                    continue
 
-            # Only pick video urls coming from the following websites
-            if src:
-                video_link = ''
+                src = iframe.get("src")
 
-                if providers.DAILYMOTION in src:
-                    video_link = format_dailymotion_link(src)
+                # Only pick video urls coming from the following websites
+                if src:
+                    video_link = ''
 
-                elif providers.STREAMABLE in src:
-                    video_link = format_streamable_link(src)
+                    if providers.DAILYMOTION in src:
+                        video_link = format_dailymotion_link(src)
 
-                elif providers.OK_RU in src:
-                    video_link = format_link(src)
+                    elif providers.STREAMABLE in src:
+                        video_link = format_streamable_link(src)
 
-                elif providers.MATCHAT_ONLINE in src:
-                    video_link = format_link(src)
+                    elif providers.OK_RU in src:
+                        video_link = format_link(src)
 
-                if video_link:
-                    video_links.append(video_link)
+                    elif providers.MATCHAT_ONLINE in src:
+                        video_link = format_link(src)
+
+                    if video_link:
+                        video_links.append(video_link)
 
     return video_links
 
@@ -238,7 +242,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights()
+    highlights = fetch_highlights(num_pagelet=4, max_days_ago=40)
 
     for highlight in highlights:
         print(highlight)

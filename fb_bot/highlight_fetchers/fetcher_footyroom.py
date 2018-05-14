@@ -246,7 +246,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights()
+    highlights = fetch_highlights(num_pagelet=1)
 
     footyroom_highlights = [h for h in highlights if isinstance(h, FootyroomHighlight)]
     footyroom_video_highlights = [h for h in highlights if isinstance(h, FootyroomVideoHighlight)]

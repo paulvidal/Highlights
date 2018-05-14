@@ -1,6 +1,6 @@
 import re
 import requests
-from raven.contrib.django.models import client
+from raven.contrib.django.raven_compat.models import client
 
 from fb_bot.logger import logger
 

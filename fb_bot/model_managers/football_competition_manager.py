@@ -1,4 +1,4 @@
-from fb_bot.highlight_fetchers import mapping_football_competition
+from fb_bot.highlight_fetchers.utils import mapping_football_competition
 from fb_highlights.models import FootballCompetition
 
 

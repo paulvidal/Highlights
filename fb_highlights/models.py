@@ -6,7 +6,7 @@ import dateparser
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from fb_bot.highlight_fetchers import mapping_football_team
+from fb_bot.highlight_fetchers.utils import mapping_football_team
 
 
 class User(models.Model):

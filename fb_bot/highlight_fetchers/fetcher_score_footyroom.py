@@ -4,8 +4,6 @@ import time
 import requests
 from bs4 import BeautifulSoup
 
-from fb_bot.highlight_fetchers import mapping_football_team
-
 
 # Get goal data from page HTML
 def get_goal_data(soup):
@@ -23,9 +21,6 @@ def get_goal_data(soup):
 
 def _extract_goals(match_data):
     goals = []
-
-    home_team = match_data["homeTeam"]['name']
-    away_team = match_data["awayTeam"]['name']
 
     incidents = match_data["incidents"]
 

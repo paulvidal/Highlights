@@ -1,12 +1,13 @@
-import requests
-import dateparser
 import time
 
+import dateparser
+import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.Highlight import Highlight
-from fb_bot.highlight_fetchers.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.utils.Highlight import Highlight
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 
 ROOT_URL = 'http://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
@@ -32,7 +33,7 @@ class HoofootHighlight(Highlight):
         return team1, score1, team2, score2
 
     def get_source(self):
-        return 'hoofoot'
+        return sources.HOOFOOT
 
 
 def fetch_highlights(num_pagelet=4, max_days_ago=7):
@@ -151,13 +152,13 @@ def _get_video_link(full_link):
             continue
 
         # Only pick video urls coming from the following websites
-        if 'dailymotion.com' in src:
+        if providers.DAILYMOTION in src:
             return format_dailymotion_link(src)
 
-        elif 'streamable.com' in src:
+        elif providers.STREAMABLE in src:
             return format_streamable_link(src)
 
-        elif 'matchat.online' in src:
+        elif providers.MATCHAT_ONLINE in src:
             return format_link(src)
 
     return None

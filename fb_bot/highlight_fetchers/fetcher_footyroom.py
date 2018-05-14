@@ -1,18 +1,16 @@
-import json
-
 import re
-import requests
-import dateparser
 import time
-
-from fb_bot.highlight_fetchers import mapping_football_team, score_fetcher_footyroom
-from fb_bot.highlight_fetchers.Highlight import Highlight
-
-from bs4 import BeautifulSoup
 from datetime import datetime
 from datetime import timedelta
 
-from fb_bot.highlight_fetchers.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+import dateparser
+import requests
+from bs4 import BeautifulSoup
+
+from fb_bot.highlight_fetchers import fetcher_score_footyroom
+from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.utils.Highlight import Highlight
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 
 ROOT_URL = 'http://footyroom.com/'
 PAGELET_EXTENSION = 'posts-pagelet?page='
@@ -49,7 +47,7 @@ class FootyroomHighlight(Highlight):
         return self.team1.lower().startswith(team) or self.team2.lower().startswith(team)
 
     def get_source(self):
-        return 'footyroom'
+        return sources.FOOTYROOM
 
 
 class FootyroomVideoHighlight(Highlight):
@@ -75,7 +73,7 @@ class FootyroomVideoHighlight(Highlight):
         return clean_team_name(team1), score1, clean_team_name(team2), score2
 
     def get_source(self):
-        return 'footyroom_video'
+        return sources.FOOTYROOM_VIDEOS
 
 
 def fetch_highlights(num_pagelet=3, max_days_ago=7):
@@ -166,7 +164,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         # Get and set goal information
         try:
-            goal_data = score_fetcher_footyroom.get_goal_data(soup)
+            goal_data = fetcher_score_footyroom.get_goal_data(soup)
         except Exception:
             goal_data = []
 
@@ -219,16 +217,16 @@ def _get_video_link(soup):
 
             link = search_result.groups()[0].replace('\\', '')
 
-            if 'dailymotion' in link:
+            if providers.DAILYMOTION in link:
                 return format_dailymotion_link(link)
 
-            elif 'streamable' in link:
+            elif providers.STREAMABLE in link:
                 return format_streamable_link(link)
 
-            elif 'ok.ru' in link:
+            elif providers.OK_RU in link:
                 return format_link(link)
 
-            elif 'matchat.online' in link:
+            elif providers.MATCHAT_ONLINE in link:
                 return format_link(link)
 
             elif 'youtube' in link:

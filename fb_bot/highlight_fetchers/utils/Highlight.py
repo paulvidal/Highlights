@@ -2,7 +2,7 @@ import abc
 
 import dateparser
 
-from fb_bot.highlight_fetchers import mapping_football_team, mapping_football_competition
+from fb_bot.highlight_fetchers.utils import mapping_football_competition, mapping_football_team
 
 
 class Highlight:

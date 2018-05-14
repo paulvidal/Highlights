@@ -1,15 +1,15 @@
 import json
+import time
 from datetime import datetime
 
-import requests
 import dateparser
-import time
-
+import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.Highlight import Highlight
-from fb_bot.highlight_fetchers.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.utils.Highlight import Highlight
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 
 ROOT_URL = 'https://highlightsfootball.com/wp-admin/admin-ajax.php'
 
@@ -36,7 +36,7 @@ class HighlightsFootballHighlight(Highlight):
         return team1, score1, team2, score2
 
     def get_source(self):
-        return 'highlightsfootball'
+        return sources.HIGHLIGHTS_FOOTBALL
 
 
 def fetch_highlights(num_pagelet=4, max_days_ago=7):
@@ -160,16 +160,16 @@ def _get_video_link(full_link):
 
         # Only pick video urls coming from the following websites
         if src:
-            if 'dailymotion.com' in src:
+            if providers.DAILYMOTION in src:
                 return format_dailymotion_link(src)
 
-            if 'streamable.com' in src:
+            if providers.STREAMABLE in src:
                 return format_streamable_link(src)
 
-            if 'ok.ru' in src:
+            if providers.OK_RU in src:
                 return format_link(src)
 
-            if 'matchat.online' in src:
+            if providers.MATCHAT_ONLINE in src:
                 return format_link(src)
 
     return None

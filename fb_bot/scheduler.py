@@ -3,27 +3,20 @@ from datetime import datetime, timedelta
 import dateparser
 import requests
 
-from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, ressource_checker, fetcher_highlightsfootball, \
-    fetcher_sportyhl, streamable_converter
+from fb_bot import messenger_manager, streamable_converter, ressource_checker
+from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, fetcher_highlightsfootball, \
+    fetcher_sportyhl
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
+from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager
 from fb_bot.video_providers import video_info_fetcher
-from raven.contrib.django.raven_compat.models import client
-
 
 # Send highlights
 
-AVAILABLE_SOURCES=[
-    'footyroom',
-    'footyroom_video',
-    'hoofoot',
-    'highlightsfootball',
-    'sportyhl',
-    'bot'
-]
+AVAILABLE_SOURCES = sources.get_available_sources()
+
 
 def send_most_recent_highlights(footyroom_pagelet=3,
                                 hoofoot_pagelet=4,
@@ -54,7 +47,7 @@ def send_most_recent_highlights(footyroom_pagelet=3,
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
     # Set Footyroom infos
-    for h in latest_highlight_manager.get_all_highlights_from_source(sources=['hoofoot', 'sportyhl', 'highlightsfootball']):
+    for h in latest_highlight_manager.get_all_highlights_from_source(sources=sources.get_sources_without_image()):
         footyroom_highlight = latest_highlight_manager.get_same_highlight_footyroom(h)
 
         if not footyroom_highlight:
@@ -63,8 +56,8 @@ def send_most_recent_highlights(footyroom_pagelet=3,
         latest_highlight_manager.set_img_link(h, footyroom_highlight.img_link)
         latest_highlight_manager.set_goal_data(h, footyroom_highlight.goal_data)
 
-        # Also add game score for specific sources
-        if h.source in ['sportyhl', 'highlightsfootball']:
+        # Also add game score for specific providers
+        if h.source in sources.get_sources_without_score():
             latest_highlight_manager.set_score(h, footyroom_highlight.score1, footyroom_highlight.score2)
 
     # Send highlights not already sent
@@ -139,25 +132,25 @@ def check_scrapping_status():
     highlights_footyroom = [h for h in highlights_footyroom if isinstance(h, FootyroomHighlight)]
 
     if not highlights_footyroom:
-        scrapping_problems.append('FOOTYROOM')
+        scrapping_problems.append(sources.FOOTYROOM)
 
     if not highlights_footyroom_video:
-        scrapping_problems.append('FOOTYROOM VIDEOS')
+        scrapping_problems.append(sources.FOOTYROOM_VIDEOS)
 
     highlights_hoofoot = fetcher_hoofoot.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
     if not highlights_hoofoot:
-        scrapping_problems.append('HOOFOOT')
+        scrapping_problems.append(sources.HOOFOOT)
 
     highlights_highlightsfootball = fetcher_highlightsfootball.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
     if not highlights_highlightsfootball:
-        scrapping_problems.append('HIGHLIGHTS FOOTBALL')
+        scrapping_problems.append(sources.HIGHLIGHTS_FOOTBALL)
 
     highlights_sportyhl = fetcher_sportyhl.fetch_highlights(num_pagelet=1, max_days_ago=1000)
 
     if not highlights_sportyhl:
-        scrapping_problems.append('SPORTYHL')
+        scrapping_problems.append(sources.SPORTYHL)
 
     if scrapping_problems:
         raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))
@@ -195,11 +188,11 @@ def create_streamable_videos():
 
     for h in highlights:
         # Create similar streamable video and replace it in the database
-        if 'matchat.online' in h.link:
+        if providers.MATCHAT_ONLINE in h.link:
             streamable_link = streamable_converter.convert(h.link)
 
             if streamable_link:
-                latest_highlight_manager.convert_highlight(h, new_link=streamable_link, new_source='bot')
+                latest_highlight_manager.convert_highlight(h, new_link=streamable_link, new_source=sources.BOT)
 
 
 # Check if streamable video is ready

@@ -1,15 +1,15 @@
 import json
+import time
 from datetime import datetime
 
-import requests
 import dateparser
-import time
-
+import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.Highlight import Highlight
-from fb_bot.highlight_fetchers.link_formatter import format_streamable_link, format_link, format_dailymotion_link
+from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.utils.Highlight import Highlight
+from fb_bot.highlight_fetchers.utils.link_formatter import format_streamable_link, format_link, format_dailymotion_link
 
 ROOT_URL = 'https://sportyhl.com/wp-admin/admin-ajax.php'
 
@@ -36,7 +36,7 @@ class SportyHLHighlight(Highlight):
         return team1, score1, team2, score2
 
     def get_source(self):
-        return 'sportyhl'
+        return sources.SPORTYHL
 
 
 def fetch_highlights(num_pagelet=4, max_days_ago=15):
@@ -215,16 +215,16 @@ def _get_video_links(full_link):
             if src:
                 video_link = ''
 
-                if 'dailymotion.com' in src:
+                if providers.DAILYMOTION in src:
                     video_link = format_dailymotion_link(src)
 
-                elif 'streamable.com' in src:
+                elif providers.STREAMABLE in src:
                     video_link = format_streamable_link(src)
 
-                elif 'ok.ru' in src:
+                elif providers.OK_RU in src:
                     video_link = format_link(src)
 
-                elif 'matchat.online' in src:
+                elif providers.MATCHAT_ONLINE in src:
                     video_link = format_link(src)
 
                 if video_link:

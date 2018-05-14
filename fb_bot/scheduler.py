@@ -180,19 +180,22 @@ def add_videos_info():
 
 # Create streamable video from matchat.online video
 def create_streamable_videos():
-    highlights = latest_highlight_manager.get_recent_highlight(minutes=60)
+    highlights = latest_highlight_manager.get_recent_highlight(minutes=300)
     highlights_time_since_added = [h.time_since_added for h in highlights]
 
     # remove all highlight with same date, as already converted videos
-    highlights = [h for h in highlights if not highlights_time_since_added.count(h.time_since_added) == 2]
+    highlights = [h for h in highlights if (not highlights_time_since_added.count(h.time_since_added) == 3)
+                                            and providers.MATCHAT_ONLINE in h.link]
 
     for h in highlights:
-        # Create similar streamable video and replace it in the database
-        if providers.MATCHAT_ONLINE in h.link:
-            streamable_link = streamable_converter.convert(h.link)
+        # Create similar 2 similar streamable videos and replace it in the database
+        streamable_link = streamable_converter.convert(h.link)
+        streamable_link_2 = streamable_converter.convert(h.link)
 
-            if streamable_link:
-                latest_highlight_manager.convert_highlight(h, new_link=streamable_link, new_source=sources.BOT)
+        if streamable_link:
+            latest_highlight_manager.convert_highlight(h, new_link=streamable_link, new_source=sources.BOT)
+        if streamable_link_2:
+            latest_highlight_manager.convert_highlight(h, new_link=streamable_link_2, new_source=sources.BOT)
 
 
 # Check if streamable video is ready
@@ -206,7 +209,8 @@ def check_streamable_videos_ready():
         if 'Oops!' in page:
             latest_highlight_manager.delete_highlight(h)
         elif not 'Processing Video' in page:
-            latest_highlight_manager.set_ready(h)
+            # latest_highlight_manager.set_ready(h)
+            pass
 
 
 # HELPERS

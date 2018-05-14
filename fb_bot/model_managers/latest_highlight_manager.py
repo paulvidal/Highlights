@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 
+from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 
@@ -9,11 +10,15 @@ def get_all_highlights():
 
 
 def get_all_highlights_from_source(sources):
-    return LatestHighlight.objects.filter(source__in=sources)
+    return LatestHighlight.objects.filter(
+        source__in=sources
+    )
 
 
 def get_all_highlights_without_info():
-    return LatestHighlight.objects.filter(video_duration=0)
+    return LatestHighlight.objects.filter(
+        video_duration=0
+    )
 
 
 def get_recent_highlight(minutes):
@@ -23,21 +28,54 @@ def get_recent_highlight(minutes):
 
 
 def get_not_ready_highlights():
-    return LatestHighlight.objects.filter(ready=False)
+    return LatestHighlight.objects.filter(
+        ready=False
+    )
 
 
 def has_highlight(highlight):
-    return LatestHighlight.objects.filter(link=highlight.link)
+    return LatestHighlight.objects.filter(
+        link=highlight.link
+    )
+
+#
+#  Main methods for getting highlights to send
+#
 
 
-def increment_click_count(highlight_model):
-    highlight_model.click_count += 1
-    highlight_model.save()
-
-
+# choosing highlight to show and redirect to when user clicks
 def get_highlights(team1, score1, team2, score2, date):
-    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, score1=score1, score2=score2, valid=True, ready=True)
+    return [h for h in LatestHighlight.objects.filter(team1=team1,
+                                                      team2=team2,
+                                                      score1=score1,
+                                                      score2=score2,
+                                                      valid=True,
+                                                      ready=True,
+                                                      source__in=sources.get_available_sources())
             if abs(date - h.get_parsed_time_since_added()) < timedelta(days=2)]
+
+
+# choosing highlight to show when user makes a search for a team
+def get_highlights_for_team(team_name):
+    if not football_team_manager.has_football_team(team_name):
+        return None
+
+    team = football_team_manager.get_football_team(team_name)
+
+    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team,
+                                                                            valid=True,
+                                                                            sent=True,
+                                                                            source__in=sources.get_available_sources())] \
+                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team,
+                                                                              valid=True,
+                                                                              sent=True,
+                                                                              source__in=sources.get_available_sources())]
+
+    return highlights
+
+#
+#  Main methods for getting highlights to send
+#
 
 
 def get_similar_sent_highlights(highlight):
@@ -48,31 +86,33 @@ def get_similar_sent_highlights(highlight):
     team1 = football_team_manager.get_football_team(highlight.team1)
     team2 = football_team_manager.get_football_team(highlight.team2)
 
-    return [h for h in LatestHighlight.objects.filter(team1=team1, team2=team2, sent=True)
+    return [h for h in LatestHighlight.objects.filter(team1=team1,
+                                                      team2=team2,
+                                                      sent=True)
             if abs(highlight.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2) ]
 
 
-def get_highlights_for_team(team_name):
-    if not football_team_manager.has_football_team(team_name):
-        return None
-
-    team = football_team_manager.get_football_team(team_name)
-
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team, valid=True, sent=True)] \
-                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team, valid=True, sent=True)]
-
-    return highlights
-
-
 def get_not_sent_highlights(available_sources):
-    return LatestHighlight.objects.filter(sent=False, valid=True, ready=True, source__in=available_sources)
+    return LatestHighlight.objects.filter(
+        sent=False,
+        valid=True,
+        ready=True,
+        source__in=available_sources
+    )
 
 
-def get_same_highlight_footyroom(highlight_model):
-    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1, team2=highlight_model.team2, source='footyroom')
+def get_same_highlight_from_sources(highlight_model, sources):
+    highlight =[h for h in LatestHighlight.objects.filter(team1=highlight_model.team1,
+                                                          team2=highlight_model.team2,
+                                                          source__in=sources)
                  if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
-    return highlight[0] if len(highlight) > 0 else None
+    return highlight if len(highlight) > 0 else None
+
+
+#
+#  Adding and deleting
+#
 
 
 def add_highlight(highlight, sent=False):
@@ -102,7 +142,14 @@ def delete_highlight(highlight_model):
     LatestHighlight.objects.filter(link=highlight_model.link).delete()
 
 
-# Setters
+#
+#  Setters
+#
+
+def increment_click_count(highlight_model):
+    highlight_model.click_count += 1
+    highlight_model.save()
+
 
 def set_sent(highlight_model):
     highlight_model.sent = True
@@ -155,7 +202,9 @@ def convert_highlight(highlight_model, new_link, new_source):
                                              sent=highlight_model.sent, ready=False, goal_data=highlight_model.goal_data)
 
 
+#
 # HELPERS
+#
 
 def has_teams_in_db(highlight):
     return football_team_manager.has_football_team(highlight.team1) and \

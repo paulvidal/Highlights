@@ -7,6 +7,7 @@ OUR_MATCH = 'ourmatch'
 BOT = 'bot'
 
 
+# Sources ready to be show
 def get_available_sources():
     return [
         FOOTYROOM,
@@ -14,22 +15,24 @@ def get_available_sources():
         HOOFOOT,
         HIGHLIGHTS_FOOTBALL,
         SPORTYHL,
-        BOT
+        BOT,
+        OUR_MATCH
     ]
 
 
-def get_sources_without_image():
+# Sources with all the information such as scores, goal scorers and image
+def get_sources_with_complete_data():
+    return [
+        FOOTYROOM,
+        FOOTYROOM_VIDEOS,
+        OUR_MATCH
+    ]
+
+
+def get_sources_with_incomplete_data():
     return [
         HOOFOOT,
         SPORTYHL,
         HIGHLIGHTS_FOOTBALL,
-        OUR_MATCH,
         BOT
-    ]
-
-
-def get_sources_without_score():
-    return [
-        SPORTYHL,
-        HIGHLIGHTS_FOOTBALL
     ]

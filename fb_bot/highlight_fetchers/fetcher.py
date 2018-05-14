@@ -45,7 +45,7 @@ def fetch_all_highlights():
     highlights = []
 
     for fetcher in FETCHERS:
-        num_pagelet = 1
+        num_pagelet = fetcher['num_pagelet']
         max_days_ago = fetcher['max_days_ago']
 
         try:

@@ -4,9 +4,7 @@ import dateparser
 import requests
 
 from fb_bot import messenger_manager, streamable_converter, ressource_checker
-from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, fetcher_highlightsfootball, \
-    fetcher_sportyhl, fetcher_our_match, fetcher
-from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
+from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
@@ -42,19 +40,19 @@ def send_most_recent_highlights(fetch=True):
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
-    # Set Footyroom infos
-    for h in latest_highlight_manager.get_all_highlights_from_source(sources=sources.get_sources_without_image()):
-        footyroom_highlight = latest_highlight_manager.get_same_highlight_footyroom(h)
-
-        if not footyroom_highlight:
+    # Set incomplete infos
+    for h in latest_highlight_manager.get_all_highlights_from_source(sources=sources.get_sources_with_incomplete_data()):
+        if h.goal_data and h.score1 and h.score2 and h.img_link:
             continue
 
-        latest_highlight_manager.set_img_link(h, footyroom_highlight.img_link)
-        latest_highlight_manager.set_goal_data(h, footyroom_highlight.goal_data)
+        reference_highlight = latest_highlight_manager.get_same_highlight_from_sources(h, sources.get_sources_with_complete_data())
 
-        # Also add game score for specific providers
-        if h.source in sources.get_sources_without_score():
-            latest_highlight_manager.set_score(h, footyroom_highlight.score1, footyroom_highlight.score2)
+        if not reference_highlight:
+            continue
+
+        latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
+        latest_highlight_manager.set_goal_data(h, reference_highlight.goal_data)
+        latest_highlight_manager.set_score(h, reference_highlight.score1, reference_highlight.score2)
 
     # Send highlights not already sent
     not_sent_highlights = latest_highlight_manager.get_not_sent_highlights(AVAILABLE_SOURCES)

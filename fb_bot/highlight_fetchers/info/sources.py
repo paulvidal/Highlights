@@ -23,6 +23,7 @@ def get_sources_without_image():
         HOOFOOT,
         SPORTYHL,
         HIGHLIGHTS_FOOTBALL,
+        OUR_MATCH,
         BOT
     ]
 

@@ -5,7 +5,7 @@ import requests
 
 from fb_bot import messenger_manager, streamable_converter, ressource_checker
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_hoofoot, fetcher_highlightsfootball, \
-    fetcher_sportyhl
+    fetcher_sportyhl, fetcher_our_match, fetcher
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
@@ -18,16 +18,12 @@ from fb_bot.video_providers import video_info_fetcher
 AVAILABLE_SOURCES = sources.get_available_sources()
 
 
-def send_most_recent_highlights(footyroom_pagelet=3,
-                                hoofoot_pagelet=4,
-                                highlightsfootball_pagelet=3,
-                                sportyhl_pagelet=3):
+def send_most_recent_highlights(fetch=True):
+    highlights = []
 
     # Fetch highlights from multiple sources
-    highlights = fetcher_footyroom.fetch_highlights(num_pagelet=footyroom_pagelet, max_days_ago=7) \
-                 + fetcher_hoofoot.fetch_highlights(num_pagelet=hoofoot_pagelet, max_days_ago=7) \
-                 + fetcher_highlightsfootball.fetch_highlights(num_pagelet=highlightsfootball_pagelet, max_days_ago=7) \
-                 + fetcher_sportyhl.fetch_highlights(num_pagelet=sportyhl_pagelet, max_days_ago=7)
+    if fetch:
+        highlights += fetcher.fetch_all_highlights()
 
     # Add new highlights
     for highlight in highlights:
@@ -129,33 +125,7 @@ def check_scrapping_status():
     class ScrappingException(Exception):
         pass
 
-    scrapping_problems = []
-
-    highlights_footyroom = fetcher_footyroom.fetch_highlights(num_pagelet=1, max_days_ago=1000)
-
-    highlights_footyroom_video = [h for h in highlights_footyroom if isinstance(h, FootyroomVideoHighlight)]
-    highlights_footyroom = [h for h in highlights_footyroom if isinstance(h, FootyroomHighlight)]
-
-    if not highlights_footyroom:
-        scrapping_problems.append(sources.FOOTYROOM)
-
-    if not highlights_footyroom_video:
-        scrapping_problems.append(sources.FOOTYROOM_VIDEOS)
-
-    highlights_hoofoot = fetcher_hoofoot.fetch_highlights(num_pagelet=1, max_days_ago=1000)
-
-    if not highlights_hoofoot:
-        scrapping_problems.append(sources.HOOFOOT)
-
-    highlights_highlightsfootball = fetcher_highlightsfootball.fetch_highlights(num_pagelet=1, max_days_ago=1000)
-
-    if not highlights_highlightsfootball:
-        scrapping_problems.append(sources.HIGHLIGHTS_FOOTBALL)
-
-    highlights_sportyhl = fetcher_sportyhl.fetch_highlights(num_pagelet=1, max_days_ago=1000)
-
-    if not highlights_sportyhl:
-        scrapping_problems.append(sources.SPORTYHL)
+    scrapping_problems = fetcher.get_fetching_status()
 
     if scrapping_problems:
         raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))

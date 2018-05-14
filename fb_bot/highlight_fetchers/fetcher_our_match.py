@@ -181,9 +181,6 @@ def _is_valid_link(link):
     return link.startswith("http://ourmatch.net/videos/")
 
 
-TYPES = []
-SELECTED = []
-
 def _get_video_links(soup):
     video_links = []
 
@@ -199,15 +196,9 @@ def _get_video_links(soup):
 
             for i in range(len(types)):
 
-                if types[i].lower() not in TYPES:
-                    TYPES.append(types[i].lower())
-
                 for accepted in ['extended highlights', 'highlights', 'short', 'alternative player', 'short highlights']:
                     # Do distance to be more robust against site typing errors
                     if nltk.edit_distance(types[i].lower(), accepted) <= 2:
-
-                        if types[i].lower() not in SELECTED:
-                            SELECTED.append(types[i].lower())
 
                         video = videos[i]
                         video_link = ''
@@ -247,10 +238,6 @@ if __name__ == "__main__":
 
     for highlight in highlights:
         print(highlight)
-
-    print()
-    print(TYPES)
-    print(SELECTED)
 
     print("Number of highlights: " + str(len(highlights)))
     print("Time taken: " + str(round(time.time() - start_time, 2)) + "s")

@@ -730,10 +730,7 @@ class SchedulerTestCase(TestCase):
         tests_helper.set_up(TEST_USER_ID)
 
     def send_most_recent_highlights(self):
-        scheduler.send_most_recent_highlights(footyroom_pagelet=0,
-                                              hoofoot_pagelet=0,
-                                              highlightsfootball_pagelet=0,
-                                              sportyhl_pagelet=0)
+        scheduler.send_most_recent_highlights(fetch=False)
 
     def test_scheduler_send_highlight_message_for_subscribed_team(self):
         # Given

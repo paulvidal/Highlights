@@ -57,10 +57,17 @@ def fill_db(test_user_id):
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona2',
                                                             'Chelsea 0 - 2 Barcelona',
-                                                            'http://hoofoot/images?chelsea-barcelona',
+                                                            'http://hoofoot/images?chelsea-barcelona2',
                                                             0,
                                                             'Champions League',
                                                             dateparser.parse('2018-01-01')), sent=False)
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona3',
+                                                            'Chelsea 0 - 2 Barcelona',
+                                                            'http://hoofoot/images?chelsea-barcelona3',
+                                                            0,
+                                                            'Champions League',
+                                                            dateparser.parse('2018-01-05')), sent=False)
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-real_madrid',
                                                             'Arsenal 1 - 0 Real Madrid',

@@ -80,6 +80,11 @@ def send_most_recent_highlights(footyroom_pagelet=3,
                 latest_highlight_manager.set_invalid(highlight)
                 continue
 
+            if latest_highlight_manager.get_similar_sent_highlights(highlight):
+                # prevent from sending a highlight if find any similar already sent
+                latest_highlight_manager.set_sent(highlight)
+                continue
+
             # Log highlights sent
             logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 

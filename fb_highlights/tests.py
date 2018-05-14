@@ -760,22 +760,22 @@ class SchedulerTestCase(TestCase):
                                 {
                                     "title": "Chelsea 0 - 2 Barcelona",
                                     "subtitle": "Champions League",
-                                    "image_url": "http://hoofoot/images?chelsea-barcelona",
+                                    "image_url": "http://hoofoot/images?chelsea-barcelona3",
                                     "default_action": {
                                         "type": "web_url",
                                         "messenger_extensions": "false",
                                         "webview_height_ratio": "full",
-                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=" + str(TEST_USER_ID)
+                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=short&user_id=" + str(TEST_USER_ID)
                                     },
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=" + str(TEST_USER_ID),
+                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=short&user_id=" + str(TEST_USER_ID),
                                             "title": "Short highlight",
                                         },
                                         {
                                             "type": "web_url",
-                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=extended&user_id=" + str(TEST_USER_ID),
                                             "title": "Extended highlight",
                                         }
                                     ]
@@ -1017,9 +1017,9 @@ class SchedulerTestCase(TestCase):
                                 {
                                     'title': 'Chelsea - Barcelona',
                                     'subtitle': 'Champions League',
-                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/images?chelsea-barcelona3',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=' + str(TEST_USER_ID),
+                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=short&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -1027,12 +1027,12 @@ class SchedulerTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=short&user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlight",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=extended&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-05&type=extended&user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlight",
                                         }
                                     ]
@@ -1059,3 +1059,54 @@ class SchedulerTestCase(TestCase):
         # Set back old properties
         user.see_result = True
         user.save()
+
+    def test_scheduler_does_not_send_highlight_if_highlight_for_same_match_already_sent(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertNotIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Chelsea 0 - 2 Barcelona",
+                                    "subtitle": "Champions League",
+                                    "image_url": "http://hoofoot/images?chelsea-barcelona2",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight",
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=2018-01-01&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight",
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)

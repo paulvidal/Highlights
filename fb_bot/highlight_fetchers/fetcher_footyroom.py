@@ -7,10 +7,10 @@ import dateparser
 import requests
 from bs4 import BeautifulSoup
 
-from fb_bot.highlight_fetchers import fetcher_score_footyroom
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+from fb_bot.highlight_score_fetcher import fetcher_score_footyroom
 
 ROOT_URL = 'http://footyroom.com/'
 PAGELET_EXTENSION = 'posts-pagelet?page='

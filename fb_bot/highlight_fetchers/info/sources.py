@@ -3,6 +3,7 @@ FOOTYROOM_VIDEOS = 'footyroom_video'
 HOOFOOT = 'hoofoot'
 SPORTYHL = 'sportyhl'
 HIGHLIGHTS_FOOTBALL = 'highlightsfootball'
+OUR_MATCH = 'ourmatch'
 BOT = 'bot'
 
 

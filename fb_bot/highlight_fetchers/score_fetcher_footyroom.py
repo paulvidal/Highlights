@@ -44,7 +44,6 @@ def _extract_goals(match_data):
         elapsed = incident.get('elapsed')
 
         if category == 'g' and id in ['og', 'g', 'p', 'eg']: # goal
-            print(incident)
             goal_type = 'goal'
 
             if id == 'p':

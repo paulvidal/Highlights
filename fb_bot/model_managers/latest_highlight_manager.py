@@ -45,6 +45,12 @@ def has_highlight(highlight):
 
 # choosing highlight to show and redirect to when user clicks
 def get_highlights(team1, score1, team2, score2, date):
+    if not has_team(team1) or not has_team(team1):
+        return None
+
+    team1 = football_team_manager.get_football_team(team1)
+    team2 = football_team_manager.get_football_team(team2)
+
     return [h for h in LatestHighlight.objects.filter(team1=team1,
                                                       team2=team2,
                                                       score1=score1,
@@ -57,7 +63,7 @@ def get_highlights(team1, score1, team2, score2, date):
 
 # choosing highlight to show when user makes a search for a team
 def get_highlights_for_team(team_name):
-    if not football_team_manager.has_football_team(team_name):
+    if not has_team(team_name):
         return None
 
     team = football_team_manager.get_football_team(team_name)
@@ -207,8 +213,11 @@ def convert_highlight(highlight_model, new_link, new_source):
 #
 
 def has_teams_in_db(highlight):
-    return football_team_manager.has_football_team(highlight.team1) and \
-           football_team_manager.has_football_team(highlight.team2)
+    return has_team(highlight.team1) and has_team(highlight.team2)
+
+
+def has_team(team):
+    return football_team_manager.has_football_team(team)
 
 
 def add_new_team_to_db(highlight):

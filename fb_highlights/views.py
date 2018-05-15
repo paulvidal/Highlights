@@ -492,6 +492,9 @@ class HighlightRedirectView(generic.View):
 
         highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
 
+        if not highlight_models:
+            return HttpResponseBadRequest('<h1>Invalid link</h1>')
+
         extended = type == 'extended'
 
         if extended:

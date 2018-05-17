@@ -16,7 +16,7 @@ PAGELET_EXTENSION = '?page='
 class HoofootHighlight(Highlight):
 
     def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type='normal')
 
     def get_match_info(self, match):
         match_split = match.split()

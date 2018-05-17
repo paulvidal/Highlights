@@ -17,7 +17,7 @@ ROOT_URL = 'https://highlightsfootball.com/wp-admin/admin-ajax.php'
 class HighlightsFootballHighlight(Highlight):
 
     def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type='normal')
 
     def get_match_info(self, match):
         match = match.replace('Highlights', '').strip()

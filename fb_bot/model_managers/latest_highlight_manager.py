@@ -141,7 +141,7 @@ def add_highlight(highlight, sent=False):
                                              time_since_added=highlight.time_since_added, team1=team1, score1=highlight.score1,
                                              team2=team2, score2=highlight.score2, category=category,
                                              view_count=highlight.view_count, source=highlight.source,
-                                             sent=sent, goal_data=highlight.goal_data)
+                                             sent=sent, goal_data=highlight.goal_data, type=highlight.type)
 
 
 def delete_highlight(highlight_model):
@@ -205,7 +205,8 @@ def convert_highlight(highlight_model, new_link, new_source):
                                              score1=highlight_model.score1, team2=highlight_model.team2,
                                              score2=highlight_model.score2, category=highlight_model.category,
                                              view_count=highlight_model.view_count, source=new_source,
-                                             sent=highlight_model.sent, ready=False, goal_data=highlight_model.goal_data)
+                                             sent=highlight_model.sent, ready=False, goal_data=highlight_model.goal_data,
+                                             type=highlight_model.type)
 
 
 #

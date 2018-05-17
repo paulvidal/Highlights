@@ -17,8 +17,8 @@ ROOT_URL = 'https://sportyhl.com/wp-admin/admin-ajax.php'
 
 class SportyHLHighlight(Highlight):
 
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, type):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type=type)
 
     def get_match_info(self, match):
         match = match.split('Highlights')[0].strip()
@@ -165,8 +165,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
             continue
 
         # Add multiple video links
-        for v in video_links:
-            highlights.append(SportyHLHighlight(v, match_name, img_link, view_count, category, time_since_added))
+        for type, link in video_links:
+            highlights.append(SportyHLHighlight(link, match_name, img_link, view_count, category, time_since_added, type))
 
     return highlights
 
@@ -206,6 +206,14 @@ def _get_video_links(full_link):
             # Do distance to be more robust against site typing errors
             if nltk.edit_distance(type.lower(), accepted) <= 2 or accepted in type.lower():
 
+                # Get video type
+                type = 'normal'
+
+                if accepted in ['extended hl']:
+                    type = 'extended'
+                elif accepted in ['highlights', 'moth hl', 'motd highlights']:
+                    type = 'normal'
+
                 # Get the iframe
                 div = soup.find(id=id)
                 iframe = div.find('iframe') if div else None
@@ -232,7 +240,9 @@ def _get_video_links(full_link):
                         video_link = format_link(src)
 
                     if video_link:
-                        video_links.append(video_link)
+                        video_links.append(
+                            (type, video_link)
+                        )
 
     return video_links
 

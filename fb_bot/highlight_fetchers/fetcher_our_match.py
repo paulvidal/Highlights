@@ -21,8 +21,8 @@ PAGELET_EXTENSION = 'page/'
 
 class OurMatchHighlight(Highlight):
 
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, [])
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, goal_data, type):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=goal_data, type=type)
 
     def get_match_info(self, match):
         match = match.split('Highlights')[0].strip()
@@ -43,9 +43,6 @@ class OurMatchHighlight(Highlight):
     def set_score(self, score1, score2):
         self.score1 = score1
         self.score2 = score2
-
-    def set_goal_data(self, goal_data):
-        self.goal_data = goal_data
 
     def get_source(self):
         return sources.OUR_MATCH
@@ -152,15 +149,14 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         score = _get_match_score(soup)
 
-        # try:
-        goal_data = fetcher_score_ourmatch.get_goal_data(soup)
-        # except Exception:
-        #     goal_data = []
+        try:
+            goal_data = fetcher_score_ourmatch.get_goal_data(soup)
+        except Exception:
+            goal_data = []
 
         # Add multiple video links
-        for v in video_links:
-            h = OurMatchHighlight(v, match_name, img_link, view_count, category, time_since_added)
-            h.set_goal_data(goal_data)
+        for type, link in video_links:
+            h = OurMatchHighlight(link, match_name, img_link, view_count, category, time_since_added, goal_data, type)
 
             if score:
                 h.set_score(score[0], score[1])
@@ -194,12 +190,27 @@ def _get_video_links(soup):
             regex = "\'type\':\'(.*?)\'"
             types = re.compile(regex, 0).findall(script_text)
 
+            previous_type = None
+
             for i in range(len(types)):
 
                 for accepted in ['extended highlights', 'highlights', 'short', 'alternative player', 'short highlights']:
                     # Do distance to be more robust against site typing errors
                     if nltk.edit_distance(types[i].lower(), accepted) <= 2:
 
+                        # Get video type
+                        type = 'normal'
+
+                        if accepted in ['extended highlights']:
+                            type = 'extended'
+                        elif accepted in ['highlights', 'short', 'short highlights']:
+                            type = 'normal'
+                        elif accepted in ['alternative player']:
+                            type = previous_type
+
+                        previous_type = type
+
+                        # Get the video link
                         video = videos[i]
                         video_link = ''
 
@@ -220,7 +231,9 @@ def _get_video_links(soup):
 
                         # Add link if known provider
                         if video_link:
-                            video_links.append(video_link)
+                            video_links.append(
+                                (type, video_link)
+                            )
 
     return video_links
 
@@ -237,7 +250,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights(num_pagelet=4, max_days_ago=40)
+    highlights = fetch_highlights(num_pagelet=1, max_days_ago=40)
 
     for highlight in highlights:
         print(highlight)

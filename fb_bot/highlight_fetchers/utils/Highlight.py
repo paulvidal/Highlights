@@ -8,7 +8,7 @@ from fb_bot.highlight_fetchers.utils import mapping_football_competition, mappin
 class Highlight:
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, goal_data):
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, goal_data, type):
         self.link = self.form_link(link)
         self.img_link = img_link
         self.view_count = view_count
@@ -27,6 +27,9 @@ class Highlight:
 
         # Source of the highlight (website)
         self.source = self.get_source()
+
+        # Type of the video (short, normal, extended)
+        self.type = type
 
         # Goal information
         self.goal_data = goal_data
@@ -47,5 +50,5 @@ class Highlight:
         return dateparser.parse(self.time_since_added)
 
     def __str__(self):
-        return str((self.link, self.team1, self.score1, self.team2, self.score2,
-                    self.img_link, self.view_count, self.category, self.time_since_added, self.source, self.goal_data))
+        return str((self.link, self.team1, self.score1, self.team2, self.score2, self.img_link, self.view_count,
+                    self.category, self.time_since_added, self.source, self.type, self.goal_data))

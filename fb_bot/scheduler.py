@@ -157,7 +157,7 @@ def create_streamable_videos():
     highlights_time_since_added = [h.time_since_added for h in highlights]
 
     # remove all highlight with same date, as already converted videos
-    highlights = [h for h in highlights if (not highlights_time_since_added.count(h.time_since_added) == 3)
+    highlights = [h for h in highlights if (not highlights_time_since_added.count(h.time_since_added) >= 2)
                                             and providers.MATCHAT_ONLINE in h.link]
 
     for h in highlights:

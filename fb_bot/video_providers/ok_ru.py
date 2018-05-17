@@ -2,13 +2,14 @@ import re
 import requests
 from raven.contrib.django.raven_compat.models import client
 
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 
 
 def get_video_info(link):
 
     # Make sure video is from Ok.ru
-    if not 'ok.ru' in link:
+    if not providers.OK_RU in link:
         return None
 
     response = None

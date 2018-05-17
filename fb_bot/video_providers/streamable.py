@@ -4,6 +4,7 @@ from json import JSONDecodeError
 import requests
 
 from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 
 VIDEO_INFO_ENDPOINT = 'https://ajax.streamable.com/extract?url={}'
@@ -12,7 +13,7 @@ VIDEO_INFO_ENDPOINT = 'https://ajax.streamable.com/extract?url={}'
 def get_video_info(link):
 
     # Make sure video is from Streamable
-    if not 'streamable.com' in link:
+    if not providers.STREAMABLE in link:
         return None
 
     # Get rid of any argument at end of video link

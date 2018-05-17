@@ -215,6 +215,9 @@ def _get_video_links(soup):
                         elif providers.MATCHAT_ONLINE in video:
                             video_link = format_link(video)
 
+                        elif providers.CONTENT_VENTURES in video:
+                            video_link = video
+
                         # Add link if known provider
                         if video_link:
                             video_links.append(video_link)

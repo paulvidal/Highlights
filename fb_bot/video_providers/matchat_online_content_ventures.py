@@ -3,13 +3,14 @@ from raven.contrib.django.raven_compat.models import client, settings
 from selenium.common.exceptions import NoSuchElementException
 
 from fb_bot.highlight_fetchers.drivers.browser import Browser
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 
 
 def get_video_info(link):
 
     # Make sure video is from matchat.online
-    if not 'matchat.online' in link:
+    if not providers.MATCHAT_ONLINE or not providers.CONTENT_VENTURES in link:
         return None
 
     browser = None

@@ -4,6 +4,7 @@ from json import JSONDecodeError
 import requests
 
 from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 
 VIDEO_INFO_ENDPOINT = 'https://api.dailymotion.com/video/{}?fields=duration'
@@ -12,7 +13,7 @@ VIDEO_INFO_ENDPOINT = 'https://api.dailymotion.com/video/{}?fields=duration'
 def get_video_info(link):
 
     # Make sure video is from Streamable
-    if not 'dailymotion.com' in link:
+    if not providers.DAILYMOTION in link:
         return None
 
     # Get rid of any argument at end of video link

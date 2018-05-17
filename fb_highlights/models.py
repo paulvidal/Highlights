@@ -6,6 +6,7 @@ import dateparser
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.highlight_fetchers.utils import mapping_football_team
 
 
@@ -210,19 +211,22 @@ class LatestHighlight(models.Model):
     def provider_priority(self):
         priority = 0
 
-        if 'streamable' in self.link:
+        if providers.STREAMABLE in self.link:
             priority = 5
 
-        elif 'dailymotion' in self.link:
+        elif providers.DAILYMOTION in self.link:
             priority = 4
 
-        elif 'ok.ru' in self.link:
+        elif providers.MATCHAT_ONLINE in self.link:
             priority = 3
 
-        elif 'matchat.online' in self.link:
+        elif providers.CONTENT_VENTURES in self.link:
+            priority = 3
+
+        elif providers.OK_RU in self.link:
             priority = 2
 
-        elif 'footyroom' in self.link:
+        elif providers.FOOYTROOM in self.link:
             priority = 1
 
         return priority

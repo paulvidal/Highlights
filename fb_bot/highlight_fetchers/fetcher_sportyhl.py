@@ -239,6 +239,9 @@ def _get_video_links(full_link):
                     elif providers.MATCHAT_ONLINE in src:
                         video_link = format_link(src)
 
+                    elif providers.CONTENT_VENTURES in src:
+                        video_link = src
+
                     if video_link:
                         video_links.append(
                             (type, video_link)

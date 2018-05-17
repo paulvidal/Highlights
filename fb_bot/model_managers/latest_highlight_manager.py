@@ -276,11 +276,15 @@ def get_best_highlight(highlight_models, extended=False):
             current_best = h if h.priority_short > current_best.priority_short else current_best
             continue
 
+        if h.type == 'extended':
+            continue
+
         current_best = determine_best_highlight(current_best, h, current_best.score1 + current_best.score2)
 
     # Extended highlight is always based on the short highlight
     if extended:
-        highlight_models_extended = [h for h in highlight_models if current_best.video_duration > 0 and h.video_duration > current_best.video_duration + 90]
+        highlight_models_extended = [h for h in highlight_models if (0 < current_best.video_duration < h.video_duration and h.type == 'extended')
+                                                                    or h.priority_extended > 0]
 
         if len(highlight_models_extended) == 0:
             return current_best
@@ -309,19 +313,19 @@ def determine_best_highlight(h1, h2, total_goals):
 
         # CASE NO GOALS
         if total_goals == 0:
-            return choose(h1, h2, [180, 300, 360, 420, 480, 600], min_threshold=30)
+            return choose(h1, h2, [240, 360, 480, 600], min_threshold=30)
 
         # CASE 1 or 2 GOALS
         elif total_goals <= 2:
-            return choose(h1, h2, [240, 360, 420, 480, 600], min_threshold=60)
+            return choose(h1, h2, [300, 420, 600], min_threshold=60)
 
         # CASE 3 or 4 GOALS
         elif total_goals <= 4:
-            return choose(h1, h2, [300, 360, 420, 480, 600], min_threshold=120)
+            return choose(h1, h2, [360, 480, 600], min_threshold=120)
 
         # CASE 5 or 6 GOALS
         elif total_goals <= 6:
-            return choose(h1, h2, [360, 420, 480, 600], min_threshold=200)
+            return choose(h1, h2, [420, 600], min_threshold=200)
 
         # CASE 7 or more GOALS
         else:

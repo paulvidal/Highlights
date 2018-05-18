@@ -10,7 +10,7 @@ from fb_bot.logger import logger
 def get_video_info(link):
 
     # Make sure video is from matchat.online
-    if not providers.MATCHAT_ONLINE or not providers.CONTENT_VENTURES in link:
+    if not providers.MATCHAT_ONLINE and not providers.CONTENT_VENTURES in link:
         return None
 
     browser = None

@@ -14,10 +14,8 @@ class User(models.Model):
     facebook_id = models.BigIntegerField(unique=True, primary_key=True)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40)
-    image_url = models.URLField(max_length=200)
     locale = models.CharField(max_length=10)
     timezone = models.SmallIntegerField()
-    gender = models.CharField(max_length=20)
     context = models.SmallIntegerField(default=1)
     see_result = models.BooleanField(default=True)
 
@@ -28,11 +26,11 @@ class User(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['facebook_id', 'first_name', 'last_name', 'image_url', 'gender', 'message_count', 'highlights_click_count', 'join_date', 'context', 'see_result']
+        return ['facebook_id', 'first_name', 'last_name', 'message_count', 'highlights_click_count', 'join_date', 'context', 'see_result']
 
     @staticmethod
     def to_list_filter():
-        return ['gender', 'locale', 'see_result']
+        return ['locale', 'see_result']
 
     @staticmethod
     def search_fields():
@@ -43,10 +41,8 @@ class User(models.Model):
         return User(facebook_id=facebook_id,
                     first_name="user",
                     last_name="last",
-                    image_url="http://images/url.png",
                     locale="en_GB",
-                    timezone=0,
-                    gender="male")
+                    timezone=0)
 
     def __str__(self):
         return str(self.first_name) + ' ' + str(self.last_name)

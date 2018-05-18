@@ -28,10 +28,8 @@ def fill_db(test_user_id):
     User.objects.update_or_create(facebook_id=test_user_id,
                                   first_name="first",
                                   last_name="last",
-                                  image_url="http://images/url.png",
                                   locale="en_GB",
-                                  timezone=0,
-                                  gender="male")
+                                  timezone=0)
 
     # Add teams
     football_team_manager.add_football_team("chelsea")

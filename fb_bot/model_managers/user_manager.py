@@ -50,7 +50,7 @@ def _insert_user(fb_id):
     if not user_info:
         return False
 
-    facebook_id, first_name, last_name, image_url, locale, timezone, gender = user_info
+    facebook_id, first_name, last_name, locale, timezone = user_info
 
     User.objects.update_or_create(facebook_id=facebook_id,
                                   first_name=first_name,

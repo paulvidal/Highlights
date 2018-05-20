@@ -353,10 +353,8 @@ def choose(h1, h2, thresholds, min_threshold):
         elif h1.video_duration >= min_threshold and h2.video_duration >= min_threshold \
                 and h1.video_duration <= threshold and h2.video_duration <= threshold and h1.provider_priority() == h2.provider_priority():
 
-            if threshold == thresholds[0]:
-                return h1 if h1.video_duration >= h2.video_duration else h2
-            else:
-                return h1 if h1.video_duration <= h2.video_duration else h2
+            # Return most recently added video
+            return h1 if h1.get_parsed_time_since_added() > h2.get_parsed_time_since_added() else h2
 
     return h1 if h1.provider_priority() >= h2.provider_priority() else h2
 

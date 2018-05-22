@@ -183,7 +183,8 @@ NAME_MAPPING = {
     'heidenheim': 'fc heidenheim',
     'erzgebirge aue': 'fc erzgebirge aue',
     'fortuna dusseldorf': 'fortuna düsseldorf',
-    'osmanlispor fk': 'osmanlispor'
+    'osmanlispor fk': 'osmanlispor',
+    'mamelodi sundowns': 'mamelodi sundowns fc'
 }
 
 

@@ -24,7 +24,8 @@ NAME_MAPPING = {
     'spl': 'scottish premiership',
     'major league soccer': 'mls',
     'uefa europa league': 'europa league',
-
+    'taca de portugal': 'taça de portugal',
+    'dfb pokal': 'dfb-pokal'
 }
 
 

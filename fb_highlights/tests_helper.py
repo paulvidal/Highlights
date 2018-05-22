@@ -3,8 +3,9 @@ from datetime import datetime
 import dateparser
 
 from fb_bot import messenger_manager
-from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight
+from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.highlight_fetchers.fetcher_hoofoot import HoofootHighlight
+from fb_bot.highlight_fetchers.fetcher_our_match import OurMatchHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import football_team_manager, football_competition_manager, latest_highlight_manager, \
     context_manager
@@ -39,6 +40,7 @@ def fill_db(test_user_id):
     football_team_manager.add_football_team("liverpool")
     football_team_manager.add_football_team("burnley")
     football_team_manager.add_football_team("tottenham")
+    football_team_manager.add_football_team("manchester city")
 
     # Add competitions
     football_competition_manager.add_football_competition('champions league')
@@ -112,9 +114,23 @@ def fill_db(test_user_id):
                                                                        {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15, 'goal_type': 'goal'}
                                                                    ]))
 
-    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/burnley-tottenham',
-                                                            'Burnley 1 - 2 Tottenham',
-                                                            'http://hoofoot/images?burley-tottenham',
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/manchester_city-tottenham',
+                                                            'Manchester City 0 - 0 Tottenham',
+                                                            'http://hoofoot/images?manchester_city-tottenham',
                                                             0,
                                                             'Premier League',
-                                                            dateparser.parse('2018-01-07')), sent=False)
+                                                            dateparser.parse('2018-01-08')))
+
+    latest_highlight_manager.add_highlight(OurMatchHighlight('http://ourmatch/manchester_city-tottenham',
+                                                             'Manchester City vs Tottenham',
+                                                             'http://ourmatch/images?manchester_city-tottenham',
+                                                             0,
+                                                             'Premier League',
+                                                             dateparser.parse('2018-01-08'), [], 'normal').set_score(0, 0))
+
+    latest_highlight_manager.add_highlight(FootyroomHighlight('http://footyroom/manchester_city-tottenham',
+                                                              'Manchester City 0 - 0 Tottenham',
+                                                              'http://footyroom/images?manchester_city-tottenham',
+                                                              0,
+                                                              'Premier League',
+                                                              dateparser.parse('2018-01-08')))

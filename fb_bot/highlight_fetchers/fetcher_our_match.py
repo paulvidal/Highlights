@@ -44,6 +44,8 @@ class OurMatchHighlight(Highlight):
         self.score1 = score1
         self.score2 = score2
 
+        return self
+
     def get_source(self):
         return sources.OUR_MATCH
 

@@ -1107,3 +1107,54 @@ class SchedulerTestCase(TestCase):
                     }
                 }
             }, messages)
+
+    def test_scheduler_overrides_picture_and_goals_for_highlights(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Manchester City 0 - 0 Tottenham",
+                                    "subtitle": "Premier League",
+                                    "image_url": "http://footyroom/images?manchester_city-tottenham",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=manchester%20city&score1=0&team2=tottenham&score2=0&date=2018-01-08&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=manchester%20city&score1=0&team2=tottenham&score2=0&date=2018-01-08&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight"
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=manchester%20city&score1=0&team2=tottenham&score2=0&date=2018-01-08&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)

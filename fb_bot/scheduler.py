@@ -45,12 +45,15 @@ def send_most_recent_highlights(fetch=True):
         if h.goal_data and h.score1 and h.score2 and h.img_link:
             continue
 
-        reference_highlight = latest_highlight_manager.get_same_highlight_from_sources(h, sources.get_sources_with_complete_data())
+        reference_highlight = latest_highlight_manager.get_same_highlight_from_sources(h, sources.get_sources_with_complete_data_in_order_of_priority())
 
         if not reference_highlight:
             continue
 
-        latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
+        # Do not override if default image
+        if not 'nothumb' in reference_highlight.img_link and not 'default' in reference_highlight.img_link:
+            latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
+
         latest_highlight_manager.set_goal_data(h, reference_highlight.goal_data)
         latest_highlight_manager.set_score(h, reference_highlight.score1, reference_highlight.score2)
 

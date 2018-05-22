@@ -108,12 +108,17 @@ def get_not_sent_highlights(available_sources):
 
 
 def get_same_highlight_from_sources(highlight_model, sources):
-    highlights = [h for h in LatestHighlight.objects.filter(team1=highlight_model.team1,
-                                                          team2=highlight_model.team2,
-                                                          source__in=sources)
-                 if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
+    # Check for sources in order of priority
+    for source in sources:
+        highlights = [h for h in LatestHighlight.objects.filter(team1=highlight_model.team1,
+                                                                team2=highlight_model.team2,
+                                                                source=source)
+                     if abs(highlight_model.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
-    return highlights[0] if len(highlights) > 0 else None
+        if highlights:
+            return highlights[0]
+
+    return None
 
 
 #

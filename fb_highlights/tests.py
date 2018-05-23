@@ -457,6 +457,56 @@ class MessengerBotTestCase(TestCase):
             }
         ])
 
+    def test_search_does_not_show_highlights_with_incomplete_data(self):
+        # Given
+        self.send_message(TEST_USER_ID, 'search')
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, 'marseille')
+
+        # Then
+        self.assertNotEqual(json_response, [
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "RESPONSE",
+                'message': {
+                    'attachment': {
+                        'payload': {
+                            'template_type': 'generic',
+                            'elements': [
+                                {
+                                    "title": "Marseille -1 - -1 Monaco",
+                                    "subtitle": "Ligue 1",
+                                    "image_url": "http://sportyhl/images?marseille-monaco",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight"
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        'type': 'template'
+                    }
+                }
+            }
+        ])
+
     def test_change_see_result_setting(self):
         # Given
 
@@ -724,6 +774,7 @@ class SchedulerTestCase(TestCase):
         # Add test registrations
         registration_team_manager.add_team(TEST_USER_ID, "barcelona")
         registration_competition_manager.add_competition(TEST_USER_ID, "premier league")
+        registration_competition_manager.add_competition(TEST_USER_ID, "ligue 1")
 
     def setUp(self):
         self.client = Client()
@@ -1149,6 +1200,57 @@ class SchedulerTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             "url": "http://localhost:8000/highlight?team1=manchester%20city&score1=0&team2=tottenham&score2=0&date=2018-01-08&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)
+
+    def test_scheduler_does_not_send_highlight_with_incomplete_data(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertNotIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Marseille -1 - -1 Monaco",
+                                    "subtitle": "Ligue 1",
+                                    "image_url": "http://sportyhl/images?marseille-monaco",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight"
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=2018-01-09&type=extended&user_id=" + str(TEST_USER_ID),
                                             "title": "Extended highlight"
                                         }
                                     ]

@@ -58,7 +58,7 @@ def send_most_recent_highlights(fetch=True):
         latest_highlight_manager.set_score(h, reference_highlight.score1, reference_highlight.score2)
 
     # Send highlights not already sent
-    not_sent_highlights = latest_highlight_manager.get_not_sent_highlights(AVAILABLE_SOURCES)
+    not_sent_highlights = latest_highlight_manager.get_valid_not_sent_highlights(AVAILABLE_SOURCES)
 
     today = datetime.today()
 
@@ -67,15 +67,6 @@ def send_most_recent_highlights(fetch=True):
 
         # Add time to make sure video is good
         if timedelta(minutes=30) < abs(today - time_since_added) or highlight.priority_short > 0:
-
-            if highlight.sent:
-                # highlight has already been sent
-                continue
-
-            if highlight.score1 < 0 or highlight.score2 < 0:
-                # score was not set as no similar video - invalid
-                latest_highlight_manager.set_invalid(highlight)
-                continue
 
             if latest_highlight_manager.get_similar_sent_highlights(highlight):
                 # prevent from sending a highlight if find any similar already sent

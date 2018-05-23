@@ -43,9 +43,9 @@ def has_highlight(highlight):
 #
 
 
-# choosing highlight to show and redirect to when user clicks
+# searching highlight to show and redirect to when user clicks
 def get_highlights(team1, score1, team2, score2, date):
-    if not has_team(team1) or not has_team(team1):
+    if not has_team(team1) or not has_team(team2):
         return None
 
     team1 = football_team_manager.get_football_team(team1)
@@ -61,7 +61,7 @@ def get_highlights(team1, score1, team2, score2, date):
             if abs(date - h.get_parsed_time_since_added()) < timedelta(days=2)]
 
 
-# choosing highlight to show when user makes a search for a team
+# searching highlight to show when user makes a search for a team
 def get_highlights_for_team(team_name):
     if not has_team(team_name):
         return None
@@ -69,12 +69,18 @@ def get_highlights_for_team(team_name):
     team = football_team_manager.get_football_team(team_name)
 
     highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team,
-                                                                            valid=True,
                                                                             sent=True,
+                                                                            valid=True,
+                                                                            ready=True,
+                                                                            score1__gte=0,
+                                                                            score2__gte=0,
                                                                             source__in=sources.get_available_sources())] \
                  + [highlight for highlight in LatestHighlight.objects.filter(team2=team,
-                                                                              valid=True,
                                                                               sent=True,
+                                                                              valid=True,
+                                                                              ready=True,
+                                                                              score1__gte=0,
+                                                                              score2__gte=0,
                                                                               source__in=sources.get_available_sources())]
 
     return highlights
@@ -98,11 +104,18 @@ def get_similar_sent_highlights(highlight):
             if abs(highlight.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2) ]
 
 
-def get_not_sent_highlights(available_sources):
+def get_valid_not_sent_highlights(available_sources):
+    """
+    :param available_sources: sources from which a highlight is valid - if source not listed, exclude the highlight
+    :return: a list highlight that can be sent, whith complete information
+    """
+
     return LatestHighlight.objects.filter(
         sent=False,
         valid=True,
         ready=True,
+        score1__gte=0,
+        score2__gte=0,
         source__in=available_sources
     )
 

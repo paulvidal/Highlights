@@ -11,7 +11,7 @@ gunicorn==19.7.1
 html5lib==1.0.1
 Logentries==0.17
 nltk==3.2.5
-psycopg2==2.7.1
+psycopg2==2.7.3.2
 python-dateutil==2.6.0
 pytz==2017.2
 raven==6.0.0

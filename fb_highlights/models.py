@@ -71,13 +71,14 @@ class FootballTeam(models.Model):
 class NewFootballRegistration(models.Model):
     name = models.CharField(max_length=200)
     source = models.CharField(max_length=80)
+    time = models.DateTimeField(default=datetime.now)
 
     class Meta:
         unique_together = ('name', 'source')
 
     @staticmethod
     def to_list_display():
-        return ['name', 'source']
+        return ['name', 'source', 'time']
 
     @staticmethod
     def to_list_filter():

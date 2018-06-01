@@ -23,6 +23,7 @@ NAME_MAPPING = {
     'sm caen': 'caen',
     'pordenone': 'pordenone calcio',
     'frankfurt': 'eintracht frankfurt',
+    'eintracht frakfurt': 'eintracht frankfurt',
     'afc bournemouth': 'bournemouth',
     'west ham united': 'west ham',
     'tottenham hotspur': 'tottenham',
@@ -88,6 +89,7 @@ NAME_MAPPING = {
     'ogc nice': 'nice',
     'equipe de france': 'france',
     'man u': 'manchester united',
+    'manchester united fc': 'manchester united',
     'man city': 'manchester city',
     'spurs': 'tottenham',
     'gunners': 'arsenal',
@@ -130,6 +132,7 @@ NAME_MAPPING = {
     'real': 'real madrid',
     'fc metz': 'metz',
     'bosnia-herzegovina': 'bosnia and herzegovina',
+    'bosnia & herzegovina': 'bosnia and herzegovina',
     'n.ireland': 'northern ireland',
     'hannover': 'hannover 96',
     'wigan': 'wigan athletic',
@@ -184,7 +187,14 @@ NAME_MAPPING = {
     'erzgebirge aue': 'fc erzgebirge aue',
     'fortuna dusseldorf': 'fortuna düsseldorf',
     'osmanlispor fk': 'osmanlispor',
-    'mamelodi sundowns': 'mamelodi sundowns fc'
+    'mamelodi sundowns': 'mamelodi sundowns fc',
+    'united states': 'usa',
+    'republic of ireland': 'ireland',
+    'seattle sounders': 'seattle sounders fc',
+    'new england rev.': 'new england rev',
+    'villareal': 'villarreal',
+    'new york city': 'new york city	fc',
+    'goztepe sk': 'goztepe'
 }
 
 

@@ -52,8 +52,10 @@ def fetch_all_highlights():
             highlights += fetcher['fetch'](num_pagelet=num_pagelet, max_days_ago=max_days_ago)
         except:
             # Say which fetcher failed and the prod status
-            client.user_context({'highlights fetcher': fetcher['name']})
-            client.user_context({'prod_status': settings.PROD_STATUS})
+            client.user_context({
+                'prod_status': settings.PROD_STATUS,
+                'highlights_fetcher': fetcher['name']
+            })
             # Report to sentry problem detected
             client.captureException()
 

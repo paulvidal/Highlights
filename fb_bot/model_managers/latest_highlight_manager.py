@@ -362,19 +362,37 @@ def determine_best_highlight(h1, h2, total_goals):
 
 def choose(h1, h2, thresholds, min_threshold):
     for threshold in thresholds:
-        if h1.video_duration >= min_threshold and h1.video_duration <= threshold and h1.provider_priority() > h2.provider_priority():
+        # case where both videos have correct duration but one has a better provider
+        if _is_correct_duration(h1.video_duration, min_threshold, threshold) and _is_correct_duration(h2.video_duration, min_threshold, threshold) \
+                and h1.provider_priority() > h2.provider_priority():
             return h1
 
-        elif h2.video_duration >= min_threshold and h2.video_duration <= threshold and h2.provider_priority() > h1.provider_priority():
+        # case where both videos have correct duration but one has a better provider
+        elif _is_correct_duration(h1.video_duration, min_threshold, threshold) and _is_correct_duration(h2.video_duration, min_threshold, threshold) \
+                and h1.provider_priority() < h2.provider_priority():
             return h2
 
-        elif h1.video_duration >= min_threshold and h2.video_duration >= min_threshold \
-                and h1.video_duration <= threshold and h2.video_duration <= threshold and h1.provider_priority() == h2.provider_priority():
+        # case where both videos have correct duration and same provider
+        elif _is_correct_duration(h1.video_duration, min_threshold, threshold) and _is_correct_duration(h2.video_duration, min_threshold, threshold) \
+                and h1.provider_priority() == h2.provider_priority():
 
-            # Return most recently added video
+            # Return most recently added video if both have same priority
             return h1 if h1.get_parsed_time_since_added() > h2.get_parsed_time_since_added() else h2
 
+        # case where only one video has correct duration
+        elif _is_correct_duration(h1.video_duration, min_threshold, threshold):
+            return h1
+
+        # case where only one video has correct duration
+        elif _is_correct_duration(h2.video_duration, min_threshold, threshold):
+            return h2
+
+    # case where both video did not have correct duration
     return h1 if h1.provider_priority() >= h2.provider_priority() else h2
+
+
+def _is_correct_duration(duration, min_threshold, max_threshold):
+    return min_threshold <= duration <= max_threshold
 
 
 def determine_best_highlight_extended(h1, h2, short_best_highlight_duration):

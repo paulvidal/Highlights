@@ -216,6 +216,11 @@ def set_ready(highlight_model):
     highlight_model.save()
 
 
+def set_extended_type(highlight_model):
+    highlight_model.type = 'extended'
+    highlight_model.save()
+
+
 def convert_highlight(highlight_model, new_link, new_source):
     # create a new highlight with information changed
     LatestHighlight.objects.update_or_create(link=new_link, img_link=highlight_model.img_link,

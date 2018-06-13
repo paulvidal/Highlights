@@ -141,6 +141,10 @@ def add_videos_info():
         if video_duration:
             latest_highlight_manager.set_video_duration(h, video_duration)
 
+            if video_duration > 600:
+                # Mark a video of more than 10 minutes extended
+                latest_highlight_manager.set_extended_type(h)
+
         if video_url:
             latest_highlight_manager.set_video_url(h, video_url)
 

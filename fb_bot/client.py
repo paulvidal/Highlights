@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 from requests import Timeout
 
+from fb_bot.logger import logger
 from highlights import settings
 
 
@@ -31,7 +32,7 @@ class Client:
             try:
                 return requests.post(url, headers={"Content-Type": "application/json"}, data=message)
             except Timeout:
-                pass
+                logger.log("Message timeout to send: " + str(message), forward=True)
 
         else:
             self.messages.append(message)

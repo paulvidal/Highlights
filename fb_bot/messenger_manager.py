@@ -177,7 +177,7 @@ def send_tutorial_highlight(fb_id, team):
 
 def send_highlight_messages(fb_ids, highlight_models, see_result):
     attachments = [create_generic_attachment(highlights_to_json(fb_id, highlight_models, see_result=see_result)) for fb_id in fb_ids]
-    return send_batch_multiple_facebook_messages(fb_ids, attachments)
+    return send_batch_different_facebook_messages(fb_ids, attachments)
 
 
 def send_highlight_won_introduction_message(fb_ids, highlight_model):
@@ -282,6 +282,47 @@ def _format_team_goals(goals_formatted):
 #
 
 def send_batch_multiple_facebook_messages(fb_ids, messages):
+    """
+    Send multiple messages to all fb_id (2 or more message in a row to the same user)
+    Does this in a chunk manner so people get the message at the same time in order
+    """
+    response_msgs = []
+    messages_to_send = []
+
+    def chunks(l, n):
+        """Yield successive n-sized chunks from list l"""
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
+
+    for fb_ids_chunk in chunks(fb_ids, 50): # choose chunks of 50
+
+        for message in messages:
+
+            for fb_id in fb_ids_chunk:
+
+                fb_message = json.dumps(
+                    {
+                        "recipient": {
+                            "id": str(fb_id)
+                        },
+                        "messaging_type": "MESSAGE_TAG",  # Messaging type is MESSAGE_TAG, NON_PROMOTIONAL_SUBSCRIPTION
+                        "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                        "message": message
+                    })
+
+                messages_to_send.append(fb_message)
+                response_msgs.append(fb_message)
+
+            CLIENT.send_fb_messages_async(GRAPH_URL, messages_to_send)
+            messages_to_send = []
+
+    if not settings.is_prod():
+        logger.log(response_msgs)
+
+    return response_msgs
+
+
+def send_batch_different_facebook_messages(fb_ids, messages):
     """
     Send different messages to all fb_id
     """
@@ -562,6 +603,29 @@ def create_generic_attachment(elements):
             "payload": {
                 "template_type": "generic",
                 "elements": elements
+            }
+        }
+    }
+
+
+def create_image_attachment_from_saved_asset(asset_id):
+    return {
+        "attachment": {
+            "type": "image",
+            "payload": {
+                "attachment_id": str(asset_id)
+            }
+        }
+    }
+
+
+def create_image_attachment_from_url(url):
+    return {
+        "attachment":{
+            "type":"image",
+            "payload": {
+                "url": url,
+                "is_reusable": True
             }
         }
     }

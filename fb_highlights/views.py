@@ -92,17 +92,19 @@ class HighlightsBotView(generic.View):
 
                     # Special replies
                     # TODO: remove at some point
-                    if message == 'add competition ' + EMOJI_TROPHY:
-                        logger.log("ADD COMPETITION")
+                    if message == 'subscribe ' + EMOJI_TROPHY:
+                        logger.log("ADD WORLD CUP")
 
-                        context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
+                        context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
 
-                        suggestions_override = ['champions league', 'ligue 1', 'premier league', 'europa league',
-                                                'fa cup', 'serie a', 'world cup', 'bundesliga', 'friendly match']
+                        registration_competition_manager.add_competition(sender_id, 'world cup')
 
                         response_msg.append(
-                            messenger_manager.send_add_registration_message(sender_id,
-                                                                            suggestions_override=suggestions_override)
+                            messenger_manager.send_registration_added_message(sender_id, 'World Cup ' + EMOJI_TROPHY)
+                        )
+
+                        response_msg.append(
+                            view_message_helper.send_subscriptions_settings(sender_id)
                         )
 
                     # Special replies

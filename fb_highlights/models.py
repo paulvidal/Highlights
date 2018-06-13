@@ -209,15 +209,15 @@ class LatestHighlight(models.Model):
         priority = 0
 
         if providers.STREAMABLE in self.link:
-            priority = 5
-
-        elif providers.DAILYMOTION in self.link:
             priority = 4
 
         elif providers.MATCHAT_ONLINE in self.link:
-            priority = 3
+            priority = 4
 
         elif providers.CONTENT_VENTURES in self.link:
+            priority = 4
+
+        elif providers.DAILYMOTION in self.link:
             priority = 3
 
         elif providers.OK_RU in self.link:

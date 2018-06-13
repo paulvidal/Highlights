@@ -110,6 +110,11 @@ class MessengerBotTestCase(TestCase):
                         {
                             "content_type": "text",
                             "payload": "NO_PAYLOAD",
+                            "title": "World Cup"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
                             "title": "Psg"
                         },
                         {
@@ -136,11 +141,6 @@ class MessengerBotTestCase(TestCase):
                             "content_type": "text",
                             "payload": "NO_PAYLOAD",
                             "title": "Europa League"
-                        },
-                        {
-                            "content_type": "text",
-                            "payload": "NO_PAYLOAD",
-                            "title": "World Cup"
                         },
                         {
                             "content_type": "text",

@@ -306,7 +306,7 @@ def get_best_highlight(highlight_models, extended=False):
 
     # Extended highlight is always based on the short highlight
     if extended:
-        highlight_models_extended = [h for h in highlight_models if (0 < current_best.video_duration < h.video_duration and h.type == 'extended')
+        highlight_models_extended = [h for h in highlight_models if (0 < current_best.video_duration < h.video_duration < 1200 and h.type == 'extended')
                                                                     or h.priority_extended > 0]
 
         if len(highlight_models_extended) == 0:
@@ -324,7 +324,7 @@ def get_best_highlight(highlight_models, extended=False):
                 current_best_extended = h if h.priority_extended > current_best_extended.priority_extended else current_best_extended
                 continue
 
-            current_best_extended = determine_best_highlight_extended(current_best_extended, h, current_best.video_duration)
+            current_best_extended = determine_best_highlight_extended(current_best_extended, h)
 
         return current_best_extended
 
@@ -400,27 +400,8 @@ def _is_correct_duration(duration, min_threshold, max_threshold):
     return min_threshold <= duration <= max_threshold
 
 
-def determine_best_highlight_extended(h1, h2, short_best_highlight_duration):
-    if short_best_highlight_duration <= 300:
-        max_threshold = 600
-    elif short_best_highlight_duration <= 450:
-        max_threshold = 900
+def determine_best_highlight_extended(h1, h2):
+    if h1.provider_priority() == h2.provider_priority():
+        return h1 if h1.video_duration >= h2.video_duration else h2
     else:
-        max_threshold = 1200
-
-    return choose_extended(h1, h2, [1100, 1000, 900, 800, 700, 600], max_threshold=max_threshold)
-
-
-def choose_extended(h1, h2, thresholds, max_threshold):
-    for threshold in thresholds:
-        if h1.video_duration <= max_threshold and h1.video_duration >= threshold:
-            return h1
-
-        elif h2.video_duration <= max_threshold and h2.video_duration >= threshold:
-            return h2
-
-        elif h1.video_duration <= max_threshold and h2.video_duration <= max_threshold \
-                and h1.video_duration >= threshold and h2.video_duration >= threshold:
-            return h1 if h1.video_duration >= h2.video_duration else h2
-
-    return h1 if h1.provider_priority() >= h2.provider_priority() else h2
+        return h1 if h1.provider_priority() >= h2.provider_priority() else h2

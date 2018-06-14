@@ -93,7 +93,7 @@ class HighlightsBotView(generic.View):
                     # Special replies
                     # TODO: remove at some point
                     if message == 'subscribe ' + EMOJI_TROPHY:
-                        logger.log("ADD WORLD CUP")
+                        logger.log_for_user("ADD WORLD CUP", sender_id, forward=True)
 
                         context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
 
@@ -110,6 +110,8 @@ class HighlightsBotView(generic.View):
                     # Special replies
                     # TODO: remove at some point
                     elif message == 'no thanks ' + EMOJI_CROSS:
+                        logger.log_for_user("NO THANKS WORLD CUP", sender_id, forward=True)
+
                         response_msg.append(
                             messenger_manager.send_facebook_message(
                                 sender_id, messenger_manager.create_message("Another time! " + EMOJI_SMILE))

@@ -151,8 +151,10 @@ def get_suggestion_for_registrations(registrations):
     # Add default suggestions
     suggestions += ['psg', 'arsenal', 'champions league', 'barcelona', 'manchester united', 'europa league',
                     'world cup', 'bayern munich', 'real madrid', 'liverpool']
+    suggestions = ['world cup'] + suggestions
+
     # Remove teams already in registrations
-    suggestions = ['world cup'] + [s for s in suggestions if s not in registrations]
+    suggestions = [s for s in suggestions if s not in registrations]
     # Remove duplicates while keeping order
     suggestions = _remove_duplicates_and_keep_order(suggestions)
 

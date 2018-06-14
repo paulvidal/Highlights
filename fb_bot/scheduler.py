@@ -224,6 +224,8 @@ def _send_highlight_to_users(highlight):
     user_ids_see_result = win_ids + draw_ids + lose_ids
     user_ids_see_result_disable = [_id for _id in ids if _id in user_ids_see_result_disable]
 
+    # TODO: send batch messages using @send_batch_multiple_facebook_messages() method
+
     # Send introduction message to users
     messenger_manager.send_highlight_won_introduction_message(win_ids, highlight)
     messenger_manager.send_highlight_draw_introduction_message(draw_ids, highlight)

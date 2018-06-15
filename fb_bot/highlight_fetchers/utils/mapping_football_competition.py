@@ -26,7 +26,8 @@ NAME_MAPPING = {
     'uefa europa league': 'europa league',
     'taca de portugal': 'taça de portugal',
     'dfb pokal': 'dfb-pokal',
-    'world cup 2018': 'world cup'
+    'world cup 2018': 'world cup',
+    'world cup highlights': 'world cup',
 }
 
 

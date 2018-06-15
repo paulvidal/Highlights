@@ -61,7 +61,7 @@ def fetch_highlights(num_pagelet=4, max_days_ago=15):
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
-    payload = "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"query[category]\"\r\n\r\n58,29,72,69,30,65,907,31,419,67,18,417,25,63,82,28,256\r\n" \
+    payload = "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"query[category]\"\r\n\r\n58,29,72,69,30,65,907,31,419,67,18,417,25,63,82,28,256,902\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"query[count]\"\r\n\r\n15\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"query[order_by]\"\r\n\r\ndate\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"query[order]\"\r\n\r\nDESC\r\n" \
@@ -82,7 +82,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"view\"\r\n\r\nPublisher_Classic_Listing_1_Shortcode\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"current_page\"\r\n\r\n" \
               + str(pagelet_num) + "\r\n" \
-              "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"_bs_pagin_token\"\r\n\r\n0060b77\r\n" \
+              "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"_bs_pagin_token\"\r\n\r\n2670529\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"action\"\r\n\r\npagination_ajax\r\n" \
               "------WebKitFormBoundary7MA4YWxkTrZu0gW--"
 
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights(num_pagelet=4, max_days_ago=40)
+    highlights = fetch_highlights(num_pagelet=1, max_days_ago=40)
 
     for highlight in highlights:
         print(highlight)

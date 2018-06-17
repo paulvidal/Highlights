@@ -64,7 +64,7 @@ NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight 
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + "\n\nI am the smart bot that fetches the latest football highlights for you."
 
-GET_STARTED_MESSAGE_2 = "To get started, enter the name of a " + EMOJI_FOOTBALL + " team or comeptition you would love to subscribe to."
+GET_STARTED_MESSAGE_2 = "To get started, enter the name of a " + EMOJI_FOOTBALL + " team or competition you would love to subscribe to."
 
 SUBSCRIPTION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " subscriptions: \n\n{}\n\nDo you want to ADD or REMOVE a subscription?"
 

@@ -111,7 +111,13 @@ def send_getting_started_message(fb_id, user_name):
 
 
 def send_getting_started_message_2(fb_id):
-    return send_facebook_message(fb_id, create_message(GET_STARTED_MESSAGE_2))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(GET_STARTED_MESSAGE_2, ['World Cup',
+                                                                                                'PSG',
+                                                                                                'Arsenal',
+                                                                                                'Chelsea',
+                                                                                                'Manchester United',
+                                                                                                'Champions League'
+                                                                                                'Premier League']))
 
 
 def send_error_message(fb_id):

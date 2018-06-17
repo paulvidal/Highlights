@@ -471,7 +471,7 @@ def get_highlights_for_team_or_competitions(fb_id, team_or_competition, highligh
             # Case where only one team_or_competition is similar, so send the highlights for this team_or_competition
             # -> error correction as user might have done a typo
             team_or_competition = similar_team_or_competition_names[0]
-            highlights = latest_highlight_manager.get_highlights_for_team(team_or_competition)
+            return get_highlights_for_team_or_competitions(fb_id, team_or_competition)
 
         elif len(similar_team_or_competition_names) >= 2:
             similar_team_or_competition_names = [team_name.title() for team_name in similar_team_or_competition_names]

@@ -352,7 +352,7 @@ class MessengerBotTestCase(TestCase):
                 },
                 "messaging_type": "RESPONSE",
                 "message": {
-                    "text": "Tell me for which team should I give you highlight videos? 📺"
+                    "text": "Tell me for which team or competition should I give you highlight videos? 📺"
                 }
             }
         ])
@@ -688,7 +688,7 @@ class MessengerBotTestCase(TestCase):
                             "content_type": "text"
                         }
                     ],
-                    "text": "I'm so sorry but I could not find any recent highlight video for your team 💔"
+                    "text": "I'm so sorry but I could not find any recent highlight video for your team or competition 💔"
                 }
             }
         ])

@@ -85,6 +85,24 @@ def get_highlights_for_team(team_name):
 
     return highlights
 
+
+# searching highlight to show when user makes a search for a team
+def get_highlights_for_competition(competition_name):
+    if not has_competition(competition_name):
+        return None
+
+    competition = football_competition_manager.get_football_competition(competition_name)
+
+    highlights = [highlight for highlight in LatestHighlight.objects.filter(category=competition,
+                                                                            sent=True,
+                                                                            valid=True,
+                                                                            ready=True,
+                                                                            score1__gte=0,
+                                                                            score2__gte=0,
+                                                                            source__in=sources.get_available_sources())]
+
+    return highlights
+
 #
 #  Main methods for getting highlights to send
 #
@@ -253,7 +271,11 @@ def add_new_team_to_db(highlight):
 
 
 def has_competition_in_db(highlight):
-    return football_competition_manager.has_football_competition(highlight.category)
+    return has_competition(highlight.category)
+
+
+def has_competition(competition):
+    return football_competition_manager.has_football_competition(competition)
 
 
 def add_new_competition_to_db(highlight):

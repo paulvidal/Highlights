@@ -8,7 +8,7 @@ from fb_bot import client, registration_suggestions
 from fb_bot.logger import logger
 from fb_bot.messages import *
 from fb_bot.model_managers import latest_highlight_manager, football_team_manager, new_football_registration_manager, \
-    registration_team_manager, registration_competition_manager, user_manager
+    registration_team_manager, registration_competition_manager, user_manager, football_competition_manager
 from highlights import settings
 
 CLIENT = client.Client()
@@ -118,8 +118,8 @@ def send_error_message(fb_id):
     return send_facebook_message(fb_id, create_message(ERROR_MESSAGE))
 
 
-def send_highlight_message_for_team(fb_id, team):
-    return send_facebook_message(fb_id, get_highlights_for_team(fb_id, team))
+def send_highlight_message_for_team_or_competition(fb_id, team):
+    return send_facebook_message(fb_id, get_highlights_for_team_or_competitions(fb_id, team))
 
 
 def send_see_result_setting(fb_id):
@@ -153,14 +153,27 @@ def send_team_not_found_tutorial_message(fb_id):
 
 
 # FIXME: duplication with real search
-def send_tutorial_highlight(fb_id, team):
-    highlights = latest_highlight_manager.get_highlights_for_team(team)
+def send_tutorial_highlight(fb_id, team_or_competition):
+    highlights_team = latest_highlight_manager.get_highlights_for_team(team_or_competition)
+    highlights_competition = latest_highlight_manager.get_highlights_for_competition(team_or_competition)
+
+    # TODO: clean this code - check for teams before
+    if highlights_team is None and highlights_competition is None:
+        highlights = None
+    elif highlights_team is None:
+        highlights = highlights_competition
+    elif highlights_competition is None:
+        highlights = highlights_team
+    else:
+        highlights = highlights_team + highlights_competition
 
     if highlights == []:
-        # Case no highlight found for the team, use example such as PSG, Barcelona, Real Madrid
+        # Case no highlight found for the team_or_competition, use example such as PSG, Barcelona, Real Madrid, Spain or France
         highlights = latest_highlight_manager.get_highlights_for_team('psg') \
                      + latest_highlight_manager.get_highlights_for_team('barcelona') \
-                     + latest_highlight_manager.get_highlights_for_team('real madrid')
+                     + latest_highlight_manager.get_highlights_for_team('real madrid')\
+                     + latest_highlight_manager.get_highlights_for_team('spain')\
+                     + latest_highlight_manager.get_highlights_for_team('france')
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights)
@@ -414,37 +427,49 @@ def has_highlight_for_team(team):
 
 
 # FIXME: code duplicated for tutorial
-def get_highlights_for_team(fb_id, team, highlight_count=10):
-    highlights = latest_highlight_manager.get_highlights_for_team(team)
+def get_highlights_for_team_or_competitions(fb_id, team_or_competition, highlight_count=10):
+    highlights_team = latest_highlight_manager.get_highlights_for_team(team_or_competition)
+    highlights_competition = latest_highlight_manager.get_highlights_for_competition(team_or_competition)
+
+    # TODO: clean this code - check for teams before
+    if highlights_team is None and highlights_competition is None:
+        highlights = None
+    elif highlights_team is None:
+        highlights = highlights_competition
+    elif highlights_competition is None:
+        highlights = highlights_team
+    else:
+        highlights = highlights_team + highlights_competition
 
     if highlights == []:
-        # Case no highlight found for the team
+        # Case no highlight found for the team_or_competition
         return create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
                                                                        HELP_BUTTON,
                                                                        CANCEL_BUTTON])
 
     if not highlights:
-        # Case no team name matched
-        similar_team_names = football_team_manager.similar_football_team_names(team)
+        # Case no team_or_competition name matched
+        similar_team_or_competition_names = football_team_manager.similar_football_team_names(team_or_competition) \
+                                            + football_competition_manager.similar_football_competition_names(team_or_competition)
 
         # Register wrong search
-        new_football_registration_manager.add_football_registration(team, 'user')
+        new_football_registration_manager.add_football_registration(team_or_competition, 'user')
 
-        # Check if name of team was not properly written
-        if len(similar_team_names) == 0:
+        # Check if name of team_or_competition was not properly written
+        if len(similar_team_or_competition_names) == 0:
             return create_quick_text_reply_message(NO_MATCH_FOUND, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
                                                                     HELP_BUTTON,
                                                                     CANCEL_BUTTON])
 
-        elif len(similar_team_names) == 1:
-            # Case where only one team is similar, so send the highlights for this team
+        elif len(similar_team_or_competition_names) == 1:
+            # Case where only one team_or_competition is similar, so send the highlights for this team_or_competition
             # -> error correction as user might have done a typo
-            team = similar_team_names[0]
-            highlights = latest_highlight_manager.get_highlights_for_team(team)
+            team_or_competition = similar_team_or_competition_names[0]
+            highlights = latest_highlight_manager.get_highlights_for_team(team_or_competition)
 
-        elif len(similar_team_names) >= 2:
-            similar_team_names = [team_name.title() for team_name in similar_team_names]
-            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_names[:9]
+        elif len(similar_team_or_competition_names) >= 2:
+            similar_team_or_competition_names = [team_name.title() for team_name in similar_team_or_competition_names]
+            return create_quick_text_reply_message(NO_MATCH_FOUND_TEAM_RECOMMENDATION, similar_team_or_competition_names[:9]
                                                    + [HELP_BUTTON,
                                                       CANCEL_BUTTON])
 

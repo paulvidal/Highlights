@@ -51,20 +51,20 @@ EMOJI_RUNNING = emo(":running:")
 #
 
 HELP_MESSAGE = "Here is what you can ask me:\n\n" \
-               + EMOJI_ONE + " Press \"Search highlights\" and I will give you the latest highlights videos for a team\n\n" \
+               + EMOJI_ONE + " Press \"Search highlights\" and I will give you the latest highlights videos for a team or a competition\n\n" \
                + EMOJI_TWO + " Press \"My subscriptions\" to subscribe to teams and competitions, I will then send you highlights videos as soon as the match is over!"
 
 CANCEL_MESSAGE = "Alright let's stop there then :)"
 
 DONE_MESSAGE = "You're good to go!\nI will send you the latest highlights for your subscriptions as soon as videos are available. " + EMOJI_TV
 
-SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team should I give you highlight videos? " + EMOJI_TV
+SEARCH_HIGHLIGHTS_MESSAGE = "Tell me for which team or competition should I give you highlight videos? " + EMOJI_TV
 
-NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team " + EMOJI_BROKEN_HEART
+NO_HIGHLIGHTS_MESSAGE = "I'm so sorry but I could not find any recent highlight video for your team or competition " + EMOJI_BROKEN_HEART
 
 GET_STARTED_MESSAGE = "Hey {} " + EMOJI_WAVE + "\n\nI am the smart bot that fetches the latest football highlights for you."
 
-GET_STARTED_MESSAGE_2 = "To get started, enter the name of a " + EMOJI_FOOTBALL + " team you would love to subscribe to."
+GET_STARTED_MESSAGE_2 = "To get started, enter the name of a " + EMOJI_FOOTBALL + " team or comeptition you would love to subscribe to."
 
 SUBSCRIPTION_MESSAGE = "I am currently sending you the highlights for the following " + EMOJI_FOOTBALL + " subscriptions: \n\n{}\n\nDo you want to ADD or REMOVE a subscription?"
 
@@ -82,9 +82,9 @@ REGISTRATION_ADDED_MESSAGE = "{} was successfully registered " + EMOJI_THUMBS_UP
 
 REGISTRATION_DELETED_MESSAGE = "{} successfully removed from your subscriptions " + EMOJI_THUMBS_UP
 
-NO_MATCH_FOUND_TEAM_RECOMMENDATION = "I did not find highlights for your team " + EMOJI_BROKEN_HEART + " Did you mean?"
+NO_MATCH_FOUND_TEAM_RECOMMENDATION = "I did not find highlights for your team or competition " + EMOJI_BROKEN_HEART + " Did you mean?"
 
-NO_MATCH_FOUND = "I did not find highlights for your team! " + EMOJI_BROKEN_HEART
+NO_MATCH_FOUND = "I did not find highlights for your team or competition! " + EMOJI_BROKEN_HEART
 
 NO_REGISTRATION_MESSAGE = "-> No team or competition registered"
 

@@ -184,14 +184,34 @@ class HighlightsBotView(generic.View):
                                 view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
-                        elif football_team_manager.similar_football_team_names(registration_to_add):
-                            # Team recommendation
+                        elif football_competition_manager.has_football_competition(registration_to_add):
+                            # Does competition exist check
+
+                            registration_competition_manager.add_competition(sender_id, registration_to_add)
+
+                            response_msg.append(
+                                messenger_manager.send_tutorial_message(sender_id, text)
+                            )
+
+                            response_msg.append(
+                                messenger_manager.send_tutorial_highlight(sender_id, registration_to_add)
+                            )
+
+                            response_msg.append(
+                                view_message_helper.send_subscriptions_settings(sender_id)
+                            )
+
+                        elif football_team_manager.similar_football_team_names(registration_to_add) \
+                            + football_competition_manager.similar_football_competition_names(registration_to_add):
+                            # Registration recommendation
 
                             # Register wrong search
                             new_football_registration_manager.add_football_registration(registration_to_add, 'user')
 
+                            recommendations = football_team_manager.similar_football_team_names(registration_to_add) \
+                                              + football_competition_manager.similar_football_competition_names(registration_to_add)
+
                             # Format recommendation names
-                            recommendations = football_team_manager.similar_football_team_names(registration_to_add)
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
                             response_msg.append(
@@ -401,7 +421,7 @@ class HighlightsBotView(generic.View):
                         logger.log("SEARCHING HIGHLIGHTS")
 
                         response_msg.append(
-                            messenger_manager.send_highlight_message_for_team(sender_id, message)
+                            messenger_manager.send_highlight_message_for_team_or_competition(sender_id, message)
                         )
 
                 if 'postback' in message:

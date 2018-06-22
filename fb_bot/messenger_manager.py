@@ -116,7 +116,7 @@ def send_getting_started_message_2(fb_id):
                                                                                                 'Arsenal',
                                                                                                 'Chelsea',
                                                                                                 'Manchester United',
-                                                                                                'Champions League'
+                                                                                                'Champions League',
                                                                                                 'Premier League']))
 
 

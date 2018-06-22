@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    page = requests.get("http://ourmatch.net/videos/12-05-2018-paris-saint-germain-vs-rennes/")
+    page = requests.get("http://ourmatch.net/videos/22-06-2018-brazil-vs-costa-rica/")
     soup = BeautifulSoup(page.content, 'html.parser')
 
     goals = get_goal_data(soup)

@@ -73,6 +73,7 @@ NAME_MAPPING = {
     'str': 'rennes',
     'stade rennais': 'rennes',
     'se': 'saint etienne',
+    'asse': 'saint etienne',
     'soc': 'sochaux',
     'tfc': 'toulouse',
     'est': 'troyes',

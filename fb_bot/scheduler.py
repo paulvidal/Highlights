@@ -221,23 +221,13 @@ def _send_highlight_to_users(highlight):
     draw_ids = [_id for _id in draw_ids if _id not in user_ids_see_result_disable]
     lose_ids = [_id for _id in lose_ids if _id not in user_ids_see_result_disable]
 
-    user_ids_see_result = win_ids + draw_ids + lose_ids
     user_ids_see_result_disable = [_id for _id in ids if _id in user_ids_see_result_disable]
 
-    # TODO: send batch messages using @send_batch_multiple_facebook_messages() method
+    send_highlight(win_ids, highlight, messenger_manager.send_highlight_won_introduction_message, see_result=True)
+    send_highlight(draw_ids, highlight, messenger_manager.send_highlight_draw_introduction_message, see_result=True)
+    send_highlight(lose_ids, highlight, messenger_manager.send_highlight_lost_introduction_message, see_result=True)
 
-    # Send introduction message to users
-    messenger_manager.send_highlight_won_introduction_message(win_ids, highlight)
-    messenger_manager.send_highlight_draw_introduction_message(draw_ids, highlight)
-    messenger_manager.send_highlight_lost_introduction_message(lose_ids, highlight)
-    messenger_manager.send_highlight_neutral_introduction_message(user_ids_see_result_disable, highlight)
-
-    # Send the highlight to users
-    messenger_manager.send_highlight_messages(user_ids_see_result, [highlight], see_result=True)
-    messenger_manager.send_highlight_messages(user_ids_see_result_disable, [highlight], see_result=False)
-
-    # Send the score to users
-    messenger_manager.send_score(user_ids_see_result, highlight)
+    send_highlight(user_ids_see_result_disable, highlight, messenger_manager.send_highlight_neutral_introduction_message, see_result=False)
 
     # TODO: do batch update on database
     for user_id in ids:
@@ -246,3 +236,24 @@ def _send_highlight_to_users(highlight):
 
         # Reset to default context
         context_manager.set_default_context(user_id)
+
+
+def send_highlight(fb_ids, highlight, send_intro_message_f, see_result):
+
+    for fb_ids_chunk in chunks(fb_ids, 40): # choose chunks of 40
+
+        # Send introduction message to users
+        send_intro_message_f(fb_ids_chunk, highlight)
+
+        # Send the highlight to users
+        messenger_manager.send_highlight_messages(fb_ids_chunk, [highlight], see_result=see_result)
+
+        # Send the score to users
+        if see_result:
+            messenger_manager.send_score(fb_ids_chunk, highlight)
+
+
+def chunks(l, n):
+    """Yield successive n-sized chunks from list l"""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]

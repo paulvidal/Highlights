@@ -26,6 +26,10 @@ def _extract_goals(goal_section, home):
         if not goal:
             continue
 
+        # Do not show red cards
+        if goal_list_item.find(class_="match-head-red-card"):
+            continue
+
         goal_scorer = goal[:goal.index('(')]
 
         regex = "\((.*?)\)"
@@ -63,7 +67,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
 
-    page = requests.get("http://ourmatch.net/videos/22-06-2018-brazil-vs-costa-rica/")
+    page = requests.get("http://ourmatch.net/videos/19-06-2018-colombia-vs-japan/")
     soup = BeautifulSoup(page.content, 'html.parser')
 
     goals = get_goal_data(soup)

@@ -169,7 +169,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights()
+    highlights = fetch_highlights(num_pagelet=1)
 
     for highlight in highlights:
         print(highlight)

@@ -480,6 +480,7 @@ def get_highlights_for_team_or_competitions(fb_id, team_or_competition, highligh
                                                       CANCEL_BUTTON])
 
     # Eliminate duplicates
+    # FIXME: bottleneck when fetching competition highlights (more than 500), as comaprison takes time so provokes timeout
     highlights = latest_highlight_manager.get_unique_highlights(highlights)
 
     # Order highlights by date and take the first 10

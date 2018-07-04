@@ -66,7 +66,7 @@ def send_most_recent_highlights(fetch=True):
         time_since_added = highlight.get_parsed_time_since_added()
 
         # Add time to make sure video is good
-        if timedelta(minutes=30) < abs(today - time_since_added) or highlight.priority_short > 0:
+        if timedelta(minutes=30) < abs(today - time_since_added) < timedelta(hours=30) or highlight.priority_short > 0:
 
             if latest_highlight_manager.get_similar_sent_highlights(highlight):
                 # prevent from sending a highlight if find any similar already sent

@@ -423,7 +423,7 @@ class HighlightsBotView(generic.View):
                         response_msg.append(
                             messenger_manager.send_highlight_message_for_team_or_competition(sender_id, message)
                         )
-
+`
                 if 'postback' in message:
                     postback = message['postback']['payload']
 

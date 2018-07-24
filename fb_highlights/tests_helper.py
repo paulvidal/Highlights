@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import dateparser
 
@@ -11,6 +11,11 @@ from fb_bot.logger import logger
 from fb_bot.model_managers import football_team_manager, football_competition_manager, latest_highlight_manager, \
     context_manager
 from fb_highlights.models import User
+
+
+TIME_NOW = datetime.now()
+TIME_40_MINUTES_EARLIER = datetime.now() - timedelta(minutes=40)
+TIME_3_DAYS_EARLIER = datetime.now() - timedelta(hours=72)
 
 
 def class_setup():
@@ -40,6 +45,7 @@ def fill_db(test_user_id):
     football_team_manager.add_football_team("arsenal")
     football_team_manager.add_football_team("liverpool")
     football_team_manager.add_football_team("burnley")
+    football_team_manager.add_football_team("swansea")
     football_team_manager.add_football_team("tottenham")
     football_team_manager.add_football_team("manchester city")
     football_team_manager.add_football_team("marseille")
@@ -58,49 +64,49 @@ def fill_db(test_user_id):
                                                             'http://hoofoot/images?chelsea-barcelona',
                                                             0,
                                                             'Champions League',
-                                                            dateparser.parse('2018-01-01')), sent=True)
+                                                            TIME_40_MINUTES_EARLIER), sent=True)
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona2',
                                                             'Chelsea 0 - 2 Barcelona',
                                                             'http://hoofoot/images?chelsea-barcelona2',
                                                             0,
                                                             'Champions League',
-                                                            dateparser.parse('2018-01-01')), sent=False)
+                                                            TIME_40_MINUTES_EARLIER), sent=False)
 
-    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona3',
-                                                            'Chelsea 0 - 2 Barcelona',
-                                                            'http://hoofoot/images?chelsea-barcelona3',
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/burnley-barcelona',
+                                                            'Burnley 0 - 2 Barcelona',
+                                                            'http://hoofoot/images?burnley-barcelona',
                                                             0,
                                                             'Champions League',
-                                                            dateparser.parse('2018-01-05')), sent=False)
+                                                            TIME_40_MINUTES_EARLIER), sent=False)
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-real_madrid',
                                                             'Arsenal 1 - 0 Real Madrid',
                                                             'http://hoofoot/images?chelsea-real_madrid',
                                                             0,
                                                             'Champions League',
-                                                            dateparser.parse('2018-01-02')))
+                                                            TIME_40_MINUTES_EARLIER))
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/arsenal-liverpool',
                                                             'Arsenal 0 - 4 Liverpool',
                                                             'http://hoofoot/images?arsenal-liverpool',
                                                             0,
                                                             'Premier League',
-                                                            dateparser.parse('2018-01-03')))
+                                                            TIME_40_MINUTES_EARLIER))
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/barcelona-liverpool',
                                                             'Barcelona 1 - 1 Liverpool',
                                                             'http://hoofoot/images?barcelona-liverpool',
                                                             0,
                                                             'Champions League',
-                                                            datetime.now()))
+                                                            TIME_NOW))
 
     latest_highlight_manager.add_highlight(FootyroomVideoHighlight('http://hoofoot/barcelona-real_madrid',
                                                                    'Barcelona 3 - 2 Real Madrid',
                                                                    'http://footyroom/images?barcelona-real_madrid',
                                                                    0,
                                                                    'La Liga',
-                                                                   dateparser.parse('2018-01-05'),
+                                                                   TIME_40_MINUTES_EARLIER,
                                                                    [
                                                                        {'team': 1, 'player': 'Lionel Messi', 'elapsed': 4, 'goal_type': 'penalty'},
                                                                        {'team': 2, 'player': 'Cristiano Ronaldo', 'elapsed': 10, 'goal_type': 'goal'},
@@ -114,7 +120,7 @@ def fill_db(test_user_id):
                                                                    'http://footyroom/images?barcelona-arsenal',
                                                                    0,
                                                                    'Champions League',
-                                                                   dateparser.parse('2018-01-06'),
+                                                                   TIME_40_MINUTES_EARLIER,
                                                                    [
                                                                        {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15, 'goal_type': 'goal'}
                                                                    ]))
@@ -124,32 +130,39 @@ def fill_db(test_user_id):
                                                             'http://hoofoot/images?manchester_city-tottenham',
                                                             0,
                                                             'Premier League',
-                                                            dateparser.parse('2018-01-08')))
+                                                            TIME_40_MINUTES_EARLIER))
 
     latest_highlight_manager.add_highlight(OurMatchHighlight('http://ourmatch/manchester_city-tottenham',
                                                              'Manchester City vs Tottenham',
                                                              'http://ourmatch/images?manchester_city-tottenham',
                                                              0,
                                                              'Premier League',
-                                                             dateparser.parse('2018-01-08'), [], 'normal').set_score(0, 0))
+                                                             TIME_40_MINUTES_EARLIER, [], 'normal').set_score(0, 0))
 
     latest_highlight_manager.add_highlight(FootyroomHighlight('http://footyroom/manchester_city-tottenham',
                                                               'Manchester City 0 - 0 Tottenham',
                                                               'http://footyroom/images?manchester_city-tottenham',
                                                               0,
                                                               'Premier League',
-                                                              dateparser.parse('2018-01-08')))
+                                                              TIME_40_MINUTES_EARLIER))
 
     latest_highlight_manager.add_highlight(SportyHLHighlight('http://sportyhl/marseille-monaco',
                                                              'Marseille vs Monaco',
                                                              'http://sportyhl/images?marseille-monaco',
                                                              0,
                                                              'Ligue 1',
-                                                             dateparser.parse('2018-01-09'), 'normal'))
+                                                             TIME_40_MINUTES_EARLIER, 'normal'))
 
     latest_highlight_manager.add_highlight(SportyHLHighlight('http://sportyhl/marseille-monaco-2',
                                                              'Marseille vs Monaco',
                                                              'http://sportyhl/images?marseille-monaco',
                                                              0,
                                                              'Ligue 1',
-                                                             dateparser.parse('2018-01-09'), 'normal'), sent=True)
+                                                             TIME_3_DAYS_EARLIER, 'normal'), sent=True)
+
+    latest_highlight_manager.add_highlight(FootyroomHighlight('http://footyroom/swansea-barcelona',
+                                                             'Swansea 0 - 3 Barcelona',
+                                                             'http://footyroom/images?swansea-barcelona',
+                                                             0,
+                                                             'Champions League',
+                                                              TIME_3_DAYS_EARLIER))

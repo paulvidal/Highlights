@@ -150,8 +150,7 @@ def get_suggestion_for_registrations(registrations):
 
     # Add default suggestions
     suggestions += ['psg', 'arsenal', 'champions league', 'barcelona', 'manchester united', 'europa league',
-                    'world cup', 'bayern munich', 'real madrid', 'liverpool']
-    suggestions = ['world cup'] + suggestions
+                    'bayern munich', 'real madrid', 'liverpool']
 
     # Remove teams already in registrations
     suggestions = [s for s in suggestions if s not in registrations]

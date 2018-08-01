@@ -137,6 +137,10 @@ SUGGESTIONS = {
 }
 
 
+def get_default_suggestion_for_registration():
+    return get_suggestion_for_registrations([])
+
+
 def get_suggestion_for_registrations(registrations):
     # shuffle registrations
     random.shuffle(registrations)

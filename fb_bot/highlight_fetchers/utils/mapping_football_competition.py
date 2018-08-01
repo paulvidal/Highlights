@@ -28,6 +28,7 @@ NAME_MAPPING = {
     'dfb pokal': 'dfb-pokal',
     'world cup 2018': 'world cup',
     'world cup highlights': 'world cup',
+    'international champions cup 2018': 'international champions cup',
 }
 
 

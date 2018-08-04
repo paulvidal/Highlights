@@ -3,6 +3,7 @@ from raven.contrib.django.raven_compat.models import client
 
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_sportyhl, fetcher_highlightsfootball, fetcher_hoofoot, fetcher_our_match
 from fb_bot.highlight_fetchers.info import sources
+from fb_bot.model_managers import scrapping_status_manager
 from highlights import settings
 
 FETCHERS = [
@@ -74,6 +75,9 @@ def get_fetching_status():
 
         if not highlights:
             scrapping_problems.append(fetcher['name'])
+
+        # Update status in database
+        scrapping_status_manager.update_scrapping_status(fetcher['name'], bool(highlights))
 
     return scrapping_problems
 

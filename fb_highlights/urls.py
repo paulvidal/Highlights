@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^debug', views.DebugPageView.as_view()),
     url(r'^privacy', views.PrivacyPageView.as_view()),
     url(r'^analytics', views.Analytics.as_view()),
+    url(r'^status', views.Status.as_view()),
 ]

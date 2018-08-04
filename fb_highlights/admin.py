@@ -2,7 +2,7 @@ import json
 
 from django.contrib import admin
 from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, HighlightStat, \
-    HighlightNotificationStat, RegistrationCompetition, FootballCompetition
+    HighlightNotificationStat, RegistrationCompetition, FootballCompetition, ScrappingStatus
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -67,6 +67,12 @@ class HighlightNotificationStatAdmin(admin.ModelAdmin):
     ordering = '-send_time',
 
 
+class ScrappingStatusAdmin(admin.ModelAdmin):
+    list_display = ScrappingStatus.to_list_display()
+    list_filter = ScrappingStatus.to_list_filter()
+    search_fields = ScrappingStatus.search_fields()
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(RegistrationTeam, RegistrationTeamAdmin)
 admin.site.register(RegistrationCompetition, RegistrationCompetitionAdmin)
@@ -76,3 +82,4 @@ admin.site.register(FootballCompetition, FootballCompetitionAdmin)
 admin.site.register(NewFootballRegistration, NewFootballRegistrationAdmin)
 admin.site.register(HighlightStat, HighlightStatAdmin)
 admin.site.register(HighlightNotificationStat, HighlightNotificationStatAdmin)
+admin.site.register(ScrappingStatus, ScrappingStatusAdmin)

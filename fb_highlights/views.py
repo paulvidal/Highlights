@@ -16,7 +16,7 @@ from fb_bot.logger import logger
 from fb_bot.messages import EMOJI_TROPHY, EMOJI_CROSS, EMOJI_SMILE, SETTING_CHANGED_MESSAGE, SHOW_BUTTON, HIDE_BUTTON
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
-    registration_competition_manager, new_football_registration_manager
+    registration_competition_manager, new_football_registration_manager, scrapping_status_manager
 from fb_bot.model_managers import registration_team_manager
 from fb_bot.model_managers.context_manager import ContextType
 from fb_highlights import view_message_helper
@@ -36,6 +36,13 @@ class Analytics(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         return TemplateResponse(request, 'analytics.html', analytics.get_highlight_analytics())
+
+
+class Status(LoginRequiredMixin, TemplateView):
+    login_url = '/admin/'
+
+    def get(self, request, *args, **kwargs):
+        return TemplateResponse(request, 'status.html', { 'sites': scrapping_status_manager.get_all_scrapping_status() })
 
 
 class PrivacyPageView(TemplateView):

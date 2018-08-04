@@ -287,3 +287,20 @@ class HighlightNotificationStat(models.Model):
 
     def get_parsed_match_time(self):
         return dateparser.parse(str(self.match_time))
+
+
+class ScrappingStatus(models.Model):
+    site_name = models.TextField(unique=True, primary_key=True)
+    ok = models.BooleanField(default=True)
+
+    @staticmethod
+    def to_list_display():
+        return ['site_name', 'ok']
+
+    @staticmethod
+    def to_list_filter():
+        return ['ok']
+
+    @staticmethod
+    def search_fields():
+        return ['site_name']

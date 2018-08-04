@@ -7,6 +7,7 @@ def format_dailymotion_link(link):
 
     return link
 
+
 def format_streamable_link(link):
     link = format_link(link)
 

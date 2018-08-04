@@ -243,7 +243,7 @@ def send_highlight(fb_ids, highlight, send_intro_message_f, see_result):
     for fb_ids_chunk in chunks(fb_ids, 40): # choose chunks of 40
 
         # Send introduction message to users
-        send_intro_message_f(fb_ids_chunk, highlight)
+        # send_intro_message_f(fb_ids_chunk, highlight)
 
         # Send the highlight to users
         messenger_manager.send_highlight_messages(fb_ids_chunk, [highlight], see_result=see_result)

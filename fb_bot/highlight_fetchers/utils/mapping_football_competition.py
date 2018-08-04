@@ -29,6 +29,9 @@ NAME_MAPPING = {
     'world cup 2018': 'world cup',
     'world cup highlights': 'world cup',
     'international champions cup 2018': 'international champions cup',
+    'trophee des champions': 'trophée des champions',
+    'dutch super cup': 'johan cruyff shield',
+    'johan cruijff shield': 'johan cruyff shield',
 }
 
 

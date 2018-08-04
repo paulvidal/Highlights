@@ -10,6 +10,7 @@ NAME_MAPPING = {
     'betis': 'real betis',
     'psg': 'paris saint germain',
     'paris': 'paris saint germain',
+    'paris st germain': 'paris saint germain',
     'paris saint-germain': 'paris saint germain',
     'paris-saint germain': 'paris saint germain',
     'paris-saint-germain': 'paris saint germain',

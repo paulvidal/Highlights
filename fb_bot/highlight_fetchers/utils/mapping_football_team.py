@@ -196,7 +196,9 @@ NAME_MAPPING = {
     'new england rev.': 'new england rev',
     'villareal': 'villarreal',
     'new york city': 'new york city	fc',
-    'goztepe sk': 'goztepe'
+    'goztepe sk': 'goztepe',
+    'blackburn': 'blackburn rovers',
+    'fc basel': 'basel'
 }
 
 

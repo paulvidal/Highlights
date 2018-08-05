@@ -304,3 +304,21 @@ class ScrappingStatus(models.Model):
     @staticmethod
     def search_fields():
         return ['site_name']
+
+
+class ScraperApiKeys(models.Model):
+    code = models.TextField(unique=True, primary_key=True)
+    last_invalid_try = models.DateTimeField()
+    valid = models.BooleanField()
+
+    @staticmethod
+    def to_list_display():
+        return ['code', 'last_invalid_try', 'valid']
+
+    @staticmethod
+    def to_list_filter():
+        return ['valid']
+
+    @staticmethod
+    def search_fields():
+        return ['code']

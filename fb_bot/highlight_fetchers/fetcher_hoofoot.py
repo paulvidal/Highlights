@@ -1,10 +1,10 @@
 import time
 
 import dateparser
-import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
+from fb_bot.highlight_fetchers.proxy import proxy
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
@@ -57,7 +57,7 @@ def fetch_highlights(num_pagelet=4, max_days_ago=7):
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
-    page = requests.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
+    page = proxy.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Extract videos
@@ -142,7 +142,7 @@ def _form_full_link(link):
 
 
 def _get_video_link(full_link):
-    page = requests.get(full_link)
+    page = proxy.get(full_link)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     for iframe in soup.find_all("iframe"):

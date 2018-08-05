@@ -43,6 +43,9 @@ class Highlight:
         """ Override method """
 
     def form_link(self, link):
+        if 'youtube' in link:
+            return link
+
         # Add only resource link, clear all arguments (to prevent duplicate links)
         return link.split('?')[0] if '?' in link else link
 

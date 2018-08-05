@@ -40,10 +40,15 @@ FETCHERS = [
 ]
 
 
+# Define scrapping exception
+class ScrappingException(Exception):
+    pass
+
+
 # General fetch method which is fail SAFE (one fetcher failing won't affect the others)
 def fetch_all_highlights():
-
     highlights = []
+    scrapping_problems = []
 
     for fetcher in FETCHERS:
         num_pagelet = fetcher['num_pagelet']
@@ -60,26 +65,20 @@ def fetch_all_highlights():
             # Report to sentry problem detected
             client.captureException()
 
-    return highlights
-
-
-# Check status of fetching
-def get_fetching_status():
-    scrapping_problems = []
-
-    for fetcher in FETCHERS:
-        num_pagelet = 1
-        max_days_ago = 1000
-
-        highlights = fetcher['fetch'](num_pagelet=num_pagelet, max_days_ago=max_days_ago)
-
         if not highlights:
             scrapping_problems.append(fetcher['name'])
 
-        # Update status in database
+        # Update scrapping status in database
         scrapping_status_manager.update_scrapping_status(fetcher['name'], bool(highlights))
 
-    return scrapping_problems
+    # Tell sentry scrapping problem occured
+    if scrapping_problems:
+        try:
+            raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))
+        except:
+            client.captureException()
+
+    return highlights
 
 
 if __name__ == "__main__":

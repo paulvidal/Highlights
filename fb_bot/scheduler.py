@@ -109,20 +109,6 @@ def check_highlight_validity():
             latest_highlight_manager.set_invalid(h)
 
 
-# Check scrapping status of websites
-
-def check_scrapping_status():
-
-    # Define scrapping exception
-    class ScrappingException(Exception):
-        pass
-
-    scrapping_problems = fetcher.get_fetching_status()
-
-    if scrapping_problems:
-        raise ScrappingException("Failed to scrape " + ', '.join(scrapping_problems))
-
-
 # Add the video info such as duration
 
 def add_videos_info():

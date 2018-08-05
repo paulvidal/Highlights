@@ -3,7 +3,7 @@ import json
 from django.contrib import admin
 from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, \
     HighlightStat, \
-    HighlightNotificationStat, RegistrationCompetition, FootballCompetition, ScrappingStatus, ScraperApiKeys
+    HighlightNotificationStat, RegistrationCompetition, FootballCompetition, ScrappingStatus, ScraperApiKey
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -75,9 +75,9 @@ class ScrappingStatusAdmin(admin.ModelAdmin):
 
 
 class ScraperApiKeysAdmin(admin.ModelAdmin):
-    list_display = ScraperApiKeys.to_list_display()
-    list_filter = ScraperApiKeys.to_list_filter()
-    search_fields = ScraperApiKeys.search_fields()
+    list_display = ScraperApiKey.to_list_display()
+    list_filter = ScraperApiKey.to_list_filter()
+    search_fields = ScraperApiKey.search_fields()
 
 
 admin.site.register(User, UserAdmin)
@@ -90,4 +90,4 @@ admin.site.register(NewFootballRegistration, NewFootballRegistrationAdmin)
 admin.site.register(HighlightStat, HighlightStatAdmin)
 admin.site.register(HighlightNotificationStat, HighlightNotificationStatAdmin)
 admin.site.register(ScrappingStatus, ScrappingStatusAdmin)
-admin.site.register(ScraperApiKeys, ScraperApiKeysAdmin)
+admin.site.register(ScraperApiKey, ScraperApiKeysAdmin)

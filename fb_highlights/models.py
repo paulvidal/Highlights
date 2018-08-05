@@ -306,7 +306,7 @@ class ScrappingStatus(models.Model):
         return ['site_name']
 
 
-class ScraperApiKeys(models.Model):
+class ScraperApiKey(models.Model):
     code = models.TextField(unique=True, primary_key=True)
     last_invalid_try = models.DateTimeField()
     valid = models.BooleanField()

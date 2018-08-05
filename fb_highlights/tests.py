@@ -776,7 +776,7 @@ class SchedulerTestCase(TestCase):
         tests_helper.set_up(TEST_USER_ID)
 
     def send_most_recent_highlights(self):
-        scheduler.send_most_recent_highlights(fetch=False)
+        scheduler.send_most_recent_highlights()
 
     def test_scheduler_send_highlight_message_for_subscribed_team(self):
         # Given

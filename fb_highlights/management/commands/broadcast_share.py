@@ -7,10 +7,10 @@ from highlights import settings
 
 class Command(CustomCommand):
 
-    def get_task_name(self):
+    def get_task_name(self, options):
         return 'broadcast message'
 
-    def run_task(self):
+    def run_task(self, options):
         all_ids = user_manager.get_all_users_id()
 
         message = messenger_manager.create_generic_attachment([

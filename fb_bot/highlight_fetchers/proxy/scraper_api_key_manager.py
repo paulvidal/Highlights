@@ -2,14 +2,14 @@ from datetime import timedelta, datetime
 
 from django.db.models import Q
 
-from fb_highlights.models import ScraperApiKeys
+from fb_highlights.models import ScraperApiKey
 
 
 def get_scraper_api_keys():
     """
     :return: Get the valid keys or the keys that had an invalid try more than 2 days ago
     """
-    return ScraperApiKeys.objects.filter(
+    return ScraperApiKey.objects.filter(
         Q(valid=True) |
         Q(last_invalid_try__lt=datetime.now() - timedelta(days=2))
     )

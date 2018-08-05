@@ -4,24 +4,18 @@ import dateparser
 import requests
 
 from fb_bot import messenger_manager, streamable_converter, ressource_checker
-from fb_bot.highlight_fetchers import fetchers
+from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager
 from fb_bot.video_providers import video_info_fetcher
 
-# Send highlights
-
 AVAILABLE_SOURCES = sources.get_available_sources()
 
 
-def send_most_recent_highlights(fetch=True):
-    highlights = []
-
-    # Fetch highlights from multiple sources
-    if fetch:
-        highlights += fetchers.fetch_all_highlights()
+def fetch_highlights(site):
+    highlights = fetcher.fetch(site)
 
     # Add new highlights
     for highlight in highlights:
@@ -40,6 +34,8 @@ def send_most_recent_highlights(fetch=True):
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
 
+
+def send_most_recent_highlights():
     # Set incomplete infos
     for h in latest_highlight_manager.get_all_highlights_from_source(sources=sources.get_sources_with_incomplete_data()):
         if h.goal_data and h.score1 and h.score2 and h.img_link:

@@ -4,8 +4,8 @@ from fb_bot import scheduler
 
 class Command(CustomCommand):
 
-    def get_task_name(self):
+    def get_task_name(self, options):
         return 'check highlight availability'
 
-    def run_task(self):
+    def run_task(self, options):
         scheduler.check_highlight_validity()

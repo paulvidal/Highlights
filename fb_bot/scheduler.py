@@ -4,7 +4,7 @@ import dateparser
 import requests
 
 from fb_bot import messenger_manager, streamable_converter, ressource_checker
-from fb_bot.highlight_fetchers import fetcher
+from fb_bot.highlight_fetchers import fetchers
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
@@ -21,7 +21,7 @@ def send_most_recent_highlights(fetch=True):
 
     # Fetch highlights from multiple sources
     if fetch:
-        highlights += fetcher.fetch_all_highlights()
+        highlights += fetchers.fetch_all_highlights()
 
     # Add new highlights
     for highlight in highlights:

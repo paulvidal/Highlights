@@ -1,5 +1,5 @@
+from fb_bot import scheduler_tasks
 from fb_highlights.management.commands.CustomCommand import CustomCommand
-from fb_bot import scheduler
 
 
 class Command(CustomCommand):
@@ -12,4 +12,4 @@ class Command(CustomCommand):
 
     def run_task(self, options):
         site = options['site_to_fetch']
-        scheduler.fetch_highlights(site)
+        scheduler_tasks.fetch_highlights(site)

@@ -1,4 +1,4 @@
-from fb_bot import scheduler
+from fb_bot import scheduler_tasks
 from fb_highlights.management.commands.CustomCommand import CustomCommand
 
 
@@ -8,5 +8,5 @@ class Command(CustomCommand):
         return 'convert videos'
 
     def run_task(self, options):
-        scheduler.create_streamable_videos()
-        scheduler.check_streamable_videos_ready()
+        scheduler_tasks.create_streamable_videos()
+        scheduler_tasks.check_streamable_videos_ready()

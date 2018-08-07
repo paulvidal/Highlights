@@ -1,5 +1,5 @@
+from fb_bot import scheduler_tasks
 from fb_highlights.management.commands.CustomCommand import CustomCommand
-from fb_bot import scheduler
 
 
 class Command(CustomCommand):
@@ -8,4 +8,4 @@ class Command(CustomCommand):
         return 'broadcast highlights'
 
     def run_task(self, options):
-        scheduler.send_most_recent_highlights()
+        scheduler_tasks.send_most_recent_highlights()

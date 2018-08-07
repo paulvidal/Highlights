@@ -2,7 +2,7 @@ import json
 
 from django.test import TestCase, Client
 
-from fb_bot import messenger_manager, scheduler
+from fb_bot import messenger_manager, scheduler_tasks
 from fb_bot.messages import *
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
 from fb_highlights import tests_helper
@@ -776,7 +776,7 @@ class SchedulerTestCase(TestCase):
         tests_helper.set_up(TEST_USER_ID)
 
     def send_most_recent_highlights(self):
-        scheduler.send_most_recent_highlights()
+        scheduler_tasks.send_most_recent_highlights()
 
     def test_scheduler_send_highlight_message_for_subscribed_team(self):
         # Given

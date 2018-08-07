@@ -282,12 +282,16 @@ def add_new_competition_to_db(highlight):
     new_football_registration_manager.add_football_registration(highlight.category, highlight.source)
 
 
-def get_unique_highlights(highlight_models):
+def get_unique_highlights(highlight_models, max_count=10):
     unique = []
 
     for h in highlight_models:
         if not get_similar_highlights(h, unique):
             unique.append(h)
+
+        # Do not get more than max_count unique highlights
+        if len(unique) >= max_count:
+            break
 
     return unique
 

@@ -178,13 +178,13 @@ def send_tutorial_highlight(fb_id, team_or_competition):
                      + latest_highlight_manager.get_highlights_for_team('spain')\
                      + latest_highlight_manager.get_highlights_for_team('france')
 
+    # Order highlights by date
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)
+
     # Eliminate duplicates
-    highlights = latest_highlight_manager.get_unique_highlights(highlights)
+    highlights = latest_highlight_manager.get_unique_highlights(highlights, max_count=1)
 
-    # Order highlights by date and take the first one
-    highlight = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[0]
-
-    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, [highlight])))
+    return send_facebook_message(fb_id, create_generic_attachment(highlights_to_json(fb_id, highlights)))
 
 
 #
@@ -476,12 +476,11 @@ def get_highlights_for_team_or_competitions(fb_id, team_or_competition, highligh
                                                    + [HELP_BUTTON,
                                                       CANCEL_BUTTON])
 
-    # Eliminate duplicates
-    # FIXME: bottleneck when fetching competition highlights (more than 500), as comaprison takes time so provokes timeout
-    highlights = latest_highlight_manager.get_unique_highlights(highlights)
+    # Order highlights by date
+    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)
 
-    # Order highlights by date and take the first 10
-    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)[:highlight_count]
+    # Eliminate duplicates
+    highlights = latest_highlight_manager.get_unique_highlights(highlights, max_count=10)
 
     # Check if user has see result activated
     see_result_setting = user_manager.get_see_result_setting(fb_id)

@@ -151,7 +151,12 @@ class MessengerBotTestCase(TestCase):
                             "content_type": "text",
                             "payload": "NO_PAYLOAD",
                             "title": "Liverpool"
-                        }
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "I'm good 👍"
+                        },
                     ],
                 }
             }
@@ -182,6 +187,85 @@ class MessengerBotTestCase(TestCase):
                 },
                 "messaging_type": "RESPONSE",
                 "message": {
+                    "text": "Tell me the name of the team or competition you want to add 🔥",
+                    "quick_replies": [
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Champions League"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Tottenham"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "England"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Premier League"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Psg"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Arsenal"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Barcelona"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Manchester United"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Europa League"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "Bayern Munich"
+                        },
+                        {
+                            "content_type": "text",
+                            "payload": "NO_PAYLOAD",
+                            "title": "I'm good 👍"
+                        },
+                    ],
+                }
+            }
+        ])
+
+    def test_adding_chelsea_adds_the_team(self):
+        # Given
+        self.send_message(TEST_USER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'add')
+        self.send_message(TEST_USER_ID, 'chelsea')
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, "I'm good 👍")
+
+        # Then
+        self.assertEqual(json_response, [
+            {
+                "recipient": {
+                    "id": str(TEST_USER_ID)
+                },
+                "messaging_type": "RESPONSE",
+                "message": {
                     "quick_replies": [
                         {
                             "title": "➕ Add",
@@ -204,11 +288,52 @@ class MessengerBotTestCase(TestCase):
             }
         ])
 
+    def test_add_multiple_teams_in_a_row(self):
+        # Given
+        self.send_message(TEST_USER_ID, 'subscriptions')
+        self.send_message(TEST_USER_ID, 'add')
+        self.send_message(TEST_USER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, 'barcelona')
+
+        # When
+        json_response = self.send_message(TEST_USER_ID, "I'm good 👍")
+
+        # Then
+        self.assertEqual(json_response, [
+            {
+                "recipient": {
+                    "id": str(TEST_USER_ID)
+                },
+                "messaging_type": "RESPONSE",
+                "message": {
+                    "quick_replies": [
+                        {
+                            "title": "➕ Add",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        },
+                        {
+                            "title": "➖ Remove",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        },
+                        {
+                            "title": "👌 Done",
+                            "payload": "NO_PAYLOAD",
+                            "content_type": "text"
+                        }
+                    ],
+                    "text": "I am currently sending you the highlights for the following ⚽ subscriptions: \n\n-> Barcelona\n-> Chelsea\n\nDo you want to ADD or REMOVE a subscription?"
+                }
+            }
+        ])
+
     def test_remove_team(self):
         # Given
         self.send_message(TEST_USER_ID, 'subscriptions')
         self.send_message(TEST_USER_ID, 'add')
         self.send_message(TEST_USER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, "I'm good 👍")
 
         # When
         json_response = self.send_message(TEST_USER_ID, 'remove')
@@ -243,6 +368,7 @@ class MessengerBotTestCase(TestCase):
         self.send_message(TEST_USER_ID, 'subscriptions')
         self.send_message(TEST_USER_ID, 'add')
         self.send_message(TEST_USER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, "I'm good 👍")
         self.send_message(TEST_USER_ID, 'remove')
 
         # When

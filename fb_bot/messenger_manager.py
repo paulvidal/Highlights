@@ -79,7 +79,7 @@ def send_add_registration_message(fb_id, suggestions_override=None):
     suggestions = registration_suggestions.get_suggestion_for_registrations(registrations) if not suggestions_override else suggestions_override
     suggestions = [s.title() for s in suggestions]
 
-    return send_facebook_message(fb_id, create_quick_text_reply_message(ADD_REGISTRATIONS_MESSAGE, suggestions))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(ADD_REGISTRATIONS_MESSAGE, suggestions + [I_M_GOOD_BUTTON]))
 
 
 def send_delete_registration_message(fb_id, registrations):
@@ -91,7 +91,7 @@ def send_recommended_registration_message(fb_id, recommended):
 
 
 def send_registration_not_found_message(fb_id):
-    return send_facebook_message(fb_id, create_quick_text_reply_message(REGISTRATION_NOT_FOUND_MESSAGE, [TRY_AGAIN_BUTTON, CANCEL_BUTTON]))
+    return send_facebook_message(fb_id, create_quick_text_reply_message(REGISTRATION_NOT_FOUND_MESSAGE, [TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON]))
 
 
 def send_registration_added_message(fb_id, team):

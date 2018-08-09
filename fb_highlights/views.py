@@ -404,7 +404,7 @@ class HighlightsBotView(generic.View):
                     # SEE RESULT SETTING
                     elif accepted_messages(message, ['see result setting', 'spoiler', 'show result', 'hide result',
                                                      'show score', 'hide score']):
-                        logger.log("SEE RESULT SETTING")
+                        logger.log("SEE RESULT SETTING", forward=True)
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)
@@ -412,7 +412,7 @@ class HighlightsBotView(generic.View):
 
                     # SHARE
                     elif accepted_messages(message, ['share', 'send to a friend']):
-                        logger.log("SHARE")
+                        logger.log("SHARE", forward=True)
 
                         response_msg.append(
                             messenger_manager.send_share_introduction_message(sender_id)
@@ -423,7 +423,7 @@ class HighlightsBotView(generic.View):
 
                     # SEARCH HIGHLIGHT OPTION
                     elif accepted_messages(message, ['search', 'search again']):
-                        logger.log("SEARCH HIGHLIGHTS")
+                        logger.log("SEARCH HIGHLIGHTS", forward=True)
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -431,7 +431,7 @@ class HighlightsBotView(generic.View):
 
                     # SEARCHING HIGHLIGHTS
                     elif context_manager.is_searching_highlights_context(sender_id):
-                        logger.log("SEARCHING HIGHLIGHTS")
+                        logger.log("SEARCHING HIGHLIGHTS", forward=True)
 
                         response_msg.append(
                             messenger_manager.send_highlight_message_for_team_or_competition(sender_id, message)
@@ -441,7 +441,7 @@ class HighlightsBotView(generic.View):
                     postback = message['postback']['payload']
 
                     if postback == 'get_started':
-                        logger.log("GET STARTED POSTBACK")
+                        logger.log("GET STARTED POSTBACK", forward=True)
 
                         user = user_manager.get_user(sender_id)
 
@@ -457,7 +457,7 @@ class HighlightsBotView(generic.View):
 
                     # SEARCH HIGHLIGHT SETTING POSTBACK
                     elif postback == 'search_highlights':
-                        logger.log("SEARCH HIGHLIGHTS POSTBACK")
+                        logger.log("SEARCH HIGHLIGHTS POSTBACK", forward=True)
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -465,7 +465,7 @@ class HighlightsBotView(generic.View):
 
                     # SUBSCRIPTION SETTING POSTBACK
                     elif postback == 'my_subscriptions':
-                        logger.log("SUBSCRIPTION SETTING POSTBACK")
+                        logger.log("SUBSCRIPTION SETTING POSTBACK", forward=True)
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
@@ -473,7 +473,7 @@ class HighlightsBotView(generic.View):
 
                     # SHARE POSTBACK
                     elif postback == 'share':
-                        logger.log("SHARE POSTBACK")
+                        logger.log("SHARE POSTBACK", forward=True)
 
                         response_msg.append(
                             messenger_manager.send_share_introduction_message(sender_id)
@@ -484,7 +484,7 @@ class HighlightsBotView(generic.View):
 
                     # SEE RESULT SETTING POSTBACK
                     elif postback == 'see_result_setting':
-                        logger.log("SEE RESULT SETTING POSTBACK")
+                        logger.log("SEE RESULT SETTING POSTBACK", forward=True)
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)

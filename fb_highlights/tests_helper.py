@@ -1,7 +1,5 @@
 from datetime import datetime, timedelta
 
-import dateparser
-
 from fb_bot import messenger_manager
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.highlight_fetchers.fetcher_hoofoot import HoofootHighlight
@@ -69,6 +67,13 @@ def fill_db(test_user_id):
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona2',
                                                             'Chelsea 0 - 2 Barcelona',
                                                             'http://hoofoot/images?chelsea-barcelona2',
+                                                            0,
+                                                            'Champions League',
+                                                            TIME_40_MINUTES_EARLIER), sent=False)
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/chelsea-barcelona3',
+                                                            'Barcelona 2 - 0 Chelsea',
+                                                            'http://hoofoot/images?chelsea-barcelona3',
                                                             0,
                                                             'Champions League',
                                                             TIME_40_MINUTES_EARLIER), sent=False)
@@ -166,3 +171,41 @@ def fill_db(test_user_id):
                                                              0,
                                                              'Champions League',
                                                               TIME_3_DAYS_EARLIER))
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-arsenal',
+                                                            'Swansea 4 - 0 Arsenal',
+                                                            'http://hoofoot/images?swansea-arsenal',
+                                                            0,
+                                                            'Premier League',
+                                                            TIME_40_MINUTES_EARLIER), sent=True)
+
+
+def fetch_test_highlights(num_pagelet, max_days_ago):
+    highlight = [
+        FootyroomHighlight(
+            'http://footyroom/chelsea-barcelona4',
+            'Barcelona 2 - 0 Chelsea',
+            'http://footyroom/images?chelsea-barcelona4',
+            0,
+            'Champions League',
+            str(TIME_40_MINUTES_EARLIER)
+        ),
+        HoofootHighlight(
+            'http://hoofoot/arsenal-liverpool2',
+            'Liverpool 4 - 0 Arsenal',
+            'http://hoofoot/images?arsenal-liverpool',
+            0,
+            'Premier League',
+            str(TIME_40_MINUTES_EARLIER)
+        ),
+        HoofootHighlight(
+            'http://hoofoot/swansea-arsenal2',
+            'Arsenal 0 - 4 Swansea',
+            'http://hoofoot/images?swansea-arsenal',
+            0,
+            'Premier League',
+            str(TIME_40_MINUTES_EARLIER)
+        ),
+    ]
+
+    return highlight

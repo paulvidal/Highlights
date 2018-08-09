@@ -108,7 +108,7 @@ def get_highlights_for_competition(competition_name):
 #
 
 
-def get_similar_sent_highlights(highlight):
+def get_inverted_teams_highlights(highlight):
     # Add team to new team if does not exists and return
     if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
         return []
@@ -116,10 +116,23 @@ def get_similar_sent_highlights(highlight):
     team1 = football_team_manager.get_football_team(highlight.team1)
     team2 = football_team_manager.get_football_team(highlight.team2)
 
-    return [h for h in LatestHighlight.objects.filter(team1=team1,
-                                                      team2=team2,
-                                                      sent=True)
-            if abs(highlight.get_parsed_time_since_added() - h.get_parsed_time_since_added()) < timedelta(days=2) ]
+    return LatestHighlight.objects.filter(team1=team2,
+                                          team2=team1,
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2))
+
+
+def get_same_highlights_sent(highlight):
+    # Add team to new team if does not exists and return
+    if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
+        return []
+
+    team1 = football_team_manager.get_football_team(highlight.team1)
+    team2 = football_team_manager.get_football_team(highlight.team2)
+
+    return LatestHighlight.objects.filter(team1=team1,
+                                          team2=team2,
+                                          sent=True,
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2))
 
 
 def get_valid_not_sent_highlights(available_sources):
@@ -218,6 +231,12 @@ def set_video_url(highlight_model, video_url):
     highlight_model.save()
 
 
+def set_teams(highlight_model, team1, team2):
+    highlight_model.team1 = team1
+    highlight_model.team2 = team2
+    highlight_model.save()
+
+
 def set_score(highlight_model, score1, score2):
     highlight_model.score1 = score1
     highlight_model.score2 = score2
@@ -237,6 +256,17 @@ def set_ready(highlight_model):
 def set_extended_type(highlight_model):
     highlight_model.type = 'extended'
     highlight_model.save()
+
+
+def swap_home_side(highlight_model):
+    temp_team = highlight_model.team1
+    temp_score = highlight_model.score1
+
+    highlight_model.team1 = highlight_model.team2
+    highlight_model.team2 = temp_team
+
+    highlight_model.score1 = highlight_model.score2
+    highlight_model.score2 = temp_score
 
 
 def convert_highlight(highlight_model, new_link, new_source):

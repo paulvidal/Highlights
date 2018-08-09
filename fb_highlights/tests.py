@@ -4,7 +4,8 @@ from django.test import TestCase, Client
 
 from fb_bot import messenger_manager, scheduler_tasks
 from fb_bot.messages import *
-from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
+from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager, \
+    latest_highlight_manager
 from fb_highlights import tests_helper
 from fb_highlights.models import LatestHighlight
 from fb_highlights.tests_helper import TIME_40_MINUTES_EARLIER, TIME_NOW, TIME_3_DAYS_EARLIER
@@ -882,6 +883,66 @@ class MessengerBotTestCase(TestCase):
         self.send_message(TEST_USER_ID, CANCEL_BUTTON)
 
 
+class FetcherTestCase(TestCase):
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        super(FetcherTestCase, cls).setUpClass()
+
+        tests_helper.class_setup()
+        tests_helper.fill_db(TEST_USER_ID)
+
+    def setUp(self):
+        self.client = Client()
+        tests_helper.set_up(TEST_USER_ID)
+
+    def fetch_highlights(self):
+        scheduler_tasks.fetch_highlights('test')
+
+    def test_highlight_inverted_home_and_away_teams_inserted_swapped_if_more_than_1_matches_different(self):
+        # Given
+
+        # When
+        self.fetch_highlights()
+
+        # Then
+        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/chelsea-barcelona4'][0]
+
+        self.assertEqual(highlight.team1.name, 'chelsea')
+        self.assertEqual(highlight.score1, 0)
+        self.assertEqual(highlight.team2.name, 'barcelona')
+        self.assertEqual(highlight.score2, 2)
+
+    def test_highlight_inverted_home_and_away_teams_inserted_not_swapped_if_only_one_other_match(self):
+        # Given
+
+        # When
+        self.fetch_highlights()
+
+        # Then
+        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://hoofoot/arsenal-liverpool2'][0]
+
+        self.assertEqual(highlight.team1.name, 'liverpool')
+        self.assertEqual(highlight.score1, 4)
+        self.assertEqual(highlight.team2.name, 'arsenal')
+        self.assertEqual(highlight.score2, 0)
+
+    def test_highlight_inverted_home_and_away_teams_inserted_swapped_if_already_sent_highlight(self):
+        # Given
+
+        # When
+        self.fetch_highlights()
+
+        # Then
+        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://hoofoot/swansea-arsenal2'][0]
+
+        self.assertEqual(highlight.team1.name, 'swansea')
+        self.assertEqual(highlight.score1, 4)
+        self.assertEqual(highlight.team2.name, 'arsenal')
+        self.assertEqual(highlight.score2, 0)
+
+
 class SchedulerTestCase(TestCase):
     maxDiff = None
 
@@ -1270,6 +1331,57 @@ class SchedulerTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             "url": "http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight",
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)
+
+    def test_scheduler_does_not_send_highlight_if_highlight_inverted_home_and_away_teams(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertNotIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Barcelona 2 - 0 Chelsea",
+                                    "subtitle": "Champions League",
+                                    "image_url": "http://hoofoot/images?chelsea-barcelona3",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=barcelona&score1=2&team2=chelsea&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=barcelona&score1=2&team2=chelsea&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight",
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=barcelona&score1=2&team2=chelsea&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
                                             "title": "Extended highlight",
                                         }
                                     ]

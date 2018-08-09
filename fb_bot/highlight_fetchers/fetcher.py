@@ -4,6 +4,7 @@ from raven.contrib.django.raven_compat.models import client
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_sportyhl, fetcher_highlightsfootball, fetcher_hoofoot, fetcher_our_match
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import scrapping_status_manager
+from fb_highlights import tests_helper
 from highlights import settings
 
 FETCHERS = {
@@ -37,6 +38,11 @@ FETCHERS = {
         'max_days_ago': 20
     },
 
+    'test': {
+        'fetch': tests_helper.fetch_test_highlights,
+        'num_pagelet': 0,
+        'max_days_ago': 0
+    }
 }
 
 

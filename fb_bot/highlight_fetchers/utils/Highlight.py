@@ -42,6 +42,16 @@ class Highlight:
     def get_source(self):
         """ Override method """
 
+    def swap_home_side(self):
+        temp_team = self.team1
+        temp_score = self.score1
+
+        self.team1 = self.team2
+        self.team2 = temp_team
+
+        self.score1 = self.score2
+        self.score2 = temp_score
+
     def form_link(self, link):
         if 'youtube' in link:
             return link

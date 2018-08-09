@@ -26,10 +26,16 @@ def fetch_highlights(site):
             # Skip if highlight already in database
             continue
 
-        sent = False
+        # Determine if highlight with teams inverted exists (Barcelona - Arsenal instead of Arsenal - Barcelona)
+        inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)
+
+        if len(inverted_highlights) > 1 or any([h.sent for h in inverted_highlights]):
+            highlight.swap_home_side()
 
         # Mark as sent if a similar highlight (same match, different provider) is in database and has already been sent
-        if latest_highlight_manager.get_similar_sent_highlights(highlight):
+        sent = False
+
+        if latest_highlight_manager.get_same_highlights_sent(highlight):
             sent = True
 
         latest_highlight_manager.add_highlight(highlight, sent=sent)
@@ -46,7 +52,7 @@ def send_most_recent_highlights():
         if not reference_highlight:
             continue
 
-        # Do not override if default image
+        # Do not override if default image for reference highlight
         if not 'nothumb' in reference_highlight.img_link and not 'default' in reference_highlight.img_link:
             latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
 
@@ -64,8 +70,14 @@ def send_most_recent_highlights():
         # Add time to make sure video is good
         if timedelta(minutes=30) < abs(today - time_since_added) < timedelta(hours=30) or highlight.priority_short > 0:
 
-            if latest_highlight_manager.get_similar_sent_highlights(highlight):
-                # prevent from sending a highlight if find any similar already sent
+            # prevent sending 2 times same highlight with inverted home and away teams
+            inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)
+
+            if any([h.sent for h in inverted_highlights]):
+                latest_highlight_manager.swap_home_side(highlight)
+
+            # prevent from sending a highlight if find the same already sent
+            if latest_highlight_manager.get_same_highlights_sent(highlight):
                 latest_highlight_manager.set_sent(highlight)
                 continue
 

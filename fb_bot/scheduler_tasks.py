@@ -187,11 +187,11 @@ def _send_highlight_to_users(highlight):
 
     user_ids_team1 = registration_team_manager.get_users_for_team(team1)
     user_ids_team2 = registration_team_manager.get_users_for_team(team2)
-    user_ids_competition = []
+    user_ids_competition = registration_competition_manager.get_users_for_competition(competition)
 
     # FIXME: stop sending champions league, europa league temporary
-    if not ((competition is 'champions league' or competition is 'europa league') and datetime.now() < datetime(2018, 9, 1)):
-        user_ids_competition = registration_competition_manager.get_users_for_competition(competition)
+    if (competition == 'europa league' or competition == 'champions league') and datetime.now() < datetime(2018, 9, 1):
+        user_ids_competition = []
 
     ids = user_ids_team1 + user_ids_team2 + user_ids_competition
     ids = list(set(ids)) # clear duplicates

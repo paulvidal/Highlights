@@ -957,6 +957,7 @@ class SchedulerTestCase(TestCase):
         registration_team_manager.add_team(TEST_USER_ID, "barcelona")
         registration_competition_manager.add_competition(TEST_USER_ID, "premier league")
         registration_competition_manager.add_competition(TEST_USER_ID, "ligue 1")
+        registration_competition_manager.add_competition(TEST_USER_ID, "europa league")
 
     def setUp(self):
         self.client = Client()
@@ -1535,6 +1536,57 @@ class SchedulerTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             "url": "http://localhost:8000/highlight?team1=swansea&score1=0&team2=barcelona&score2=3&date=" + str(TIME_3_DAYS_EARLIER.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
+                                            "title": "Extended highlight"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }, messages)
+
+    def test_do_not_send_champions_league(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+
+        self.assertNotIn(
+            {
+                'recipient': {
+                    'id': str(TEST_USER_ID)
+                },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+                "message": {
+                    "attachment": {
+                        "type": "template",
+                        "payload": {
+                            "template_type": "generic",
+                            "elements": [
+                                {
+                                    "title": "Swansea 2 - 0 Liverpool",
+                                    "subtitle": "Europa League",
+                                    "image_url": "http://hoofoot/images?swansea-liverpool",
+                                    "default_action": {
+                                        "type": "web_url",
+                                        "messenger_extensions": "false",
+                                        "webview_height_ratio": "full",
+                                        "url": "http://localhost:8000/highlight?team1=swansea&score1=2&team2=liverpool&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=short&user_id=" + str(TEST_USER_ID)
+                                    },
+                                    "buttons": [
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=swansea&score1=2&team2=liverpool&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=short&user_id=" + str(TEST_USER_ID),
+                                            "title": "Short highlight"
+                                        },
+                                        {
+                                            "type": "web_url",
+                                            "url": "http://localhost:8000/highlight?team1=swansea&score1=2&team2=liverpool&score2=0&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
                                             "title": "Extended highlight"
                                         }
                                     ]

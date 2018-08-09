@@ -53,6 +53,7 @@ def fill_db(test_user_id):
     # Add competitions
     football_competition_manager.add_football_competition('ligue 1')
     football_competition_manager.add_football_competition('champions league')
+    football_competition_manager.add_football_competition('europa league')
     football_competition_manager.add_football_competition('premier league')
     football_competition_manager.add_football_competition('la liga')
 
@@ -178,6 +179,13 @@ def fill_db(test_user_id):
                                                             0,
                                                             'Premier League',
                                                             TIME_40_MINUTES_EARLIER), sent=True)
+
+    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-liverpool',
+                                                            'Swansea 2 - 0 Liverpool',
+                                                            'http://hoofoot/images?swansea-liverpool',
+                                                            0,
+                                                            'Europa League',
+                                                            TIME_40_MINUTES_EARLIER))
 
 
 def fetch_test_highlights(num_pagelet, max_days_ago):

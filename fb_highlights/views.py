@@ -238,7 +238,7 @@ class HighlightsBotView(generic.View):
 
                     # SEE RESULT CHANGE SETTING
                     elif context_manager.is_see_result_setting_context(sender_id):
-                        logger.log("SEE RESULT CHANGE SETTING")
+                        logger.log("SEE RESULT CHANGE SETTING", forward=True)
 
                         if text in [SHOW_BUTTON, HIDE_BUTTON]:
                             user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
@@ -257,14 +257,6 @@ class HighlightsBotView(generic.View):
                             response_msg.append(
                                 messenger_manager.send_see_result_setting(sender_id)
                             )
-
-                    # SUBSCRIPTION SETTING
-                    elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification']):
-                        logger.log("SUBSCRIPTION SETTING")
-
-                        response_msg.append(
-                            view_message_helper.send_subscriptions_settings(sender_id)
-                        )
 
                     # ADD REGISTRATION SETTING
                     elif accepted_messages(message, ['add']) and context_manager.is_notifications_setting_context(sender_id):
@@ -400,6 +392,14 @@ class HighlightsBotView(generic.View):
                             response_msg.append(
                                 messenger_manager.send_registration_to_delete_not_found_message(sender_id, registrations)
                             )
+
+                    # SUBSCRIPTION SETTING
+                    elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification']):
+                        logger.log("SUBSCRIPTION SETTING", forward=True)
+
+                        response_msg.append(
+                            view_message_helper.send_subscriptions_settings(sender_id)
+                        )
 
                     # SEE RESULT SETTING
                     elif accepted_messages(message, ['see result setting', 'spoiler', 'show result', 'hide result',

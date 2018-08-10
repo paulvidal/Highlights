@@ -134,7 +134,7 @@ class HighlightsBotView(generic.View):
 
                     # Special replies
                     # TODO: remove at some point
-                    if message == EMOJI_ADD + ' subscribe ':
+                    if message == EMOJI_ADD + ' subscribe':
                         logger.log_for_user("SUBSCRIBE REPLY", sender_id, forward=True)
 
                         context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)

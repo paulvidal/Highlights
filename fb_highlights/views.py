@@ -13,8 +13,8 @@ from django.views.generic import TemplateView
 import fb_bot.messenger_manager as messenger_manager
 from fb_bot import language, analytics
 from fb_bot.logger import logger
-from fb_bot.messages import EMOJI_TROPHY, EMOJI_CROSS, EMOJI_SMILE, SETTING_CHANGED_MESSAGE, SHOW_BUTTON, HIDE_BUTTON, \
-    OTHER_BUTTON, TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON
+from fb_bot.messages import EMOJI_CROSS, EMOJI_SMILE, SHOW_BUTTON, HIDE_BUTTON, \
+    OTHER_BUTTON, TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON, EMOJI_ADD
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
     registration_competition_manager, new_football_registration_manager, scrapping_status_manager
@@ -100,15 +100,15 @@ class HighlightsBotView(generic.View):
 
                     # Special replies
                     # TODO: remove at some point
-                    if message == 'subscribe ' + EMOJI_TROPHY:
-                        logger.log_for_user("ADD WORLD CUP", sender_id, forward=True)
+                    if message == EMOJI_ADD + ' add premier league':
+                        logger.log_for_user("ADD PREMIER LEAGUE REPLY", sender_id, forward=True)
 
                         context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
 
-                        registration_competition_manager.add_competition(sender_id, 'world cup')
+                        registration_competition_manager.add_competition(sender_id, 'premier league')
 
                         response_msg.append(
-                            messenger_manager.send_registration_added_message(sender_id, 'World Cup ' + EMOJI_TROPHY)
+                            messenger_manager.send_registration_added_message(sender_id, 'Premier League')
                         )
 
                         response_msg.append(
@@ -117,7 +117,35 @@ class HighlightsBotView(generic.View):
 
                     # Special replies
                     # TODO: remove at some point
-                    elif message == 'no thanks ' + EMOJI_CROSS:
+                    if message == EMOJI_ADD + ' add ligue 1':
+                        logger.log_for_user("ADD LIGUE 1 REPLY", sender_id, forward=True)
+
+                        context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
+
+                        registration_competition_manager.add_competition(sender_id, 'ligue 1')
+
+                        response_msg.append(
+                            messenger_manager.send_registration_added_message(sender_id, 'Ligue 1')
+                        )
+
+                        response_msg.append(
+                            view_message_helper.send_subscriptions_settings(sender_id)
+                        )
+
+                    # Special replies
+                    # TODO: remove at some point
+                    if message == EMOJI_ADD + ' subscribe ':
+                        logger.log_for_user("SUBSCRIBE REPLY", sender_id, forward=True)
+
+                        context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
+
+                        response_msg.append(
+                            view_message_helper.send_subscriptions_settings(sender_id)
+                        )
+
+                    # Special replies
+                    # TODO: remove at some point
+                    elif message == EMOJI_CROSS + ' no thanks':
                         logger.log_for_user("NO THANKS WORLD CUP", sender_id, forward=True)
 
                         response_msg.append(

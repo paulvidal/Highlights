@@ -14,26 +14,26 @@ class Command(CustomCommand):
     def run_task(self, options):
         all_ids = user_manager.get_all_users_id()
 
-        ids_subscribed_to_world_cup = registration_competition_manager.get_users_for_competition('world cup')
-        ids_not_subscribed_to_world_cup = [id for id in all_ids if id not in ids_subscribed_to_world_cup]
-
-        text = EMOJI_FIRE + " WORLD CUP BEGINS TODAY! " + EMOJI_FIRE \
-            + '\n\n' + "Subscribe to the competition to not miss a single match!"
+        text = EMOJI_FIRE + " FOOTBALL IS BACK " + EMOJI_FIRE \
+               + '\n\n' + "Thanks god! After a wild world cup " + EMOJI_TROPHY + ", Premier league and Ligue 1 START AGAIN tonight!" \
+               + '\n\n' + "Manchester United - Leicester" \
+               + '\n'   + "Marseille - Toulouse" \
+               + '\n\n' + "Do not forget to subscribe to your favourite teams to get the highlights!"
 
         messages = []
 
-        # image asset id
-        asset_id = 224641178132304 if settings.is_prod() else 1967392230174065
-
-        messages.append(
-            messenger_manager.create_image_attachment_from_saved_asset(asset_id)
-        )
+        # # image asset id
+        # asset_id = 224641178132304 if settings.is_prod() else 1967392230174065
+        #
+        # messages.append(
+        #     messenger_manager.create_image_attachment_from_saved_asset(asset_id)
+        # )
 
         messages.append(
             messenger_manager.create_quick_text_reply_message(
                 text,
-                ['Subscribe ' + EMOJI_TROPHY, 'No thanks ' + EMOJI_CROSS]
+                [EMOJI_ADD + ' Subscribe ', EMOJI_ADD + ' Add Premier League ', EMOJI_ADD + ' Add Ligue 1 ', EMOJI_CROSS + ' No thanks']
             )
         )
 
-        messenger_manager.send_batch_multiple_facebook_messages(ids_not_subscribed_to_world_cup, messages)
+        messenger_manager.send_batch_multiple_facebook_messages(all_ids, messages)

@@ -32,7 +32,7 @@ class Command(CustomCommand):
         messages.append(
             messenger_manager.create_quick_text_reply_message(
                 text,
-                [EMOJI_ADD + ' Subscribe', EMOJI_ADD + ' Add Premier League', EMOJI_ADD + ' Add Ligue 1 ', EMOJI_CROSS + ' No thanks']
+                [EMOJI_ADD + ' Subscribe', EMOJI_ADD + ' Add Premier League', EMOJI_ADD + ' Add Ligue 1', EMOJI_CROSS + ' No thanks']
             )
         )
 

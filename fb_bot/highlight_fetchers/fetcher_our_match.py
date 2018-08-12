@@ -196,7 +196,7 @@ def _get_video_links(soup):
 
             for i in range(len(types)):
 
-                for accepted in ['extended highlights', 'highlights', 'short', 'alternative player', 'short highlights']:
+                for accepted in ['motd', 'extended highlights', 'highlights', 'short', 'alternative player', 'short highlights']:
                     # Do distance to be more robust against site typing errors
                     if nltk.edit_distance(types[i].lower(), accepted) <= 2:
 
@@ -205,8 +205,10 @@ def _get_video_links(soup):
 
                         if accepted in ['extended highlights']:
                             type = 'extended'
-                        elif accepted in ['highlights', 'short', 'short highlights']:
+                        elif accepted in ['motd', 'highlights']:
                             type = 'normal'
+                        elif accepted in ['short', 'short highlights']:
+                            type = 'short'
                         elif accepted in ['alternative player']:
                             type = previous_type
 

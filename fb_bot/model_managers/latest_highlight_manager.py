@@ -66,7 +66,7 @@ def get_highlights(team1, score1, team2, score2, date):
 # searching highlight to show when user makes a search for a team
 def get_highlights_for_team(team_name):
     if not has_team(team_name):
-        return None
+        return []
 
     team = football_team_manager.get_football_team(team_name)
 
@@ -91,7 +91,7 @@ def get_highlights_for_team(team_name):
 # searching highlight to show when user makes a search for a team
 def get_highlights_for_competition(competition_name):
     if not has_competition(competition_name):
-        return None
+        return []
 
     competition = football_competition_manager.get_football_competition(competition_name)
 

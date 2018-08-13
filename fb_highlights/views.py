@@ -194,71 +194,77 @@ class HighlightsBotView(generic.View):
                     elif context_manager.is_tutorial_context(sender_id):
                         logger.log("TUTORIAL ADD REGISTRATION")
 
-                        registration_to_add = message
+                        message = message
 
                         # Check if team exists, make a recommendation if no teams
-                        if registration_to_add == 'other':
+                        if message == 'other':
 
                             response_msg.append(
                                 manager_response.send_getting_started_message_2(sender_id)
                             )
 
-                        elif football_team_manager.has_football_team(registration_to_add):
+                        elif football_team_manager.has_football_team(message):
                             # Does team exist check
 
-                            registration_team_manager.add_team(sender_id, registration_to_add)
+                            registration_team_manager.add_team(sender_id, message)
 
                             response_msg.append(
                                 manager_highlights.send_tutorial_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                manager_highlights.send_tutorial_highlight(sender_id, registration_to_add)
+                                manager_highlights.send_highlights_for_team_or_competition(sender_id,
+                                                                                           message,
+                                                                                           highlight_count=1,
+                                                                                           default_teams=['psg', 'barcelona', 'real madrid', 'spain', 'france'])
                             )
 
                             response_msg.append(
                                 view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
-                        elif football_competition_manager.has_football_competition(registration_to_add):
+                        elif football_competition_manager.has_football_competition(message):
                             # Does competition exist check
 
-                            registration_competition_manager.add_competition(sender_id, registration_to_add)
+                            registration_competition_manager.add_competition(sender_id, message)
 
                             response_msg.append(
                                 manager_highlights.send_tutorial_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                manager_highlights.send_tutorial_highlight(sender_id, registration_to_add)
+                                manager_highlights.send_highlights_for_team_or_competition(sender_id,
+                                                                                           message,
+                                                                                           highlight_count=1,
+                                                                                           default_teams=['psg', 'barcelona', 'real madrid', 'spain', 'france'])
                             )
 
                             response_msg.append(
                                 view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
-                        elif football_team_manager.similar_football_team_names(registration_to_add) \
-                            + football_competition_manager.similar_football_competition_names(registration_to_add):
+                        elif football_team_manager.similar_football_team_names(message) \
+                            + football_competition_manager.similar_football_competition_names(message):
                             # Registration recommendation
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user')
 
-                            recommendations = football_team_manager.similar_football_team_names(registration_to_add) \
-                                              + football_competition_manager.similar_football_competition_names(registration_to_add)
+                            recommendations = football_team_manager.similar_football_team_names(message) \
+                                              + football_competition_manager.similar_football_competition_names(message)
 
                             # Format recommendation names
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
                             response_msg.append(
-                                manager_highlights.send_recommended_team_tutorial_message(sender_id, recommendations)
+                                manager_highlights.send_recommended_team_or_competition_tutorial_message(sender_id, recommendations)
                             )
 
                         else:
                             # No team or recommendation found
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user')
 
                             response_msg.append(
                                 manager_highlights.send_team_not_found_tutorial_message(sender_id)
@@ -314,24 +320,24 @@ class HighlightsBotView(generic.View):
                             or context_manager.is_notifications_setting_context(sender_id):
                         logger.log("ADDING REGISTRATION")
 
-                        registration_to_add = message
+                        message = message
 
                         # Check if registration exists, make a recommendation if no registration
-                        if registration_to_add == OTHER_BUTTON.lower() or registration_to_add == TRY_AGAIN_BUTTON.lower():
+                        if message == OTHER_BUTTON.lower() or message == TRY_AGAIN_BUTTON.lower():
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             response_msg.append(
                                 manager_response.send_add_registration_message(sender_id)
                             )
 
-                        elif accepted_messages(registration_to_add, [I_M_GOOD_BUTTON.lower(), 'stop', 'done', 'good']):
+                        elif accepted_messages(message, [I_M_GOOD_BUTTON.lower(), 'stop', 'done', 'good']):
                             response_msg.append(
                                 view_message_helper.send_subscriptions_settings(sender_id)
                             )
 
-                        elif football_team_manager.has_football_team(registration_to_add):
+                        elif football_team_manager.has_football_team(message):
                             # Does team exist check
-                            registration_team_manager.add_team(sender_id, registration_to_add)
+                            registration_team_manager.add_team(sender_id, message)
 
                             response_msg.append(
                                 manager_response.send_registration_added_message(sender_id, text)
@@ -341,9 +347,9 @@ class HighlightsBotView(generic.View):
                                 manager_response.send_add_registration_message(sender_id)
                             )
 
-                        elif football_competition_manager.has_football_competition(registration_to_add):
+                        elif football_competition_manager.has_football_competition(message):
                             # Does competition exist check
-                            registration_competition_manager.add_competition(sender_id, registration_to_add)
+                            registration_competition_manager.add_competition(sender_id, message)
 
                             response_msg.append(
                                 manager_response.send_registration_added_message(sender_id, text)
@@ -353,16 +359,16 @@ class HighlightsBotView(generic.View):
                                 manager_response.send_add_registration_message(sender_id)
                             )
 
-                        elif football_team_manager.similar_football_team_names(registration_to_add) or \
-                                football_competition_manager.similar_football_competition_names(registration_to_add):
+                        elif football_team_manager.similar_football_team_names(message) or \
+                                football_competition_manager.similar_football_competition_names(message):
                             # Registration recommendation
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user')
 
-                            recommendations = football_team_manager.similar_football_team_names(registration_to_add)\
-                                              + football_competition_manager.similar_football_competition_names(registration_to_add)
+                            recommendations = football_team_manager.similar_football_team_names(message)\
+                                              + football_competition_manager.similar_football_competition_names(message)
 
                             # Format recommendation names
                             recommendations = [recommendation.title() for recommendation in recommendations]
@@ -376,7 +382,7 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(registration_to_add, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user')
 
                             response_msg.append(
                                 manager_response.send_registration_not_found_message(sender_id)
@@ -461,9 +467,48 @@ class HighlightsBotView(generic.View):
                     elif context_manager.is_searching_highlights_context(sender_id):
                         logger.log("SEARCHING HIGHLIGHTS", forward=True)
 
-                        response_msg.append(
-                            manager_highlights.send_highlight_message_for_team_or_competition(sender_id, message)
-                        )
+                        team_or_competition = message
+
+                        if football_team_manager.has_football_team(team_or_competition) \
+                                or football_competition_manager.has_football_competition(team_or_competition):
+                            # Team or competition found
+
+                            response_msg.append(
+                                manager_highlights.send_highlights_for_team_or_competition(sender_id, team_or_competition)
+                            )
+
+                        elif football_team_manager.similar_football_team_names(team_or_competition) \
+                                + football_competition_manager.similar_football_competition_names(team_or_competition):
+                            # Recommendation found
+
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(team_or_competition, 'user')
+
+                            recommendations = football_team_manager.similar_football_team_names(team_or_competition) \
+                                              + football_competition_manager.similar_football_competition_names(team_or_competition)
+
+                            if len(recommendations) == 1:
+                                response_msg.append(
+                                    manager_highlights.send_highlights_for_team_or_competition(sender_id, recommendations[0])
+                                )
+
+                            else:
+                                # Format recommendation names
+                                recommendations = [recommendation.title() for recommendation in recommendations]
+
+                                response_msg.append(
+                                    manager_highlights.send_recommended_team_or_competition_message(sender_id, recommendations)
+                                )
+
+                        else:
+                            # No team or recommendation found
+
+                            # Register wrong search
+                            new_football_registration_manager.add_football_registration(team_or_competition, 'user')
+
+                            response_msg.append(
+                                manager_highlights.send_team_not_found_tutorial_message(sender_id)
+                            )
 
                 if 'postback' in message:
                     postback = message['postback']['payload']

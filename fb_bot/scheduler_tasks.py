@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 import dateparser
 import requests
 
-from fb_bot import messenger_manager, streamable_converter, ressource_checker
+from fb_bot.messenger_manager import manager_scheduler
+from fb_bot import streamable_converter, ressource_checker
 from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
@@ -221,11 +222,11 @@ def _send_highlight_to_users(highlight):
 
     user_ids_see_result_disable = [_id for _id in ids if _id in user_ids_see_result_disable]
 
-    _send_highlight(win_ids, highlight, messenger_manager.send_highlight_won_introduction_message, see_result=True)
-    _send_highlight(draw_ids, highlight, messenger_manager.send_highlight_draw_introduction_message, see_result=True)
-    _send_highlight(lose_ids, highlight, messenger_manager.send_highlight_lost_introduction_message, see_result=True)
+    _send_highlight(win_ids, highlight, manager_scheduler.send_highlight_won_introduction_message, see_result=True)
+    _send_highlight(draw_ids, highlight, manager_scheduler.send_highlight_draw_introduction_message, see_result=True)
+    _send_highlight(lose_ids, highlight, manager_scheduler.send_highlight_lost_introduction_message, see_result=True)
 
-    _send_highlight(user_ids_see_result_disable, highlight, messenger_manager.send_highlight_neutral_introduction_message, see_result=False)
+    _send_highlight(user_ids_see_result_disable, highlight, manager_scheduler.send_highlight_neutral_introduction_message, see_result=False)
 
     # TODO: do batch update on database
     for user_id in ids:
@@ -244,11 +245,11 @@ def _send_highlight(fb_ids, highlight, send_intro_message_f, see_result):
         # send_intro_message_f(fb_ids_chunk, highlight)
 
         # Send the highlight to users
-        messenger_manager.send_highlight_messages(fb_ids_chunk, [highlight], see_result=see_result)
+        manager_scheduler.send_highlight_messages(fb_ids_chunk, [highlight], see_result=see_result)
 
         # Send the score to users
         if see_result:
-            messenger_manager.send_score(fb_ids_chunk, highlight)
+            manager_scheduler.send_score(fb_ids_chunk, highlight)
 
 
 def _chunks(l, n):

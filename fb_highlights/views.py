@@ -10,11 +10,11 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-import fb_bot.messenger_manager as messenger_manager
 from fb_bot import language, analytics
 from fb_bot.logger import logger
 from fb_bot.messages import EMOJI_CROSS, EMOJI_SMILE, SHOW_BUTTON, HIDE_BUTTON, \
     OTHER_BUTTON, TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON, EMOJI_ADD
+from fb_bot.messenger_manager import manager_response, manager_highlights, sender, manager_share
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
     registration_competition_manager, new_football_registration_manager, scrapping_status_manager
@@ -96,7 +96,7 @@ class HighlightsBotView(generic.View):
                         continue
 
                     # Send typing event - so user is aware received message
-                    messenger_manager.send_typing(sender_id)
+                    sender.send_typing(sender_id)
 
                     # Special replies
                     # TODO: remove at some point
@@ -108,7 +108,7 @@ class HighlightsBotView(generic.View):
                         registration_competition_manager.add_competition(sender_id, 'premier league')
 
                         response_msg.append(
-                            messenger_manager.send_registration_added_message(sender_id, 'Premier League')
+                            manager_response.send_registration_added_message(sender_id, 'Premier League')
                         )
 
                         response_msg.append(
@@ -125,7 +125,7 @@ class HighlightsBotView(generic.View):
                         registration_competition_manager.add_competition(sender_id, 'ligue 1')
 
                         response_msg.append(
-                            messenger_manager.send_registration_added_message(sender_id, 'Ligue 1')
+                            manager_response.send_registration_added_message(sender_id, 'Ligue 1')
                         )
 
                         response_msg.append(
@@ -149,8 +149,8 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("NO THANKS WORLD CUP", sender_id, forward=True)
 
                         response_msg.append(
-                            messenger_manager.send_facebook_message(
-                                sender_id, messenger_manager.create_message("Another time! " + EMOJI_SMILE))
+                            manager_response.send_facebook_message(
+                                sender_id, manager_response.create_message("Another time! " + EMOJI_SMILE))
                         )
 
                     # Cancel quick reply
@@ -159,7 +159,7 @@ class HighlightsBotView(generic.View):
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
-                            messenger_manager.send_cancel_message(sender_id)
+                            manager_response.send_cancel_message(sender_id)
                         )
 
                     # Done quick reply
@@ -168,7 +168,7 @@ class HighlightsBotView(generic.View):
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
-                            messenger_manager.send_done_message(sender_id)
+                            manager_response.send_done_message(sender_id)
                         )
 
                     # HELP
@@ -177,7 +177,7 @@ class HighlightsBotView(generic.View):
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
-                            messenger_manager.send_help_message(sender_id)
+                            manager_response.send_help_message(sender_id)
                         )
 
                     elif accepted_messages(message, ['thank you', 'thanks', 'cheers', 'merci', 'cimer',
@@ -186,7 +186,7 @@ class HighlightsBotView(generic.View):
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
-                            messenger_manager.send_thank_you_message(sender_id)
+                            manager_response.send_thank_you_message(sender_id)
                         )
 
                     # TUTORIAL CONTEXT
@@ -200,7 +200,7 @@ class HighlightsBotView(generic.View):
                         if registration_to_add == 'other':
 
                             response_msg.append(
-                                messenger_manager.send_getting_started_message_2(sender_id)
+                                manager_response.send_getting_started_message_2(sender_id)
                             )
 
                         elif football_team_manager.has_football_team(registration_to_add):
@@ -209,11 +209,11 @@ class HighlightsBotView(generic.View):
                             registration_team_manager.add_team(sender_id, registration_to_add)
 
                             response_msg.append(
-                                messenger_manager.send_tutorial_message(sender_id, text)
+                                manager_highlights.send_tutorial_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                messenger_manager.send_tutorial_highlight(sender_id, registration_to_add)
+                                manager_highlights.send_tutorial_highlight(sender_id, registration_to_add)
                             )
 
                             response_msg.append(
@@ -226,11 +226,11 @@ class HighlightsBotView(generic.View):
                             registration_competition_manager.add_competition(sender_id, registration_to_add)
 
                             response_msg.append(
-                                messenger_manager.send_tutorial_message(sender_id, text)
+                                manager_highlights.send_tutorial_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                messenger_manager.send_tutorial_highlight(sender_id, registration_to_add)
+                                manager_highlights.send_tutorial_highlight(sender_id, registration_to_add)
                             )
 
                             response_msg.append(
@@ -251,7 +251,7 @@ class HighlightsBotView(generic.View):
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
                             response_msg.append(
-                                messenger_manager.send_recommended_team_tutorial_message(sender_id, recommendations)
+                                manager_highlights.send_recommended_team_tutorial_message(sender_id, recommendations)
                             )
 
                         else:
@@ -261,7 +261,7 @@ class HighlightsBotView(generic.View):
                             new_football_registration_manager.add_football_registration(registration_to_add, 'user')
 
                             response_msg.append(
-                                messenger_manager.send_team_not_found_tutorial_message(sender_id)
+                                manager_highlights.send_team_not_found_tutorial_message(sender_id)
                             )
 
                     # SEE RESULT CHANGE SETTING
@@ -272,18 +272,18 @@ class HighlightsBotView(generic.View):
                             user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
 
                             response_msg.append(
-                                messenger_manager.send_setting_changed(sender_id)
+                                manager_response.send_setting_changed(sender_id)
                             )
 
                             context_manager.set_default_context(sender_id)
 
                         else:
                             response_msg.append(
-                                messenger_manager.send_setting_invalid(sender_id)
+                                manager_response.send_setting_invalid(sender_id)
                             )
 
                             response_msg.append(
-                                messenger_manager.send_see_result_setting(sender_id)
+                                manager_response.send_see_result_setting(sender_id)
                             )
 
                     # ADD REGISTRATION SETTING
@@ -293,7 +293,7 @@ class HighlightsBotView(generic.View):
                         context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                         response_msg.append(
-                            messenger_manager.send_add_registration_message(sender_id)
+                            manager_response.send_add_registration_message(sender_id)
                         )
 
                     # REMOVE REGISTRATION SETTING
@@ -305,7 +305,7 @@ class HighlightsBotView(generic.View):
                         registrations = view_message_helper.get_registrations_formatted(sender_id)
 
                         response_msg.append(
-                            messenger_manager.send_delete_registration_message(sender_id, registrations)
+                            manager_response.send_delete_registration_message(sender_id, registrations)
                         )
 
                     # ADDING REGISTRATION
@@ -321,7 +321,7 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             response_msg.append(
-                                messenger_manager.send_add_registration_message(sender_id)
+                                manager_response.send_add_registration_message(sender_id)
                             )
 
                         elif accepted_messages(registration_to_add, [I_M_GOOD_BUTTON.lower(), 'stop', 'done', 'good']):
@@ -334,11 +334,11 @@ class HighlightsBotView(generic.View):
                             registration_team_manager.add_team(sender_id, registration_to_add)
 
                             response_msg.append(
-                                messenger_manager.send_registration_added_message(sender_id, text)
+                                manager_response.send_registration_added_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                messenger_manager.send_add_registration_message(sender_id)
+                                manager_response.send_add_registration_message(sender_id)
                             )
 
                         elif football_competition_manager.has_football_competition(registration_to_add):
@@ -346,11 +346,11 @@ class HighlightsBotView(generic.View):
                             registration_competition_manager.add_competition(sender_id, registration_to_add)
 
                             response_msg.append(
-                                messenger_manager.send_registration_added_message(sender_id, text)
+                                manager_response.send_registration_added_message(sender_id, text)
                             )
 
                             response_msg.append(
-                                messenger_manager.send_add_registration_message(sender_id)
+                                manager_response.send_add_registration_message(sender_id)
                             )
 
                         elif football_team_manager.similar_football_team_names(registration_to_add) or \
@@ -368,7 +368,7 @@ class HighlightsBotView(generic.View):
                             recommendations = [recommendation.title() for recommendation in recommendations]
 
                             response_msg.append(
-                                messenger_manager.send_recommended_registration_message(sender_id, recommendations)
+                                manager_response.send_recommended_registration_message(sender_id, recommendations)
                             )
 
                         else:
@@ -379,7 +379,7 @@ class HighlightsBotView(generic.View):
                             new_football_registration_manager.add_football_registration(registration_to_add, 'user')
 
                             response_msg.append(
-                                messenger_manager.send_registration_not_found_message(sender_id)
+                                manager_response.send_registration_not_found_message(sender_id)
                             )
 
                     # REMOVING REGISTRATION
@@ -392,7 +392,7 @@ class HighlightsBotView(generic.View):
                             registration_team_manager.delete_team(sender_id, registration_to_delete)
 
                             response_msg.append(
-                                messenger_manager.send_registration_deleted_message(sender_id, message)
+                                manager_response.send_registration_deleted_message(sender_id, message)
                             )
 
                             response_msg.append(
@@ -404,7 +404,7 @@ class HighlightsBotView(generic.View):
                             registration_competition_manager.delete_competition(sender_id, registration_to_delete)
 
                             response_msg.append(
-                                messenger_manager.send_registration_deleted_message(sender_id, message)
+                                manager_response.send_registration_deleted_message(sender_id, message)
                             )
 
                             response_msg.append(
@@ -418,7 +418,7 @@ class HighlightsBotView(generic.View):
                             registrations = view_message_helper.get_registrations_formatted(sender_id)
 
                             response_msg.append(
-                                messenger_manager.send_registration_to_delete_not_found_message(sender_id, registrations)
+                                manager_response.send_registration_to_delete_not_found_message(sender_id, registrations)
                             )
 
                     # SUBSCRIPTION SETTING
@@ -443,10 +443,10 @@ class HighlightsBotView(generic.View):
                         logger.log("SHARE", forward=True)
 
                         response_msg.append(
-                            messenger_manager.send_share_introduction_message(sender_id)
+                            manager_share.send_share_introduction_message(sender_id)
                         )
                         response_msg.append(
-                            messenger_manager.send_share_message(sender_id)
+                            manager_share.send_share_message(sender_id)
                         )
 
                     # SEARCH HIGHLIGHT OPTION
@@ -462,7 +462,7 @@ class HighlightsBotView(generic.View):
                         logger.log("SEARCHING HIGHLIGHTS", forward=True)
 
                         response_msg.append(
-                            messenger_manager.send_highlight_message_for_team_or_competition(sender_id, message)
+                            manager_highlights.send_highlight_message_for_team_or_competition(sender_id, message)
                         )
 
                 if 'postback' in message:
@@ -474,10 +474,10 @@ class HighlightsBotView(generic.View):
                         user = user_manager.get_user(sender_id)
 
                         response_msg.append(
-                            messenger_manager.send_getting_started_message(sender_id, user.first_name)
+                            manager_response.send_getting_started_message(sender_id, user.first_name)
                         )
                         response_msg.append(
-                            messenger_manager.send_getting_started_message_2(sender_id)
+                            manager_response.send_getting_started_message_2(sender_id)
                         )
 
                         # Set the user in tutorial context
@@ -504,10 +504,10 @@ class HighlightsBotView(generic.View):
                         logger.log("SHARE POSTBACK", forward=True)
 
                         response_msg.append(
-                            messenger_manager.send_share_introduction_message(sender_id)
+                            manager_share.send_share_introduction_message(sender_id)
                         )
                         response_msg.append(
-                            messenger_manager.send_share_message(sender_id)
+                            manager_share.send_share_message(sender_id)
                         )
 
                     # SEE RESULT SETTING POSTBACK

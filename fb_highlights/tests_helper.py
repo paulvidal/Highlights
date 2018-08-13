@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from fb_bot import messenger_manager
+from fb_bot.messenger_manager import sender
 from fb_bot.highlight_fetchers.fetcher_footyroom import FootyroomVideoHighlight, FootyroomHighlight
 from fb_bot.highlight_fetchers.fetcher_hoofoot import HoofootHighlight
 from fb_bot.highlight_fetchers.fetcher_our_match import OurMatchHighlight
@@ -18,12 +18,12 @@ TIME_3_DAYS_EARLIER = datetime.now() - timedelta(hours=72)
 
 def class_setup():
     logger.disable()
-    messenger_manager.CLIENT.disable()
+    sender.CLIENT.disable()
 
 
 def set_up(test_user_id):
     context_manager.set_default_context(test_user_id)
-    messenger_manager.CLIENT.messages = []
+    sender.CLIENT.messages = []
 
 
 # Set up test database

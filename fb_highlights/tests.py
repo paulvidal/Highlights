@@ -2,8 +2,9 @@ import json
 
 from django.test import TestCase, Client
 
-from fb_bot import messenger_manager, scheduler_tasks
+from fb_bot import scheduler_tasks
 from fb_bot.messages import *
+from fb_bot.messenger_manager import sender
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager, \
     latest_highlight_manager
 from fb_highlights import tests_helper
@@ -973,7 +974,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1024,7 +1025,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn({
             'recipient': {
@@ -1077,7 +1078,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn({
             'recipient': {
@@ -1131,7 +1132,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1183,7 +1184,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1205,7 +1206,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1230,7 +1231,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1298,7 +1299,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn(
             {
@@ -1349,7 +1350,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn(
             {
@@ -1400,7 +1401,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertIn(
             {
@@ -1451,7 +1452,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn(
             {
@@ -1502,7 +1503,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn(
             {
@@ -1553,7 +1554,7 @@ class SchedulerTestCase(TestCase):
         self.send_most_recent_highlights()
 
         # Then
-        messages = [json.loads(m) for m in messenger_manager.CLIENT.messages]
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
 
         self.assertNotIn(
             {

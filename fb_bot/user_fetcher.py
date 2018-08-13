@@ -1,14 +1,14 @@
 import requests
 
 from fb_bot.logger import logger
-from fb_bot import messenger_manager
+from fb_bot.messenger_manager import sender
 
 
 # TODO: refactor and place it in messenger manager
 def get_facebook_user_info(fb_id):
-    response = requests.get("https://graph.facebook.com/{}/{}".format(messenger_manager.GRAPH_VERSION, fb_id),
+    response = requests.get("https://graph.facebook.com/{}/{}".format(sender.GRAPH_VERSION, fb_id),
                             params={"fields": "first_name, last_name, locale, timezone",
-                                    "access_token": messenger_manager.ACCESS_TOKEN})
+                                    "access_token": sender.ACCESS_TOKEN})
 
     if response.status_code != 200:
         logger.log_for_user("Could not retrieve facebook information", fb_id, forward=True)

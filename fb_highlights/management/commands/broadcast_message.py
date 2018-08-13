@@ -1,9 +1,7 @@
+from fb_bot.messenger_manager import sender, formatter
 from fb_bot.messages import *
 from fb_bot.model_managers import user_manager
-from fb_bot.model_managers import registration_competition_manager
 from fb_highlights.management.commands.CustomCommand import CustomCommand
-from fb_bot import messenger_manager
-from highlights import settings
 
 
 class Command(CustomCommand):
@@ -26,14 +24,14 @@ class Command(CustomCommand):
         # asset_id = 224641178132304 if settings.is_prod() else 1967392230174065
         #
         # messages.append(
-        #     messenger_manager.create_image_attachment_from_saved_asset(asset_id)
+        #     formatter.create_image_attachment_from_saved_asset(asset_id)
         # )
 
         messages.append(
-            messenger_manager.create_quick_text_reply_message(
+            formatter.create_quick_text_reply_message(
                 text,
                 [EMOJI_ADD + ' Subscribe', EMOJI_ADD + ' Add Premier League', EMOJI_ADD + ' Add Ligue 1', EMOJI_CROSS + ' No thanks']
             )
         )
 
-        messenger_manager.send_batch_multiple_facebook_messages(all_ids, messages)
+        sender.send_batch_multiple_facebook_messages(all_ids, messages)

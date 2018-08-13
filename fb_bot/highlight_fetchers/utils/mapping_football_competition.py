@@ -32,6 +32,8 @@ NAME_MAPPING = {
     'trophee des champions': 'trophée des champions',
     'dutch super cup': 'johan cruyff shield',
     'johan cruijff shield': 'johan cruyff shield',
+    'dfl supercup': 'dfl-supercup',
+    'supercopa de espana': 'supercopa de españa'
 }
 
 

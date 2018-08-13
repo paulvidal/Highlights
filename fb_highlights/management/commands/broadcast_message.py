@@ -16,8 +16,8 @@ class Command(CustomCommand):
 
         text = EMOJI_FIRE + " FOOTBALL IS BACK " + EMOJI_FIRE \
                + '\n\n' + "Thanks god! After a wild world cup " + EMOJI_TROPHY + ", Premier league and Ligue 1 START AGAIN tonight!" \
-               + '\n\n' + "Manchester United - Leicester" \
-               + '\n'   + "Marseille - Toulouse" \
+               + '\n\n' + EMOJI_FOOTBALL + " Manchester United - Leicester" \
+               + '\n'   + EMOJI_FOOTBALL + " Marseille - Toulouse" \
                + '\n\n' + "Do not forget to subscribe to your favourite teams to get the highlights!"
 
         messages = []
@@ -32,7 +32,7 @@ class Command(CustomCommand):
         messages.append(
             messenger_manager.create_quick_text_reply_message(
                 text,
-                [EMOJI_ADD + ' Subscribe ', EMOJI_ADD + ' Add Premier League ', EMOJI_ADD + ' Add Ligue 1 ', EMOJI_CROSS + ' No thanks']
+                [EMOJI_ADD + ' Subscribe', EMOJI_ADD + ' Add Premier League', EMOJI_ADD + ' Add Ligue 1', EMOJI_CROSS + ' No thanks']
             )
         )
 

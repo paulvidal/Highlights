@@ -190,20 +190,13 @@ class HighlightsBotView(generic.View):
                         )
 
                     # TUTORIAL CONTEXT
-                    # FIXME: duplication between tutorial and registration team
                     elif context_manager.is_tutorial_context(sender_id):
                         logger.log("TUTORIAL ADD REGISTRATION")
 
                         message = message
 
                         # Check if team exists, make a recommendation if no teams
-                        if message == 'other':
-
-                            response_msg.append(
-                                manager_response.send_getting_started_message_2(sender_id)
-                            )
-
-                        elif football_team_manager.has_football_team(message):
+                        if football_team_manager.has_football_team(message):
                             # Does team exist check
 
                             registration_team_manager.add_team(sender_id, message)
@@ -315,7 +308,6 @@ class HighlightsBotView(generic.View):
                         )
 
                     # ADDING REGISTRATION
-                    # FIXME: duplication between tutorial and registration
                     elif context_manager.is_adding_registration_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
                         logger.log("ADDING REGISTRATION")

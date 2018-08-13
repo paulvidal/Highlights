@@ -19,8 +19,8 @@ def send_recommended_team_or_competition_message(fb_id, recommended):
 
 def send_no_highlight_found_message(fb_id):
     return send_facebook_message(fb_id, create_quick_text_reply_message(NO_HIGHLIGHTS_MESSAGE, [SEARCH_AGAIN_HIGHLIGHTS_BUTTON,
-                                                                       HELP_BUTTON,
-                                                                       CANCEL_BUTTON]))
+                                                                                                HELP_BUTTON,
+                                                                                                CANCEL_BUTTON]))
 
 
 def send_highlights_for_team_or_competition(fb_id, team_or_competition, highlight_count=10, default_teams=[]):
@@ -36,6 +36,9 @@ def send_highlights_for_team_or_competition(fb_id, team_or_competition, highligh
         # as fallback, use example such as PSG, Barcelona, Real Madrid, Spain or France
         for team in default_teams:
             highlights += latest_highlight_manager.get_highlights_for_team(team)
+
+            if highlights != []:
+                break
 
     # Order highlights by date
     highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)

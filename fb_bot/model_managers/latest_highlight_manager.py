@@ -58,7 +58,8 @@ def get_highlights(team1, score1, team2, score2, date):
                                           valid=True,
                                           ready=True,
                                           source__in=sources.get_available_sources(),
-                                          time_since_added__gt=date - timedelta(days=2))
+                                          time_since_added__gt=date - timedelta(days=2),
+                                          time_since_added__lt=date + timedelta(days=2))
 
 # Group by team1, score1, team2, score2
 
@@ -120,7 +121,8 @@ def get_inverted_teams_highlights(highlight):
 
     return LatestHighlight.objects.filter(team1=team2,
                                           team2=team1,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2))
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2),
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=2))
 
 
 def get_same_highlights_sent(highlight):
@@ -134,7 +136,8 @@ def get_same_highlights_sent(highlight):
     return LatestHighlight.objects.filter(team1=team1,
                                           team2=team2,
                                           sent=True,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2))
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2),
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=2))
 
 
 def get_valid_not_sent_highlights(available_sources):
@@ -159,7 +162,8 @@ def get_same_highlight_from_sources(highlight_model, sources):
         highlights = LatestHighlight.objects.filter(team1=highlight_model.team1,
                                                     team2=highlight_model.team2,
                                                     source=source,
-                                                    time_since_added__gt=highlight_model.get_parsed_time_since_added() - timedelta(days=2))
+                                                    time_since_added__gt=highlight_model.get_parsed_time_since_added() - timedelta(days=2),
+                                                    time_since_added__lt=highlight_model.get_parsed_time_since_added() + timedelta(days=2))
 
         if highlights:
             return highlights[0]

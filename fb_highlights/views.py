@@ -390,7 +390,7 @@ class HighlightsBotView(generic.View):
                             registration_team_manager.delete_team(sender_id, registration_to_delete)
 
                             response_msg.append(
-                                manager_response.send_registration_deleted_message(sender_id, message)
+                                manager_response.send_registration_deleted_message(sender_id, registration_to_delete.title())
                             )
 
                             response_msg.append(
@@ -402,7 +402,7 @@ class HighlightsBotView(generic.View):
                             registration_competition_manager.delete_competition(sender_id, registration_to_delete)
 
                             response_msg.append(
-                                manager_response.send_registration_deleted_message(sender_id, message)
+                                manager_response.send_registration_deleted_message(sender_id, registration_to_delete.title())
                             )
 
                             response_msg.append(

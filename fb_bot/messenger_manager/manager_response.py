@@ -85,8 +85,8 @@ def send_registration_to_delete_not_found_message(fb_id, registrations):
     return send_facebook_message(fb_id, create_quick_text_reply_message(DELETE_REGISTRATION_NOT_FOUND_MESSAGE, registrations + [CANCEL_BUTTON]))
 
 
-def send_registration_deleted_message(fb_id, teams):
-    return send_facebook_message(fb_id, create_message(REGISTRATION_DELETED_MESSAGE.format(teams)))
+def send_registration_deleted_message(fb_id, team):
+    return send_facebook_message(fb_id, create_message(REGISTRATION_DELETED_MESSAGE.format(team)))
 
 
 def send_getting_started_message(fb_id, user_name):

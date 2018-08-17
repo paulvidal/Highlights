@@ -369,7 +369,7 @@ class MessengerBotTestCase(TestCase):
         # Given
         self.send_message(TEST_USER_ID, 'subscriptions')
         self.send_message(TEST_USER_ID, 'add')
-        self.send_message(TEST_USER_ID, 'chelsea')
+        self.send_message(TEST_USER_ID, 'Chelsea')
         self.send_message(TEST_USER_ID, "I'm good 👍")
         self.send_message(TEST_USER_ID, 'remove')
 
@@ -384,7 +384,7 @@ class MessengerBotTestCase(TestCase):
                 },
                 "messaging_type": "RESPONSE",
                 "message": {
-                    "text": "chelsea successfully removed from your subscriptions 👍"
+                    "text": "Chelsea successfully removed from your subscriptions 👍"
                 }
             },
             {

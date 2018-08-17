@@ -11,6 +11,8 @@ from fb_bot.model_managers import football_team_manager, football_competition_ma
 from fb_highlights.models import User
 
 
+TEST_USER_ID = 1119096411506599
+
 TIME_NOW = datetime.now()
 TIME_40_MINUTES_EARLIER = datetime.now() - timedelta(minutes=40)
 TIME_3_DAYS_EARLIER = datetime.now() - timedelta(hours=72)

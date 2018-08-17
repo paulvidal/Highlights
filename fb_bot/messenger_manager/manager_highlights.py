@@ -24,8 +24,7 @@ def send_no_highlight_found_message(fb_id):
 
 
 def send_highlights_for_team_or_competition(fb_id, team_or_competition, highlight_count=10, default_teams=[]):
-    highlights = latest_highlight_manager.get_highlights_for_team(team_or_competition) + \
-                 latest_highlight_manager.get_highlights_for_competition(team_or_competition)
+    highlights = latest_highlight_manager.get_highlights_for_team_or_competition(team_or_competition)
 
     if highlights == []:
         # Case no highlight found for the team_or_competition
@@ -35,13 +34,10 @@ def send_highlights_for_team_or_competition(fb_id, team_or_competition, highligh
 
         # as fallback, use example such as PSG, Barcelona, Real Madrid, Spain or France
         for team in default_teams:
-            highlights += latest_highlight_manager.get_highlights_for_team(team)
+            highlights += latest_highlight_manager.get_highlights_for_team_or_competition(team)
 
             if highlights != []:
                 break
-
-    # Order highlights by date
-    highlights = sorted(highlights, key=lambda h: h.get_parsed_time_since_added(), reverse=True)
 
     # Eliminate duplicates
     highlights = latest_highlight_manager.get_unique_highlights(highlights, max_count=highlight_count)

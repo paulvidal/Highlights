@@ -78,47 +78,45 @@ def get_highlights(team1, score1, team2, score2, date):
 # Group by team1, score1, team2, score2
 
 
-# searching highlight to show when user makes a search for a team
-def get_highlights_for_team(team_name):
-    if not has_team(team_name):
-        return []
+# searching highlight to show when user makes a search for a team or competition
+def get_highlights_for_team_or_competition(team_or_competition_name):
+    highlights = []
 
-    team = football_team_manager.get_football_team(team_name)
+    # team
+    if has_team(team_or_competition_name):
+        team = football_team_manager.get_football_team(team_or_competition_name)
 
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(team1=team,
-                                                                            sent=True,
-                                                                            valid=True,
-                                                                            ready=True,
-                                                                            score1__gte=0,
-                                                                            score2__gte=0,
-                                                                            source__in=sources.get_available_sources())] \
-                 + [highlight for highlight in LatestHighlight.objects.filter(team2=team,
-                                                                              sent=True,
-                                                                              valid=True,
-                                                                              ready=True,
-                                                                              score1__gte=0,
-                                                                              score2__gte=0,
-                                                                              source__in=sources.get_available_sources())]
+        highlights = LatestHighlight.objects.filter(
+            Q(team1=team,
+              sent=True,
+              valid=True,
+              ready=True,
+              score1__gte=0,
+              score2__gte=0,
+              source__in=sources.get_available_sources()) |
+            Q(team2=team,
+              sent=True,
+              valid=True,
+              ready=True,
+              score1__gte=0,
+              score2__gte=0,
+              source__in=sources.get_available_sources()))\
+            .order_by('-time_since_added')
 
-    return highlights
+    # competition
+    elif has_competition(team_or_competition_name):
+        competition = football_competition_manager.get_football_competition(team_or_competition_name)
 
+        highlights = LatestHighlight.objects.filter(category=competition,
+                                                    sent=True,
+                                                    valid=True,
+                                                    ready=True,
+                                                    score1__gte=0,
+                                                    score2__gte=0,
+                                                    source__in=sources.get_available_sources())\
+            .order_by('-time_since_added')
 
-# searching highlight to show when user makes a search for a team
-def get_highlights_for_competition(competition_name):
-    if not has_competition(competition_name):
-        return []
-
-    competition = football_competition_manager.get_football_competition(competition_name)
-
-    highlights = [highlight for highlight in LatestHighlight.objects.filter(category=competition,
-                                                                            sent=True,
-                                                                            valid=True,
-                                                                            ready=True,
-                                                                            score1__gte=0,
-                                                                            score2__gte=0,
-                                                                            source__in=sources.get_available_sources())]
-
-    return highlights
+    return list(highlights)
 
 #
 #  Main methods for getting highlights to send

@@ -5,11 +5,13 @@ from django.test import TestCase, Client
 from fb_bot import scheduler_tasks
 from fb_bot.messenger_manager import sender
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
+from fb_bot.model_managers.latest_highlight_manager import get_highlights, get_recent_highlights_with_incomplete_infos
 from fb_highlights.models import LatestHighlight
-from fb_highlights.tests import helper
-from fb_highlights.tests.helper import TEST_USER_ID
-from fb_highlights.tests.helper import TIME_40_MINUTES_EARLIER, TIME_NOW, TIME_3_DAYS_EARLIER
-from fb_highlights.tests.utils import create_formatted_highlight_response
+from fb_highlights.tests.utils import helper
+from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in
+from fb_highlights.tests.utils.helper import TEST_USER_ID
+from fb_highlights.tests.utils.helper import TIME_40_MINUTES_EARLIER, TIME_NOW, TIME_3_DAYS_EARLIER
+from fb_highlights.tests.utils.utils import create_formatted_highlight_response
 
 
 class SchedulerTestCase(TestCase):
@@ -44,7 +46,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertIn(
+        assert_highlight_in(
             create_formatted_highlight_response(
                 team1='Burnley',
                 score1=0,
@@ -64,7 +66,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Barcelona',
                 score1=1,
@@ -87,7 +89,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertIn(
+        assert_highlight_in(
             create_formatted_highlight_response(
                 team1='Barcelona',
                 score1=1,
@@ -111,7 +113,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertIn(
+        assert_highlight_in(
             create_formatted_highlight_response(
                 team1='Arsenal',
                 score1=0,
@@ -178,7 +180,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertIn(
+        assert_highlight_in(
             create_formatted_highlight_response(
                 team1='Burnley',
                 score1=0,
@@ -216,7 +218,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Chelsea',
                 score1=0,
@@ -236,7 +238,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Barcelona',
                 score1=2,
@@ -256,14 +258,14 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertIn(
+        assert_highlight_in(
             create_formatted_highlight_response(
                 team1='Manchester City',
                 score1=0,
                 team2='Tottenham',
                 score2=0,
                 competition='Premier League',
-                image_url='http://footyroom/images?manchester_city-tottenham',
+                image_url='http://ourmatch/images?manchester_city-tottenham',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -276,7 +278,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Marseille',
                 score1=-1,
@@ -296,7 +298,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Swansea',
                 score1=0,
@@ -316,7 +318,7 @@ class SchedulerTestCase(TestCase):
         # Then
         messages = [json.loads(m) for m in sender.CLIENT.messages]
 
-        self.assertNotIn(
+        assert_highlight_not_in(
             create_formatted_highlight_response(
                 team1='Swansea',
                 score1=2,

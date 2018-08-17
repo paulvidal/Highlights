@@ -1,5 +1,7 @@
 from datetime import timedelta, datetime
 
+from django.db.models import Q
+
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
@@ -36,6 +38,18 @@ def get_not_ready_highlights():
 def has_highlight(highlight):
     return LatestHighlight.objects.filter(
         link=highlight.link
+    )
+
+
+def get_recent_highlights_with_incomplete_infos():
+    return LatestHighlight.objects.filter(
+        (
+            Q(score1=-1) |
+            Q(score2=-1) |
+            Q(goal_data=[]) |
+            ~Q(img_link__contains='ourmatch')
+        ) &
+        Q(time_since_added__gt=datetime.today() - timedelta(hours=120))
     )
 
 #

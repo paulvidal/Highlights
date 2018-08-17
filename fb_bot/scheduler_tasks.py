@@ -44,10 +44,7 @@ def fetch_highlights(site):
 
 def send_most_recent_highlights():
     # Set incomplete infos
-    for h in latest_highlight_manager.get_all_highlights_from_source(sources=sources.get_sources_with_incomplete_data()):
-        if h.goal_data and h.score1 and h.score2 and h.img_link:
-            continue
-
+    for h in latest_highlight_manager.get_recent_highlights_with_incomplete_infos():
         reference_highlight = latest_highlight_manager.get_same_highlight_from_sources(h, sources.get_sources_with_complete_data_in_order_of_priority())
 
         if not reference_highlight:

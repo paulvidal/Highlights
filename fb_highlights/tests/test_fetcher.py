@@ -2,8 +2,8 @@ from django.test import TestCase, Client
 
 from fb_bot import scheduler_tasks
 from fb_bot.model_managers import latest_highlight_manager
-from fb_highlights.tests import helper
-from fb_highlights.tests.helper import TEST_USER_ID
+from fb_highlights.tests.utils import helper
+from fb_highlights.tests.utils.helper import TEST_USER_ID
 
 
 class FetcherTestCase(TestCase):

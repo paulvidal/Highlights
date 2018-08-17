@@ -6,7 +6,7 @@ from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_sportyhl, fetch
     fetcher_our_match
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import scrapping_status_manager
-from fb_highlights.tests import helper
+from fb_highlights.tests.utils import helper
 from highlights import settings
 
 FETCHERS = {

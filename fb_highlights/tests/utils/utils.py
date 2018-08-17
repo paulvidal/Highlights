@@ -1,4 +1,5 @@
-from fb_highlights.tests.helper import TEST_USER_ID
+from fb_highlights.tests.utils.helper import TEST_USER_ID
+from urllib.parse import quote
 
 
 def create_formatted_highlight_response(team1, score1, team2, score2, competition, image_url, time, score_hidden=False):
@@ -11,9 +12,9 @@ def create_formatted_highlight_response(team1, score1, team2, score2, competitio
     )
 
     url_start = "http://localhost:8000/highlight?team1={}&score1={}&team2={}&score2={}&date=".format(
-        team1.lower(),
+        quote(team1.lower()),
         score1,
-        team2.lower(),
+        quote(team2.lower()),
         score2
     )
 

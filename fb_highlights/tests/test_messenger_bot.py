@@ -4,9 +4,9 @@ from django.test import TestCase, Client
 
 from fb_bot.messages import HIDE_BUTTON, CANCEL_BUTTON, EMOJI_HEART
 from fb_bot.model_managers import user_manager
-from fb_highlights.tests import helper
-from fb_highlights.tests.helper import TEST_USER_ID
-from fb_highlights.tests.helper import TIME_40_MINUTES_EARLIER
+from fb_highlights.tests.utils import helper
+from fb_highlights.tests.utils.helper import TEST_USER_ID
+from fb_highlights.tests.utils.helper import TIME_40_MINUTES_EARLIER
 from highlights import settings
 
 

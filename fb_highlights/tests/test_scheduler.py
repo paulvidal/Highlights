@@ -5,7 +5,6 @@ from django.test import TestCase, Client
 from fb_bot import scheduler_tasks
 from fb_bot.messenger_manager import sender
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
-from fb_bot.model_managers.latest_highlight_manager import get_highlights, get_recent_highlights_with_incomplete_infos
 from fb_highlights.models import LatestHighlight
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in

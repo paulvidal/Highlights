@@ -421,7 +421,11 @@ def get_best_highlight(highlight_models, extended=False):
 
 
 def determine_best_highlight(h1, h2, total_goals):
-    if h1.video_duration > 0 and h2.video_duration > 0:
+    if h1.source == h2.source:
+        # return most recent as might be the most complete if same source
+        return h1 if h1.get_parsed_time_since_added() > h2.get_parsed_time_since_added() else h2
+
+    elif h1.video_duration > 0 and h2.video_duration > 0:
 
         # CASE NO GOALS
         if total_goals == 0:

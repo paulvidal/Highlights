@@ -308,7 +308,7 @@ class ScrappingStatus(models.Model):
 
 class ScraperApiKey(models.Model):
     code = models.TextField(unique=True, primary_key=True)
-    last_invalid_try = models.DateTimeField(default=datetime.now())
+    last_invalid_try = models.DateTimeField(default=datetime.now)
     valid = models.BooleanField(default=True)
 
     @staticmethod

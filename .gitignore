@@ -4,3 +4,8 @@ runserver.sh
 set_env_var.sh
 set_prod_db.sh
 miscellaneous
+static/node_modules
+static/build
+static/dist
+webpack-stats-dev.json
+webpack-stats-prod.json

@@ -6,11 +6,11 @@
     <meta charset="UTF-8">
 
     <!-- Bootstrap CSS -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Boostrap JS and Jquery -->
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/js/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/js/bootstrap.min.js' %}"></script>
 
      <style>
 
@@ -70,9 +70,9 @@
 
                     <div class="container-fluid">
                         {% if ok %}
-                            <img src="{% static 'images/tick.png' %}"/>
+                            <img src="{% static 'img/tick.png' %}"/>
                         {% else %}
-                            <img src="{% static 'images/cross.png' %}"/>
+                            <img src="{% static 'img/cross.png' %}"/>
                         {% endif %}
                     </div>
 

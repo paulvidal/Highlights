@@ -46,6 +46,10 @@ class Status(LoginRequiredMixin, TemplateView):
         return TemplateResponse(request, 'status.html', { 'sites': scrapping_status_manager.get_all_scrapping_status() })
 
 
+class Index(TemplateView):
+    template_name = "index.html"
+
+
 class PrivacyPageView(TemplateView):
     template_name = "privacy.html"
 

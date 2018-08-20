@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^privacy', views.PrivacyPageView.as_view()),
     url(r'^analytics', views.Analytics.as_view()),
     url(r'^status', views.Status.as_view()),
+    url(r'^', views.Index.as_view()),
 ]

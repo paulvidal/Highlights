@@ -1,0 +1,21 @@
+{% load static %}
+{% load render_bundle from webpack_loader %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Highlights</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'lib/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Boostrap JS and Jquery -->
+    <script src="{% static 'lib/js/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <div id="index"></div>
+    {% render_bundle 'main' %}
+</body>
+</html>

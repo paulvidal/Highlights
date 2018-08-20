@@ -52,7 +52,7 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/images?burnley-barcelona',
+                image_url='http://hoofoot/img?burnley-barcelona',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -72,7 +72,7 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=1,
                 competition='Champions League',
-                image_url='http://hoofoot/images?barcelona-liverpool',
+                image_url='http://hoofoot/img?barcelona-liverpool',
                 time=TIME_NOW
             ), messages)
 
@@ -95,7 +95,7 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=1,
                 competition='Champions League',
-                image_url='http://hoofoot/images?barcelona-liverpool',
+                image_url='http://hoofoot/img?barcelona-liverpool',
                 time=TIME_NOW
             ), messages)
 
@@ -119,7 +119,7 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=4,
                 competition='Premier League',
-                image_url='http://hoofoot/images?arsenal-liverpool',
+                image_url='http://hoofoot/img?arsenal-liverpool',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -186,7 +186,7 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/images?burnley-barcelona',
+                image_url='http://hoofoot/img?burnley-barcelona',
                 time=TIME_40_MINUTES_EARLIER,
                 score_hidden=True
             ), messages)
@@ -224,7 +224,7 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/images?chelsea-barcelona2',
+                image_url='http://hoofoot/img?chelsea-barcelona2',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -244,7 +244,7 @@ class SchedulerTestCase(TestCase):
                 team2='Chelsea',
                 score2=0,
                 competition='Champions League',
-                image_url='http://hoofoot/images?chelsea-barcelona3',
+                image_url='http://hoofoot/img?chelsea-barcelona3',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -264,7 +264,7 @@ class SchedulerTestCase(TestCase):
                 team2='Tottenham',
                 score2=0,
                 competition='Premier League',
-                image_url='http://ourmatch/images?manchester_city-tottenham',
+                image_url='http://ourmatch/img?manchester_city-tottenham',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -284,7 +284,7 @@ class SchedulerTestCase(TestCase):
                 team2='Monaco',
                 score2=-1,
                 competition='Ligue 1',
-                image_url='http://sportyhl/images?marseille-monaco',
+                image_url='http://sportyhl/img?marseille-monaco',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
@@ -304,7 +304,7 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=3,
                 competition='Champions League',
-                image_url='http://footyroom/images?swansea-barcelona',
+                image_url='http://footyroom/img?swansea-barcelona',
                 time=TIME_3_DAYS_EARLIER
             ), messages)
 
@@ -324,6 +324,6 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=0,
                 competition='Europa League',
-                image_url='http://hoofoot/images?swansea-liverpool',
+                image_url='http://hoofoot/img?swansea-liverpool',
                 time=TIME_40_MINUTES_EARLIER
             ), messages)

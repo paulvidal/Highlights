@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fb_highlights',
+    'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -172,3 +173,13 @@ RAVEN_CONFIG = {
 # https://warehouse.python.org/project/whitenoise/
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+# For WEBPACK
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'build/' if DEBUG else 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'static/webpack-stats-dev.json' if DEBUG else 'static/webpack-stats-prod.json'),
+    }
+}

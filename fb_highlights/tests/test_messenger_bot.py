@@ -426,7 +426,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
                                         'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -495,7 +495,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
                                         'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -545,7 +545,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
                                         'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -597,7 +597,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     "title": "Marseille -1 - -1 Monaco",
                                     "subtitle": "Ligue 1",
-                                    "image_url": "http://sportyhl/images?marseille-monaco",
+                                    "image_url": "http://sportyhl/img?marseille-monaco",
                                     "default_action": {
                                         "type": "web_url",
                                         "messenger_extensions": "false",
@@ -740,7 +740,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'title': 'Chelsea - Barcelona',
                                     'subtitle': 'Champions League',
-                                    'image_url': 'http://hoofoot/images?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
                                         'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(
                                             TEST_USER_ID),
@@ -839,7 +839,7 @@ class MessengerBotTestCase(TestCase):
                         "elements": [{
                             "title": "Start a conversation with me!",
                             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                            "image_url": settings.BASE_URL + "/static/images/share.png",
+                            "image_url": settings.BASE_URL + "/static/img/share.png",
                             "buttons": [
                                 {
                                     "type": "element_share",
@@ -851,7 +851,7 @@ class MessengerBotTestCase(TestCase):
                                                 "elements": [{
                                                     "title": "Start a conversation with me!",
                                                     "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                                                    "image_url": settings.BASE_URL + "/static/images/share.png",
+                                                    "image_url": settings.BASE_URL + "/static/img/share.png",
                                                     "default_action": {
                                                         "type": "web_url",
                                                         "url": "https://m.me/highlightsSportBot/"

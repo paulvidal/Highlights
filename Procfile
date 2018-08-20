@@ -1,3 +1,3 @@
-release: python manage.py migrate
+release: sh heroku_release.sh
 
 web: gunicorn highlights.wsgi --workers 3

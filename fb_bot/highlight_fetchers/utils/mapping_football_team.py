@@ -198,7 +198,10 @@ NAME_MAPPING = {
     'new york city': 'new york city	fc',
     'goztepe sk': 'goztepe',
     'blackburn': 'blackburn rovers',
-    'fc basel': 'basel'
+    'fc basel': 'basel',
+    'nimes olympique': 'nimes',
+    'greuther fuerth': 'spvgg greuther fürth',
+    'frosinone calcio': 'frosinone'
 }
 
 

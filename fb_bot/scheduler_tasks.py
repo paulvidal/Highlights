@@ -10,7 +10,9 @@ from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager
+from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
 from fb_bot.video_providers import video_info_fetcher
+
 
 AVAILABLE_SOURCES = sources.get_available_sources()
 
@@ -66,7 +68,7 @@ def send_most_recent_highlights():
         time_since_added = highlight.get_parsed_time_since_added()
 
         # Add time to make sure video is good
-        if timedelta(minutes=30) < abs(today - time_since_added) < timedelta(hours=30) or highlight.priority_short > 0:
+        if timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(today - time_since_added) < timedelta(hours=30) or highlight.priority_short > 0:
 
             # prevent sending 2 times same highlight with inverted home and away teams
             inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)

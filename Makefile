@@ -14,3 +14,6 @@ clean:
 
 test:
 	source set_env_var.sh && python manage.py test
+
+explore:
+	source set_env_var.sh && python manage.py test fb_highlights.tests.test_explore.ExploreTestCase.test_explore

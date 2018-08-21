@@ -1,10 +1,12 @@
 from datetime import timedelta, datetime
 
-from django.db.models import Q
+from django.db.models import Q, Min, Sum
 
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
+
+MIN_MINUTES_TO_SEND_HIGHLIGHTS = 30
 
 
 def get_all_highlights():
@@ -51,6 +53,18 @@ def get_recent_highlights_with_incomplete_infos():
         ) &
         Q(time_since_added__gt=datetime.today() - timedelta(hours=120))
     )
+
+
+def get_recent_unique_highlights(count=10):
+    return list(LatestHighlight.objects.filter(
+        Q(priority_short__gt=0) |
+        Q(time_since_added__lt=datetime.today() - timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
+    ) \
+               .values('team1', 'score1', 'team2', 'score2', 'category') \
+               .annotate(date=Min('time_since_added'), img_link=Min('img_link'), view_count=Sum('click_count')) \
+               .order_by('-date') \
+               [:count])
+
 
 #
 #  Main methods for getting highlights to send

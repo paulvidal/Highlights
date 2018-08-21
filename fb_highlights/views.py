@@ -15,6 +15,7 @@ from fb_bot.logger import logger
 from fb_bot.messages import EMOJI_CROSS, EMOJI_SMILE, SHOW_BUTTON, HIDE_BUTTON, \
     OTHER_BUTTON, TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON, EMOJI_ADD
 from fb_bot.messenger_manager import manager_response, manager_highlights, sender, manager_share
+from fb_bot.messenger_manager.formatter_highlights import create_link
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
     registration_competition_manager, new_football_registration_manager, scrapping_status_manager
@@ -48,6 +49,31 @@ class Status(LoginRequiredMixin, TemplateView):
 
 class Index(TemplateView):
     template_name = "index.html"
+
+
+class HighlightsView(generic.View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return generic.View.dispatch(self, request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        search = request.GET.get('search')
+        count = int(request.GET.get('count')) if request.GET.get('count') else 12
+
+        if search:
+            team = search.lower()
+            # TODO: handle for search with different function
+
+        response = latest_highlight_manager.get_recent_unique_highlights(count)
+
+        for h in response:
+            h['link'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=False)
+            h['link_extended'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=True)
+
+        return JsonResponse({
+            'highlights': response
+        })
 
 
 class PrivacyPageView(TemplateView):
@@ -578,7 +604,7 @@ class HighlightRedirectView(generic.View):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        param_keys = ['team1', 'score1', 'team2', 'score2', 'date', 'user_id']
+        param_keys = ['team1', 'score1', 'team2', 'score2', 'date']
 
         for param_key in param_keys:
             if param_key not in request.GET:
@@ -589,12 +615,14 @@ class HighlightRedirectView(generic.View):
         team2 = request.GET['team2'].lower()
         score2 = int(request.GET['score2'])
         date = dateparser.parse(request.GET['date'])
-        user_id = int(request.GET['user_id'])
-
         type = request.GET.get('type')
 
+        # can be optional if coming from the web
+        user_id = int(request.GET.get('user_id')) if request.GET.get('user_id') else None
+
         # user tracking recording if user clicked on link
-        user_manager.increment_user_highlight_click_count(user_id)
+        if user_id:
+            user_manager.increment_user_highlight_click_count(user_id)
 
         highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
 
@@ -613,8 +641,9 @@ class HighlightRedirectView(generic.View):
         # link click tracking
         latest_highlight_manager.increment_click_count(highlight_to_send)
 
-        # Highlight event tracking
-        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
-        highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
+        # Highlights event tracking
+        if user_id:
+            highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
+            highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
 
         return redirect(highlight_to_send.link)

@@ -7,5 +7,4 @@ miscellaneous
 static/node_modules
 static/build
 webpack-stats-dev.json
-webpack-stats-prod.json
 test_explore.py

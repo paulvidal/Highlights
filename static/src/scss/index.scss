@@ -1,3 +1,26 @@
+// MIXINS
+
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+
+@mixin respond($media) {
+  @if $media == lg {
+    @media only screen and (min-width: $lg) { @content; }
+  }
+  @else if $media == md {
+    @media only screen and (min-width: $md) and (max-width: $lg) { @content; }
+  }
+  @else if $media == sm {
+    @media only screen and (min-width: $sm) and (max-width: $md) { @content; }
+  }
+  @else if $media == xs {
+    @media only screen and (max-width: $sm) { @content; }
+  }
+}
+
+// CSS
+
 .logo {
   height: 40px;
   width: 40px;
@@ -8,6 +31,32 @@
 
 .navbar {
   background-color: #03457a!important;
+
+  .brand {
+    @include respond(sm) {
+      justify-content: center !important;
+      margin-bottom: 10px;
+    }
+
+    @include respond(xs) {
+      justify-content: center !important;
+      margin-bottom: 10px;
+    }
+  }
+
+  .search {
+    @include respond(sm) {
+      margin-bottom: 10px;
+    }
+
+    @include respond(xs) {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.gallery {
+  padding-top: 2rem !important;
 }
 
 .highlight {

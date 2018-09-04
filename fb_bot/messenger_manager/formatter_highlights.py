@@ -25,12 +25,12 @@ def _highlight_to_json(fb_id, highlight_model, see_result):
             {
                 "type": "web_url",
                 "url": short_highlight_link,
-                "title": "Short highlight",
+                "title": "Short highlights",
             },
             {
                 "type": "web_url",
                 "url": extended_highlight_link,
-                "title": "Extended highlight",
+                "title": "Extended highlights",
             }
         ]
     }

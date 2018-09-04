@@ -439,12 +439,12 @@ class MessengerBotTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             "url": 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
-                                            "title": "Short highlight",
+                                            "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
                                             "url": 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
-                                            "title": "Extended highlight",
+                                            "title": "Extended highlights",
                                         }
                                     ]
                                 }
@@ -508,12 +508,12 @@ class MessengerBotTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
-                                            "title": "Short highlight",
+                                            "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
-                                            "title": "Extended highlight",
+                                            "title": "Extended highlights",
                                         }
                                     ]
                                 }
@@ -558,12 +558,12 @@ class MessengerBotTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
-                                            "title": "Short highlight",
+                                            "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
-                                            "title": "Extended highlight",
+                                            "title": "Extended highlights",
                                         }
                                     ]
                                 }
@@ -608,12 +608,12 @@ class MessengerBotTestCase(TestCase):
                                         {
                                             "type": "web_url",
                                             "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=short&user_id=" + str(TEST_USER_ID),
-                                            "title": "Short highlight"
+                                            "title": "Short highlights"
                                         },
                                         {
                                             "type": "web_url",
                                             "url": "http://localhost:8000/highlight?team1=marseille&score1=-1&team2=monaco&score2=-1&date=" + str(TIME_40_MINUTES_EARLIER.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
-                                            "title": "Extended highlight"
+                                            "title": "Extended highlights"
                                         }
                                     ]
                                 }
@@ -753,13 +753,13 @@ class MessengerBotTestCase(TestCase):
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(
                                                 TEST_USER_ID),
-                                            "title": "Short highlight",
+                                            "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
                                             'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(
                                                 TEST_USER_ID),
-                                            "title": "Extended highlight",
+                                            "title": "Extended highlights",
                                         }
                                     ]
                                 }

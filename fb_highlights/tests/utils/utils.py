@@ -44,12 +44,12 @@ def create_formatted_highlight_response(team1, score1, team2, score2, competitio
                                     {
                                         "type": "web_url",
                                         "url": url_start + str(time.date()) + "&type=short&user_id=" + str(TEST_USER_ID),
-                                        "title": "Short highlight",
+                                        "title": "Short highlights",
                                     },
                                     {
                                         "type": "web_url",
                                         "url": url_start + str(time.date()) + "&type=extended&user_id=" + str(TEST_USER_ID),
-                                        "title": "Extended highlight",
+                                        "title": "Extended highlights",
                                     }
                                 ]
                             }

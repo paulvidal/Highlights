@@ -11,12 +11,14 @@
     <!-- Favicons -->
     {% include "favicons.html" %}
 
+    <!-- Google Analytics -->
+    {% include "google_analytics.html" %}
+
     <!-- Library CSS -->
     <link href="{% static 'lib/css/bootstrap4.min.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
     {% render_bundle 'main' 'css' %}
-
 </head>
 <body>
 

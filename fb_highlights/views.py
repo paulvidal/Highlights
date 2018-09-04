@@ -619,12 +619,11 @@ class HighlightRedirectView(generic.View):
         date = dateparser.parse(request.GET['date'])
         type = request.GET.get('type')
 
-        # can be optional if coming from the web
-        user_id = int(request.GET.get('user_id')) if request.GET.get('user_id') else None
+        # can be optional if coming from the web, use 0 as id for users from the web
+        user_id = int(request.GET.get('user_id')) if request.GET.get('user_id') else 0
 
         # user tracking recording if user clicked on link
-        if user_id:
-            user_manager.increment_user_highlight_click_count(user_id)
+        user_manager.increment_user_highlight_click_count(user_id)
 
         highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
 
@@ -644,8 +643,7 @@ class HighlightRedirectView(generic.View):
         latest_highlight_manager.increment_click_count(highlight_to_send)
 
         # Highlights event tracking
-        if user_id:
-            highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
-            highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
+        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
+        highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
 
         return redirect(highlight_to_send.link)

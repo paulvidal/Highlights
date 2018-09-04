@@ -18,5 +18,5 @@ fs.writeFile('webpack-stats-prod.json', JSON.stringify(info), function(err) {
         return console.log(err);
     }
 
-    console.log("The file was saved!");
+    console.log("File 'webpack-stats-prod.json' was saved!");
 });

@@ -14,7 +14,7 @@ class LoadButton extends Component {
   render() {
     const loading = this.state.loading;
     const refreshGallery = this.props.refreshGallery;
-    const className = ["btn", "btn-primary", "btn-lg", "btn-block", "col-4"]
+    const className = ["btn", "btn-primary", "btn-lg", "col-lg-4", "col-md-6", "col-11"]
 
     // Click event handler
     let onClick = () => {
@@ -41,7 +41,7 @@ class LoadButton extends Component {
     }
 
     return (
-      <div className="row justify-content-center">
+      <div className="load-button row justify-content-center">
         {button}
       </div>
     )

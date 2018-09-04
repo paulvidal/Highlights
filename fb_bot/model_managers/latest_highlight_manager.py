@@ -55,15 +55,24 @@ def get_recent_highlights_with_incomplete_infos():
     )
 
 
-def get_recent_unique_highlights(count=10):
-    return list(LatestHighlight.objects.filter(
-        Q(priority_short__gt=0) |
-        Q(time_since_added__lt=datetime.today() - timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
-    ) \
-               .values('team1', 'score1', 'team2', 'score2', 'category') \
-               .annotate(date=Min('time_since_added'), img_link=Min('img_link'), view_count=Sum('click_count')) \
-               .order_by('-date') \
-               [:count])
+def get_recent_unique_highlights(count=10, search=None):
+    highlights = LatestHighlight.objects \
+        .filter(
+            Q(priority_short__gt=0)
+            | Q(time_since_added__lt=datetime.today() - timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
+        ) \
+        .values('team1', 'score1', 'team2', 'score2', 'category') \
+        .annotate(date=Min('time_since_added'), img_link=Min('img_link'), view_count=Sum('click_count')) \
+        .order_by('-date')
+
+    if search:
+        highlights = highlights.filter(
+            Q(team1=search)
+            | Q(team2=search)
+            | Q(category=search)
+        )
+
+    return list(highlights[:count])
 
 
 #

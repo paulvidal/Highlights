@@ -3,6 +3,7 @@
  */
 
 export const SET_HIGHLIGHTS = 'SET_HIGHLIGHTS';
+export const UPDATE_SEARCH = 'UPDATE_SEARCH';
 
 /*
  * action creators
@@ -10,6 +11,12 @@ export const SET_HIGHLIGHTS = 'SET_HIGHLIGHTS';
 
 export const createSetHighlightsMessage = (highlights, startCount) => ({
   type: SET_HIGHLIGHTS,
-  startCount,
-  highlights
+  highlights,
+  startCount
+})
+
+export const createUpdateSearchMessage = (search, suggestions) => ({
+  type: UPDATE_SEARCH,
+  search,
+  suggestions
 })

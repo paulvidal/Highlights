@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SET_HIGHLIGHTS } from './actions';
+import { SET_HIGHLIGHTS, UPDATE_SEARCH } from './actions';
 
 function setHighlights(state = [], action) {
   switch (action.type) {
@@ -32,8 +32,23 @@ function setHighlights(state = [], action) {
   }
 }
 
+function search(state = {}, action) {
+  switch (action.type) {
+
+    case UPDATE_SEARCH:
+      return {
+        name: action.search,
+        suggestions: action.suggestions
+      }
+
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
-  highlights: setHighlights
+  highlights: setHighlights,
+  search: search
 });
 
 export default rootReducer;

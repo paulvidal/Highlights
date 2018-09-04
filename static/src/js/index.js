@@ -6,8 +6,16 @@ import { createStore } from 'redux';
 import client from "./client";
 import rootReducer from './reducers';
 import HighlightsGallery from "./containers/HighlightsGallery";
+import Header from "./containers/Header";
 
 const store = createStore(rootReducer);
+
+render(
+  <Provider store={store}>
+    <Header />
+  </Provider>,
+  document.getElementById('header')
+)
 
 render(
   <Provider store={store}>

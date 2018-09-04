@@ -51,6 +51,10 @@ class Index(TemplateView):
     template_name = "index.html"
 
 
+class PrivacyPageView(TemplateView):
+    template_name = "privacy.html"
+
+
 class HighlightsView(generic.View):
 
     @method_decorator(csrf_exempt)
@@ -58,26 +62,24 @@ class HighlightsView(generic.View):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        search = request.GET.get('search')
+        search = request.GET.get('search').lower() if request.GET.get('search') else None
         count = int(request.GET.get('count')) if request.GET.get('count') else 12
 
-        if search:
-            team = search.lower()
-            # TODO: handle for search with different function
+        response = latest_highlight_manager.get_recent_unique_highlights(count, search)
+        suggestions = []
 
-        response = latest_highlight_manager.get_recent_unique_highlights(count)
+        if not response:
+            suggestions = football_team_manager.similar_football_team_names(search) \
+                          + football_competition_manager.similar_football_competition_names(search)
 
         for h in response:
             h['link'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=False)
             h['link_extended'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=True)
 
         return JsonResponse({
-            'highlights': response
+            'highlights': response,
+            'suggestions': suggestions
         })
-
-
-class PrivacyPageView(TemplateView):
-    template_name = "privacy.html"
 
 
 class HighlightsBotView(generic.View):

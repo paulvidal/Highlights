@@ -3,7 +3,8 @@ import { createSetHighlightsMessage } from '../actions';
 import HighlightsGallery from '../components/HighlightsGallery';
 
 const mapStateToProps = state => ({
-  highlights: state.highlights
+  highlights: state.highlights,
+  search: state.search.name
 })
 
 const mapDispatchToProps = dispatch => ({

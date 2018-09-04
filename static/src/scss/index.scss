@@ -32,6 +32,14 @@ $lg: 992px;
 .navbar {
   background-color: #03457a!important;
 
+  @include respond(xs) {
+    padding-bottom: 1rem;
+  }
+
+  @include respond(sm) {
+    padding-bottom: 1rem;
+  }
+
   .brand {
     @include respond(sm) {
       justify-content: center !important;
@@ -44,14 +52,18 @@ $lg: 992px;
     }
   }
 
-  .search {
-    @include respond(sm) {
-      margin-bottom: 10px;
-    }
+  #search {
+    padding: 0;
+  }
 
-    @include respond(xs) {
-      margin-bottom: 10px;
-    }
+  #search-button {
+    border-top-right-radius: 0.25rem;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0.25rem;
+    border-bottom-left-radius: 0;
+  }
+
+  #search-dropdown {
   }
 }
 
@@ -61,6 +73,25 @@ $lg: 992px;
   .load-button {
     margin-top: 1rem;
   }
+
+  .no-result {
+    position: relative;
+
+    h2 {
+      position: absolute;
+      transform: translate(-50%,-50%);
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+    }
+
+    #no-result-image {
+      opacity: 0.15;
+      filter: alpha(opacity=15);
+    }
+
+  }
 }
 
 .highlight {
@@ -69,9 +100,18 @@ $lg: 992px;
   transition: all .2s ease-in-out;
 
   &:hover {
-    transform: scale(1.1);
-    z-index: 100000;
-    box-shadow: 0;
+
+    @include respond(md) {
+      transform: scale(1.1);
+      z-index: 100000;
+      box-shadow: 0;
+    }
+
+    @include respond(lg) {
+      transform: scale(1.1);
+      z-index: 100000;
+      box-shadow: 0;
+    }
   }
 
   .image {

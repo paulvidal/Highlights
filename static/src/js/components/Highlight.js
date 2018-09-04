@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import { toUpperCase } from '../utils';
 
@@ -9,11 +10,7 @@ const Highlight = ({ img_link, category, team1, team2, score1, score2, date, onC
 
   let formattedCategory = toUpperCase(category);
 
-  let formattedDate = date.toLocaleString('en-gb', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric'
-  });
+  let formattedDate = moment(date).format("dddd D MMMM");
 
   return (
     <div className="col-lg-4 col-md-6" onClick={onClickShort}>

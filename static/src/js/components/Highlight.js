@@ -16,7 +16,7 @@ const Highlight = ({ img_link, category, team1, team2, score1, score2, date, onC
   });
 
   return (
-    <div className="col-lg-4 col-md-6" onClick={onClickShort()}>
+    <div className="col-lg-4 col-md-6" onClick={onClickShort}>
       <div className="card mb-4 shadow-sm highlight">
         <div className="card-img-top">
             <img className="col image img-fluid" src={img_link} onError={(e)=>{e.target.src="/static/img/logo.png"}} alt="Card image cap"/>
@@ -32,7 +32,7 @@ const Highlight = ({ img_link, category, team1, team2, score1, score2, date, onC
           <div className="container">
             <div className="row buttons">
               <button type="button" className="btn btn-sm btn-outline-secondary short col-12">Short highlights</button>
-              <button type="button" className="btn btn-sm btn-outline-secondary extended col-12" onClick={onClickExtended()}>Extended highlights</button>
+              <button type="button" className="btn btn-sm btn-outline-secondary extended col-12" onClick={onClickExtended}>Extended highlights</button>
             </div>
           </div>
         </div>

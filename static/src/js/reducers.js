@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import { SET_HIGHLIGHTS, UPDATE_SEARCH } from './actions';
+import moment from 'moment';
 
 function setHighlights(state = [], action) {
   switch (action.type) {
@@ -9,8 +10,7 @@ function setHighlights(state = [], action) {
       let highlights = action.highlights;
 
       _.each(highlights, (h) => {
-        let date = new Date(Date.parse(h.date));
-        h.date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+        h.date = moment(h.date).seconds(0).minutes(0).hours(0).milliseconds(0);
       })
 
       highlights = highlights.slice(0, startCount).sort((h1, h2) => {

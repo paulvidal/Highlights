@@ -45,7 +45,7 @@ Highlight.propTypes = {
   team2: PropTypes.string.isRequired,
   score1: PropTypes.number.isRequired,
   score2: PropTypes.number.isRequired,
-  date: PropTypes.instanceOf(Date).isRequired,
+  date: PropTypes.instanceOf(moment).isRequired,
   onClickShort: PropTypes.func.isRequired,
   onClickExtended: PropTypes.func.isRequired,
 }

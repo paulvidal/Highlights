@@ -1,8 +1,8 @@
-import json
 import time
 from datetime import datetime
 
 import dateparser
+import re
 import requests
 from bs4 import BeautifulSoup
 
@@ -11,7 +11,7 @@ from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 
-ROOT_URL = 'https://highlightsfootball.com/wp-admin/admin-ajax.php'
+ROOT_URL = 'https://highlightsfootball.com'
 
 
 class HighlightsFootballHighlight(Highlight):
@@ -60,24 +60,14 @@ def fetch_highlights(num_pagelet=4, max_days_ago=7):
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
-    page = requests.post(ROOT_URL, data={
-        'action': 'td_ajax_block',
-        'block_type': 'td_block_3',
-        'td_current_page': pagelet_num + 1
-    })
-
-    html = json.loads(page.text)['td_data'] \
-        .replace("\n", "") \
-        .replace("\t", "") \
-        .replace("\\", "")
-
-    soup = BeautifulSoup(html, 'html.parser')
+    page = requests.get(ROOT_URL)
+    soup = BeautifulSoup(page.text, 'html.parser')
 
     # Extract videos
-    for vid in soup.find_all(class_='td_module_1'):
+    for vid in soup.find_all(class_='td_module_flex_1'):
 
         # Extract match name
-        match_name = str(vid.find('img').get('title'))
+        match_name = str(vid.find(class_='td-image-wrap').get('title'))
 
         if not 'vs' in match_name:
             # Check that the highlight is for a match
@@ -115,15 +105,23 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
             continue
 
         # Extract image link
-        image = vid.find('img')
+        image = vid.find(class_='td-image-wrap')
 
         if not image:
             continue
 
-        img_link = str(image.get("src"))
+        style = image.find("span").get("style")
+
+        regex = "background-image: url\((.*?)\)"
+        search_result = re.compile(regex, 0).search(style)
+
+        img_link = ''
+
+        if search_result:
+            img_link = search_result.groups()[0]
 
         # Extract link
-        link_tag = vid.find("a")
+        link_tag = vid.find(class_="td-image-wrap")
 
         link = str(link_tag.get("href"))
 

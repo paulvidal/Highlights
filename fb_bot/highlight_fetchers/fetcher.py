@@ -24,7 +24,7 @@ FETCHERS = {
 
     sources.HIGHLIGHTS_FOOTBALL: {
         'fetch': fetcher_highlightsfootball.fetch_highlights,
-        'num_pagelet': 3,
+        'num_pagelet': 1,
         'max_days_ago': 20
     },
 

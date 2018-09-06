@@ -35,7 +35,11 @@ NAME_MAPPING = {
     'dutch super cup': 'johan cruyff shield',
     'johan cruijff shield': 'johan cruyff shield',
     'dfl supercup': 'dfl-supercup',
-    'supercopa de espana': 'supercopa de españa'
+    'supercopa de espana': 'supercopa de españa',
+    'uefa nations league': 'nations league',
+    'nations league uefa': 'nations league',
+    'league of nations': 'nations league',
+    'uefa league of nations': 'nations league',
 }
 
 

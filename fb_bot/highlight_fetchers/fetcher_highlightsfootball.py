@@ -128,12 +128,21 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not _is_valid_link(link):
             continue
 
-        video_link = _get_video_link(link)
+        video_links = [] \
 
-        if not video_link:
+        for i in range(1, 6):
+            video_link = _get_video_link(link + str(i))
+
+            if video_link and video_link not in video_links:
+                video_links.append(video_link)
+            else:
+                break
+
+        if not video_links:
             continue
 
-        highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added))
+        for video_link in video_links:
+            highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added))
 
     return highlights
 

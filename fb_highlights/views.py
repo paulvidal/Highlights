@@ -424,7 +424,7 @@ class HighlightsBotView(generic.View):
                             )
 
                     # SUBSCRIPTION SETTING
-                    elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification']):
+                    elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification', 'add', 'remove']):
                         logger.log("SUBSCRIPTION SETTING", forward=True)
 
                         response_msg.append(

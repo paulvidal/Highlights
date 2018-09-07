@@ -46,6 +46,8 @@ NAME_MAPPING = {
     'zulte-waregem': 'zulte waregem',
     'zenit st. petersburg': 'zenit st petersburg',
     'zenit': 'zenit st petersburg',
+    'zenit saint petersburg': 'zenit st petersburg',
+    'fc zenit saint petersburg': 'zenit st petersburg',
     'appolon fc': 'apollon limassol',
     'hnk rijeka': 'rijeka',
     'fc twente': 'twente',

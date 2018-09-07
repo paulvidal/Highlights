@@ -16,6 +16,8 @@ NAME_MAPPING = {
     'english premier league': 'premier league',
     'epl': 'premier league',
     'liga': 'la liga',
+    'liga bbva': 'la liga',
+    'la liga bbva': 'la liga',
     'friendlies': 'friendly match',
     'club friendlies': 'friendly match',
     'international champions cup 2018': 'friendly match',

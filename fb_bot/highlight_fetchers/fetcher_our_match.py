@@ -196,6 +196,9 @@ def _get_video_links(soup):
 
             for i in range(len(types)):
 
+                if i >= len(videos):
+                    continue
+
                 for accepted in ['motd', 'extended highlights', 'highlights', 'short', 'alternative player', 'short highlights']:
                     # Do distance to be more robust against site typing errors
                     if nltk.edit_distance(types[i].lower(), accepted) <= 2:

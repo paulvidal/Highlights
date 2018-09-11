@@ -2,7 +2,7 @@ from datetime import timedelta, datetime
 
 from django.db.models import Q, Min, Sum
 
-from fb_bot.highlight_fetchers.info import sources
+from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 
@@ -444,7 +444,11 @@ def get_best_highlight(highlight_models, extended=False):
 
 
 def determine_best_highlight(h1, h2, total_goals):
-    if h1.source == h2.source:
+    if h1.source == sources.OUR_MATCH and h2.source == sources.OUR_MATCH and abs(h2.video_duration - h1.video_duration) < 5:
+        # choose streamable over matchat videos in case where OURMATCH has same videos
+        return h1 if providers.STREAMABLE in h1.link else h2
+
+    elif h1.source == h2.source:
         # return most recent as might be the most complete if same source
         return h1 if h1.get_parsed_time_since_added() > h2.get_parsed_time_since_added() else h2
 

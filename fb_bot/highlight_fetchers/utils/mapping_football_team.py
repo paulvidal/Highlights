@@ -203,7 +203,20 @@ NAME_MAPPING = {
     'fc basel': 'basel',
     'nimes olympique': 'nimes',
     'greuther fuerth': 'spvgg greuther fürth',
-    'frosinone calcio': 'frosinone'
+    'frosinone calcio': 'frosinone',
+    'guangzhou evergrande taobao': 'guangzhou evergrande',
+    'guangzhou evergrande taobao fc': 'guangzhou evergrande',
+    'cruzeiro esporte clube': 'cruzeiro',
+    'cruzeiro esporte': 'cruzeiro',
+    'glascow rangers': 'rangers',
+    'apollon': 'apollon limassol',
+    'vorskla': 'vorskla poltava',
+    'vorskla poltava fc': 'vorskla poltava',
+    'fc vorskla poltava': 'vorskla poltava',
+    'dudelange': 'f91 dudelange',
+    'astana': 'fc astana',
+    'zurich': 'fc zurich',
+    'jablonec': 'fk jablonec'
 }
 
 

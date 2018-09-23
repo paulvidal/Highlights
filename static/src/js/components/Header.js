@@ -14,6 +14,7 @@ class Header extends Component {
   }
 
   handleChange(name) {
+    this.props.setLoading(true);
     this.props.updateSearch(name, []);
 
     client.getHighlights(START_COUNT, (data) => {

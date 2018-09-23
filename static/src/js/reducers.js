@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { SET_HIGHLIGHTS, UPDATE_SEARCH } from './actions';
+import { SET_HIGHLIGHTS, UPDATE_SEARCH, LOADING } from './actions';
 import moment from 'moment';
 
 function setHighlights(state = [], action) {
@@ -46,9 +46,21 @@ function search(state = {}, action) {
   }
 }
 
+function loading(state = true, action) {
+  switch (action.type) {
+
+    case LOADING:
+      return action.loading;
+
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({
   highlights: setHighlights,
-  search: search
+  search: search,
+  loading: loading
 });
 
 export default rootReducer;

@@ -12,16 +12,16 @@ const store = createStore(rootReducer);
 
 render(
   <Provider store={store}>
-    <Header />
+    <HighlightsGallery />
   </Provider>,
-  document.getElementById('header')
+  document.getElementById('highlights-gallery')
 )
 
 render(
   <Provider store={store}>
-    <HighlightsGallery />
+    <Header />
   </Provider>,
-  document.getElementById('highlights-gallery')
+  document.getElementById('header')
 )
 
 if (module.hot) {

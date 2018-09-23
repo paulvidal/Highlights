@@ -3,10 +3,15 @@ import PropTypes from 'prop-types';
 
 import client from "../client";
 import Highlight from "./Highlight";
+import DefaultHighlight from "./DefaultHighlight";
 import LoadButton from "./LoadButton";
+
+export const DEFAULT_HIGHLIGHTS_COUNT = 6
 
 export const START_COUNT = 18;
 export const INCREMENT_COUNT = 12;
+
+let TIMEOUT = null;
 
 class HighlightsGallery extends Component {
 
@@ -83,18 +88,51 @@ class HighlightsGallery extends Component {
 
     } else {
 
-      return (
-        <div className="gallery py-5 bg-light">
-          <div className="container">
-            <div className="no-result row justify-content-center">
-              <h2>{'No results found' + (this.props.search ? ' for ': '')} <strong>{this.props.search ? this.props.search : ''}</strong></h2>
-              <div className="col-9 col-md-8 col-lg-5">
-                <img id="no-result-image" className="img-fluid" src="/static/img/logo.png"/>
+      // LOADING
+      if (this.props.loading) {
+
+        clearTimeout(TIMEOUT);
+
+        TIMEOUT = setTimeout(() => {
+          this.props.setLoading(false);
+        }, 1500);
+
+        return (
+          <div className="gallery py-5 bg-light">
+            <div className="container">
+              <div className="row">
+                {
+                  _.map(Array.from(Array(DEFAULT_HIGHLIGHTS_COUNT).keys()), i => {
+
+                    return (
+                      <DefaultHighlight
+                        key={i}
+                        />
+                    );
+                  })
+                }
               </div>
             </div>
           </div>
-        </div>
-      );
+        );
+
+      // NO RESULT
+      } else {
+
+        return (
+          <div className="gallery py-5 bg-light">
+            <div className="container">
+              <div className="no-result row justify-content-center">
+                <h2>{'No results found' + (this.props.search ? ' for ': '')} <strong>{this.props.search ? this.props.search : ''}</strong></h2>
+                <div className="col-9 col-md-8 col-lg-5">
+                  <img id="no-result-image" className="img-fluid" src="/static/img/logo.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      }
 
     }
   }

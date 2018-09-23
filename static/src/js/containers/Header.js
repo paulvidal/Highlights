@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import { createSetHighlightsMessage, createUpdateSearchMessage } from '../actions';
+import { createSetHighlightsMessage, createUpdateSearchMessage, createLoadMessage } from '../actions';
 import Header from '../components/Header';
 
 const mapStateToProps = state => ({
@@ -9,7 +9,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateSearch: (search, suggestions) => dispatch(createUpdateSearchMessage(search, suggestions)),
-  setHighlights: (highlights, startCount) => dispatch(createSetHighlightsMessage(highlights, startCount))
+  setHighlights: (highlights, startCount) => dispatch(createSetHighlightsMessage(highlights, startCount)),
+  setLoading: (loading) => dispatch(createLoadMessage(loading))
 })
 
 export default connect(

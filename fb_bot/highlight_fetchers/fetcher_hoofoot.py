@@ -1,6 +1,7 @@
 import time
 
 import dateparser
+import re
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
@@ -12,11 +13,13 @@ from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_li
 ROOT_URL = 'http://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
 
+POST_URL = 'http://hoofoot.com/videosx.php'
+
 
 class HoofootHighlight(Highlight):
 
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type='normal')
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, type='normal'):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type=type)
 
     def get_match_info(self, match):
         match_split = match.split()
@@ -72,9 +75,9 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
             continue
 
         full_link = _form_full_link(link)
-        video_link = _get_video_link(full_link)
+        video_links = _get_video_links(full_link)
 
-        if not video_link:
+        if not video_links:
             continue
 
         # Extract image link
@@ -121,7 +124,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not fetcher_footyroom.is_recent(time_since_added_date, max_days_ago):
             continue
 
-        highlights.append(HoofootHighlight(video_link, match_name, img_link, view_count, category, time_since_added))
+        for type, video_link in video_links:
+            highlights.append(HoofootHighlight(video_link, match_name, img_link, view_count, category, time_since_added, type))
 
     return highlights
 
@@ -141,27 +145,72 @@ def _form_full_link(link):
     return ROOT_URL + link[2:]
 
 
-def _get_video_link(full_link):
+def _get_video_links(full_link):
+    video_links = []
+
     page = proxy.get(full_link)
     soup = BeautifulSoup(page.content, 'html.parser')
 
-    for iframe in soup.find_all("iframe"):
-        src = iframe.get("src")
+    # Get all video types
+    type = get_type(soup.find(class_='focusd').get_text())
+    types = [type]
 
-        if not src:
-            continue
+    # Get other links
+    soups = [(soup)]
 
-        # Only pick video urls coming from the following websites
-        if providers.DAILYMOTION in src:
-            return format_dailymotion_link(src)
+    link_ids = soup.find(id='descruta').find_all('a')
 
-        elif providers.STREAMABLE in src:
-            return format_streamable_link(src)
+    for link_id in link_ids:
+        if link_id.get("onclick"):
+            id = str(link_id.get("onclick"))
 
-        elif providers.MATCHAT_ONLINE in src:
-            return format_link(src)
+            regex = "javascript:rruta\('(.*?)'\);"
+            search_result = re.compile(regex, 0).search(id)
 
-    return None
+            if not search_result:
+                continue
+
+            id = search_result.groups()[0]
+
+            page = proxy.post(POST_URL, data={
+                'rr': str(id)
+            })
+            soup = BeautifulSoup(page.content, 'html.parser')
+
+            soups.append(soup)
+            types.append(get_type(link_id.get_text()))
+
+    for i in range(len(soups)):
+        for iframe in soups[i].find_all("iframe"):
+            src = iframe.get("src")
+
+            if not src:
+                continue
+
+            # Only pick video urls coming from the following websites
+            if providers.DAILYMOTION in src:
+                video_links.append(
+                    (types[i], format_dailymotion_link(src))
+                )
+
+            elif providers.STREAMABLE in src:
+                video_links.append(
+                    (types[i], format_streamable_link(src))
+                )
+
+            elif providers.MATCHAT_ONLINE in src:
+                video_links.append(
+                    (types[i], format_link(src))
+                )
+
+    return video_links
+
+
+def get_type(type):
+    if 'EXTENDED' in type:
+        return 'extended'
+    else:
+        return 'normal'
 
 
 if __name__ == "__main__":

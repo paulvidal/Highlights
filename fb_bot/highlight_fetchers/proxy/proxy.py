@@ -16,14 +16,19 @@ def get(url, render=False):
             SCRAPER_URL.format(key.code, form_url(url), render)
         )
 
+        if response.status_code == requests.codes.unauthorized:
+            logger.log('Scrapper API key invalid - removing: ' + key.code, forward=True)
+            scraper_api_key_manager.remove_key(key)
+            continue
+
         if response.status_code == requests.codes.forbidden:
-            scraper_api_key_manager.invalidate_key(key)
             logger.log('Scrapper API key too many requests: ' + key.code, forward=True)
+            scraper_api_key_manager.invalidate_key(key)
             continue
 
         if response.status_code == requests.codes.ok and not key.valid:
-            scraper_api_key_manager.validate_key(key)
             logger.log('Scrapper API key reset: ' + key.code, forward=True)
+            scraper_api_key_manager.validate_key(key)
 
         return response
 

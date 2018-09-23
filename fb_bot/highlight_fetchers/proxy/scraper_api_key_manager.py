@@ -24,3 +24,7 @@ def invalidate_key(scraper_api_key):
     scraper_api_key.valid = False
     scraper_api_key.last_invalid_try = datetime.now()
     scraper_api_key.save()
+
+
+def remove_key(scraper_api_key):
+    scraper_api_key.delete()

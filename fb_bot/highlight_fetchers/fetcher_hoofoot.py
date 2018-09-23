@@ -91,6 +91,9 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         # Extract match name
         match_name = str(image.get("alt"))
 
+        if ' - ' not in match_name:
+            continue
+
         # Extract view count - NOT AVAILABLE for this website
         view_count = 0
 

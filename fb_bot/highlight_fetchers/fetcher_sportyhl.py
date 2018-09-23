@@ -179,7 +179,7 @@ def _is_valid_link(link):
     link = link.strip()
 
     # check if it is a football Match highlight video
-    return link.startswith("https://sportyhl.com/video")
+    return link.startswith("https://sportyhl.com/")
 
 
 def _get_video_links(full_link):

@@ -23,6 +23,8 @@ def format_streamable_link(link):
 
 
 def format_link(link):
+    link = link.replace("\"", "").replace("\\", "")
+
     # remove double // at start if present
     if link[:2] == '//':
         link = link[2:]
@@ -31,3 +33,7 @@ def format_link(link):
     link = 'https://' + link.replace('http://', '') if not 'https://' in link else link
 
     return link
+
+
+if __name__ == "__main__":
+    print(format_link('https://\//hfoot.matchat.online/player/0eVL906iPt\\'))

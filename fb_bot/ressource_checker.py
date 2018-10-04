@@ -18,7 +18,7 @@ def check(link):
 
     elif 'streamable' in link:
         page = requests.get(link).text
-        return not 'Oops!' in page
+        return not ('Oops!' in page or "There's nothing here!" in page)
 
     elif 'ok.ru' in link:
         page = requests.get(link).text

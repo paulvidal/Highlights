@@ -156,11 +156,15 @@ def _get_video_links(full_link):
 
     # Get all video types
     type = get_type(soup.find(class_='focusd').get_text())
-    types = [type]
+
+    types = []
+    soups = []
+
+    if type:
+        types.append(type)
+        soups.append(soup)
 
     # Get other links
-    soups = [(soup)]
-
     link_ids = soup.find(id='descruta').find_all('a')
 
     for link_id in link_ids:
@@ -180,8 +184,9 @@ def _get_video_links(full_link):
             })
             soup = BeautifulSoup(page.content, 'html.parser')
 
-            soups.append(soup)
-            types.append(get_type(link_id.get_text()))
+            if get_type(link_id.get_text()):
+                soups.append(soup)
+                types.append(get_type(link_id.get_text()))
 
     for i in range(len(soups)):
         for iframe in soups[i].find_all("iframe"):
@@ -210,10 +215,14 @@ def _get_video_links(full_link):
 
 
 def get_type(type):
-    if 'EXTENDED' in type:
+    type = type.strip()
+
+    if 'EXTENDED' == type:
         return 'extended'
-    else:
+    elif [w for w in ['EN', 'EN+', 'RU', 'ES'] if w == type]:
         return 'normal'
+    else:
+        return None
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
 from fb_bot.highlight_score_fetcher import fetcher_score_footyroom
 
-ROOT_URL = 'http://footyroom.com/'
+ROOT_URL = 'https://footyroom.com/'
 PAGELET_EXTENSION = 'posts-pagelet?page='
 
 

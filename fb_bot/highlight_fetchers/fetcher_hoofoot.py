@@ -215,11 +215,11 @@ def _get_video_links(full_link):
 
 
 def get_type(type):
-    type = type.strip()
+    type = type.strip().lower()
 
-    if 'EXTENDED' == type:
+    if 'extended' == type:
         return 'extended'
-    elif [w for w in ['EN', 'EN+', 'RU', 'ES'] if w == type]:
+    elif [w for w in ['en', 'en+', 'ru', 'es'] if w == type]:
         return 'normal'
     else:
         return None

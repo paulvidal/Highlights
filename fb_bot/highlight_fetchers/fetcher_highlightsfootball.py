@@ -16,8 +16,8 @@ ROOT_URL = 'https://highlightsfootball.com'
 
 class HighlightsFootballHighlight(Highlight):
 
-    def __init__(self, link, match_name, img_link, view_count, category, time_since_added):
-        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type='normal')
+    def __init__(self, link, match_name, img_link, view_count, category, time_since_added, type):
+        super().__init__(link, match_name, img_link, view_count, category, time_since_added, goal_data=[], type=type)
 
     def get_match_info(self, match):
         match = match.replace('Highlights', '').strip()
@@ -128,21 +128,10 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not _is_valid_link(link):
             continue
 
-        video_links = [] \
+        video_links = _get_video_links(link)
 
-        for i in range(1, 6):
-            video_link = _get_video_link(link + str(i))
-
-            if video_link and video_link not in video_links:
-                video_links.append(video_link)
-            else:
-                break
-
-        if not video_links:
-            continue
-
-        for video_link in video_links:
-            highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added))
+        for type, video_link in video_links:
+            highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added, type))
 
     return highlights
 
@@ -158,10 +147,42 @@ def _is_valid_link(link):
     return link.startswith("https://highlightsfootball.com/video/")
 
 
-def _get_video_link(full_link):
+def _get_video_links(full_link):
+    video_links = []
+
     page = requests.get(full_link)
     soup = BeautifulSoup(page.content, 'html.parser')
 
+    # Get all video types
+    types = soup.find_all(class_='acp_title')
+    types = [_get_type(t.get_text()) for t in types]
+
+    for i in range(len(types)):
+        if types[i] == 'alt player':
+            types[i] = types[i-1]
+
+    for i in range(len(types)):
+        if not types[i]:
+            continue
+
+        link = None
+
+        if i == 0:
+            link = _get_video_link(soup)
+        else:
+            page = requests.get(full_link + '{}/'.format(i+1))
+            soup = BeautifulSoup(page.content, 'html.parser')
+            link = _get_video_link(soup)
+
+        if link:
+            video_links.append(
+                (types[i], link)
+            )
+
+    return video_links
+
+
+def _get_video_link(soup):
     for iframe in soup.find_all("iframe"):
         src = iframe.get("src")
 
@@ -180,6 +201,22 @@ def _get_video_link(full_link):
                 return format_link(src)
 
     return None
+
+
+def _get_type(type):
+    type = type.strip().lower()
+    type = type.replace('(hd)', '')
+
+    if [w for w in ['extended hl'] if w == type]:
+        return 'extended'
+    elif [w for w in [] if w == type]:
+        return 'normal'
+    elif [w for w in ['short hl'] if w == type]:
+        return 'short'
+    elif [w for w in ['alt player'] if w == type]:
+        return 'alt player'
+    else:
+        return None
 
 
 if __name__ == "__main__":

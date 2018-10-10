@@ -216,7 +216,9 @@ NAME_MAPPING = {
     'dudelange': 'f91 dudelange',
     'astana': 'fc astana',
     'zurich': 'fc zurich',
-    'jablonec': 'fk jablonec'
+    'jablonec': 'fk jablonec',
+    'nuernberg': 'nurnberg',
+    'cheivo': 'chievoverona'
 }
 
 

@@ -42,6 +42,9 @@ NAME_MAPPING = {
     'nations league uefa': 'nations league',
     'league of nations': 'nations league',
     'uefa league of nations': 'nations league',
+    'english premier league highlights': 'premier league',
+    'champions league highlights': 'champions league',
+    'league 1': 'ligue 1',
 }
 
 

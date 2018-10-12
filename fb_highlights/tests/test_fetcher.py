@@ -64,3 +64,16 @@ class FetcherTestCase(TestCase):
         self.assertEqual(highlight.score1, 4)
         self.assertEqual(highlight.team2.name, 'arsenal')
         self.assertEqual(highlight.score2, 0)
+
+    def test_match_time_is_set_to_match_time_of_oldest_match_when_links_are_for_same_match(self):
+        # Given
+
+        # When
+        self.fetch_highlights()
+
+        # Then
+        h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham'][0]
+        ref_h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham2'][0]
+
+        self.assertNotEqual(h.time_since_added, ref_h.time_since_added)
+        self.assertEqual(h.match_time, ref_h.match_time)

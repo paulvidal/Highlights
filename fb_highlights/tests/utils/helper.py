@@ -15,6 +15,7 @@ TEST_USER_ID = 1119096411506599
 
 TIME_NOW = datetime.now()
 TIME_40_MINUTES_EARLIER = datetime.now() - timedelta(minutes=40)
+TIME_1_DAY_EARLIER = datetime.now() - timedelta(hours=24)
 TIME_3_DAYS_EARLIER = datetime.now() - timedelta(hours=72)
 
 
@@ -132,6 +133,13 @@ def fill_db(test_user_id):
                                                                    [
                                                                        {'team': 2, 'player': 'Olivier Giroud', 'elapsed': 15, 'goal_type': 'goal'}
                                                                    ]))
+
+    latest_highlight_manager.add_highlight(FootyroomHighlight('http://footyroom/manchester_city-tottenham2',
+                                                              'Manchester City 0 - 0 Tottenham',
+                                                              'http://footyroom/img?manchester_city-tottenham',
+                                                              0,
+                                                              'Premier League',
+                                                              TIME_1_DAY_EARLIER))
 
     latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/manchester_city-tottenham',
                                                             'Manchester City 0 - 0 Tottenham',

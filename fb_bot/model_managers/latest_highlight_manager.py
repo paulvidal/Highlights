@@ -160,6 +160,37 @@ def get_inverted_teams_highlights(highlight):
                                           time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=2))
 
 
+def get_same_highlights(highlight):
+    # Add team to new team if does not exists and return
+    if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
+        return []
+
+    team1 = football_team_manager.get_football_team(highlight.team1)
+    team2 = football_team_manager.get_football_team(highlight.team2)
+
+    return LatestHighlight.objects.filter(team1=team1,
+                                          team2=team2,
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2),
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=2))
+
+
+def get_oldest_same_highlight(highlight):
+    # Add team to new team if does not exists and return
+    if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
+        return []
+
+    team1 = football_team_manager.get_football_team(highlight.team1)
+    team2 = football_team_manager.get_football_team(highlight.team2)
+
+    highlight_models = LatestHighlight.objects.filter(team1=team1,
+                                                      team2=team2,
+                                                      time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=2),
+                                                      time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=2))\
+        .order_by('time_since_added')
+
+    return highlight_models[0] if highlight_models else None
+
+
 def get_same_highlights_sent(highlight):
     # Add team to new team if does not exists and return
     if not has_teams_in_db(highlight) or not has_competition_in_db(highlight):
@@ -227,9 +258,16 @@ def add_highlight(highlight, sent=False):
 
     category = football_competition_manager.get_football_competition(highlight.category)
 
+    match_time = datetime.fromordinal(highlight.time_since_added.date().toordinal())
+    oldest = get_oldest_same_highlight(highlight)
+
+    if oldest:
+        match_time = oldest.match_time
+
     LatestHighlight.objects.update_or_create(link=highlight.link,
                                              img_link=highlight.img_link,
                                              time_since_added=highlight.time_since_added,
+                                             match_time=match_time,
                                              team1=team1,
                                              score1=highlight.score1,
                                              team2=team2,
@@ -382,8 +420,8 @@ def get_unique_highlights(highlight_models, max_count=10):
     return unique
 
 
-def get_similar_highlights(highlight, highlights_model):
-    return [h for h in highlights_model if is_same_match_highlight(highlight, h)]
+def get_similar_highlights(highlight, highlight_models):
+    return [h for h in highlight_models if is_same_match_highlight(highlight, h)]
 
 
 def is_same_match_highlight(h1, h2):

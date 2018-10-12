@@ -155,6 +155,7 @@ class LatestHighlight(models.Model):
     link = models.TextField(unique=True, primary_key=True)
     img_link = models.TextField(default="")
     time_since_added = models.DateTimeField()
+    match_time = models.DateTimeField()
     category = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, db_column="category")
     view_count = models.IntegerField(default=0)
     team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="team1")
@@ -175,7 +176,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['link', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'type', 'priority_short', 'priority_extended', 'sent', 'valid', 'ready', 'click_count', 'img_link', 'video_url']
+        return ['link', 'match_time', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'type', 'priority_short', 'priority_extended', 'sent', 'valid', 'ready', 'click_count', 'img_link', 'video_url']
 
     @staticmethod
     def to_list_filter():
@@ -190,6 +191,9 @@ class LatestHighlight(models.Model):
 
     def get_match_name_no_result(self):
         return "{} - {}".format(self.team1.name.title(), self.team2.name.title())
+
+    def get_match_time(self):
+        return self.match_time
 
     def get_parsed_time_since_added(self):
         return self.time_since_added

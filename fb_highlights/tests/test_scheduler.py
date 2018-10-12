@@ -8,8 +8,7 @@ from fb_bot.model_managers import registration_team_manager, registration_compet
 from fb_highlights.models import LatestHighlight
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in
-from fb_highlights.tests.utils.helper import TEST_USER_ID
-from fb_highlights.tests.utils.helper import TIME_40_MINUTES_EARLIER, TIME_NOW, TIME_3_DAYS_EARLIER
+from fb_highlights.tests.utils.helper import *
 from fb_highlights.tests.utils.utils import create_formatted_highlight_response
 
 
@@ -265,7 +264,7 @@ class SchedulerTestCase(TestCase):
                 score2=0,
                 competition='Premier League',
                 image_url='http://ourmatch/img?manchester_city-tottenham',
-                time=TIME_40_MINUTES_EARLIER
+                time=TIME_1_DAY_EARLIER
             ), messages)
 
     def test_scheduler_does_not_send_highlight_with_incomplete_data(self):

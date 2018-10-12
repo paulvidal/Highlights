@@ -22,8 +22,6 @@ def fetch_highlights(site):
 
     # Add new highlights
     for highlight in highlights:
-        # Parse the date before inserting it (date needs to be a string)
-        highlight.time_since_added = str(dateparser.parse(highlight.time_since_added))
 
         if latest_highlight_manager.has_highlight(highlight):
             # Skip if highlight already in database
@@ -68,7 +66,8 @@ def send_most_recent_highlights():
         time_since_added = highlight.get_parsed_time_since_added()
 
         # Add time to make sure video is good
-        if timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(today - time_since_added) < timedelta(hours=30) or highlight.priority_short > 0:
+        if timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(today - time_since_added) < timedelta(hours=30) \
+                or highlight.priority_short > 0:
 
             # prevent sending 2 times same highlight with inverted home and away teams
             inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)

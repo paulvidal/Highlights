@@ -154,7 +154,7 @@ class RegistrationCompetition(models.Model):
 class LatestHighlight(models.Model):
     link = models.TextField(unique=True, primary_key=True)
     img_link = models.TextField(default="")
-    time_since_added = models.CharField(max_length=120)
+    time_since_added = models.DateTimeField()
     category = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, db_column="category")
     view_count = models.IntegerField(default=0)
     team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="team1")
@@ -192,7 +192,7 @@ class LatestHighlight(models.Model):
         return "{} - {}".format(self.team1.name.title(), self.team2.name.title())
 
     def get_parsed_time_since_added(self):
-        return dateparser.parse(str(self.time_since_added))
+        return self.time_since_added
 
     def get_formatted_date(self):
         return self.get_parsed_time_since_added().strftime('%d %B %Y')

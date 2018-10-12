@@ -1,5 +1,7 @@
 import abc
 
+from datetime import datetime
+
 import dateparser
 
 from fb_bot.highlight_fetchers.utils import mapping_football_competition, mapping_football_team
@@ -13,6 +15,11 @@ class Highlight:
         self.img_link = img_link
         self.view_count = view_count
         self.category = mapping_football_competition.get_exact_name(category.lower())
+
+        # Make sure date is always parsed
+        if not isinstance(time_since_added, datetime):
+            time_since_added = dateparser.parse(time_since_added)
+
         self.time_since_added = time_since_added
 
         # Match information
@@ -60,7 +67,7 @@ class Highlight:
         return link.split('?')[0] if '?' in link else link
 
     def get_parsed_time_since_added(self):
-        return dateparser.parse(self.time_since_added)
+        return self.time_since_added
 
     def __str__(self):
         return str((self.link, self.team1, self.score1, self.team2, self.score2, self.img_link, self.view_count,

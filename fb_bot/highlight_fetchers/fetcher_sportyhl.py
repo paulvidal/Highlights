@@ -191,6 +191,9 @@ def _get_video_links(full_link):
     tab_mapping = []
     tabs = soup.find(class_='bs-tab-shortcode')
 
+    if not tabs:
+        return []
+
     for tab in tabs.find_all('li'):
         a = tab.find('a')
         type = a.get_text()

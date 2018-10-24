@@ -24,7 +24,7 @@ class HighlightsGallery extends Component {
 
   refreshGallery(callback) {
     client.getHighlights(this.props.highlights.length + (this.props.highlights.length === 0 ? START_COUNT : INCREMENT_COUNT) , (data) => {
-      this.props.setHighlights(data.highlights, START_COUNT);
+      this.props.setHighlights(data.highlights);
       if (callback) {
         callback();
       }
@@ -71,7 +71,7 @@ class HighlightsGallery extends Component {
                       team2={h.team2}
                       score1={h.score1}
                       score2={h.score2}
-                      date={h.date}
+                      match_time={h.match_time}
                       onClickShort={onClickShort}
                       onClickExtended={onClickExtended}
                       />

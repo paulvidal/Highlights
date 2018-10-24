@@ -73,8 +73,8 @@ class HighlightsView(generic.View):
                           + football_competition_manager.similar_football_competition_names(search)
 
         for h in response:
-            h['link'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=False)
-            h['link_extended'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], dateparser.parse(h['date']), extended=True)
+            h['link'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], h['match_time'], extended=False)
+            h['link_extended'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], h['match_time'], extended=True)
 
         return JsonResponse({
             'highlights': response,

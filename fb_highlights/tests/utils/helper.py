@@ -183,19 +183,25 @@ def fill_db(test_user_id):
                                                              'Champions League',
                                                               TIME_3_DAYS_EARLIER))
 
-    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-arsenal',
-                                                            'Swansea 4 - 0 Arsenal',
-                                                            'http://hoofoot/img?swansea-arsenal',
-                                                            0,
-                                                            'Premier League',
-                                                            TIME_40_MINUTES_EARLIER), sent=True)
+    h1 = latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-arsenal',
+                                                                 'Swansea 4 - 0 Arsenal',
+                                                                 'http://hoofoot/img?swansea-arsenal',
+                                                                 0,
+                                                                 'Premier League',
+                                                                 TIME_40_MINUTES_EARLIER), sent=True)
 
-    latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-liverpool',
-                                                            'Swansea 2 - 0 Liverpool',
-                                                            'http://hoofoot/img?swansea-liverpool',
-                                                            0,
-                                                            'Europa League',
-                                                            TIME_40_MINUTES_EARLIER))
+    h2 = latest_highlight_manager.add_highlight(HoofootHighlight('http://hoofoot/swansea-liverpool',
+                                                                 'Swansea 2 - 0 Liverpool',
+                                                                 'http://hoofoot/img?swansea-liverpool',
+                                                                 0,
+                                                                 'Europa League',
+                                                                 TIME_40_MINUTES_EARLIER))
+
+
+    # Add viewcounts
+    latest_highlight_manager.increment_click_count(h1)
+    latest_highlight_manager.increment_click_count(h1)
+    latest_highlight_manager.increment_click_count(h2)
 
 
 def fetch_test_highlights(num_pagelet, max_days_ago):

@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   updateSearch: (search, suggestions) => dispatch(createUpdateSearchMessage(search, suggestions)),
-  setHighlights: (highlights, startCount) => dispatch(createSetHighlightsMessage(highlights, startCount)),
+  setHighlights: (highlights) => dispatch(createSetHighlightsMessage(highlights)),
   setLoading: (loading) => dispatch(createLoadMessage(loading))
 })
 

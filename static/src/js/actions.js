@@ -10,10 +10,9 @@ export const LOADING = 'LOADING';
  * action creators
  */
 
-export const createSetHighlightsMessage = (highlights, startCount) => ({
+export const createSetHighlightsMessage = (highlights) => ({
   type: SET_HIGHLIGHTS,
   highlights,
-  startCount
 })
 
 export const createUpdateSearchMessage = (search, suggestions) => ({

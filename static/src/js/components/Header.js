@@ -18,7 +18,7 @@ class Header extends Component {
     this.props.updateSearch(name, []);
 
     client.getHighlights(START_COUNT, (data) => {
-      this.props.setHighlights(data.highlights, START_COUNT);
+      this.props.setHighlights(data.highlights);
       this.props.updateSearch(name, data.suggestions);
 
     }, (xhr, status, error) => {

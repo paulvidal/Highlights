@@ -4,13 +4,13 @@ import moment from 'moment';
 
 import { toUpperCase } from '../utils';
 
-const Highlight = ({ img_link, category, team1, team2, score1, score2, date, onClickShort, onClickExtended }) => {
+const Highlight = ({ img_link, category, team1, team2, score1, score2, match_time, onClickShort, onClickExtended }) => {
 
   let title = toUpperCase(team1) + ' - ' + toUpperCase(team2);
 
   let formattedCategory = toUpperCase(category);
 
-  let formattedDate = moment(date).format("dddd D MMMM");
+  let formattedDate = moment(match_time).format("dddd D MMMM");
 
   return (
     <div className="col-lg-4 col-md-6" onClick={onClickShort}>

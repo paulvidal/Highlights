@@ -61,9 +61,9 @@ def get_recent_unique_highlights(count=10, search=None):
             Q(priority_short__gt=0)
             | Q(time_since_added__lt=datetime.today() - timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
         ) \
-        .values('team1', 'score1', 'team2', 'score2', 'category') \
-        .annotate(date=Min('time_since_added'), img_link=Min('img_link'), view_count=Sum('click_count')) \
-        .order_by('-date')
+        .values('match_time','team1', 'score1', 'team2', 'score2', 'category') \
+        .annotate(img_link=Min('img_link'), view_count=Sum('click_count')) \
+        .order_by('-match_time', '-view_count', 'team1')
 
     if search:
         highlights = highlights.filter(
@@ -264,20 +264,22 @@ def add_highlight(highlight, sent=False):
     if oldest:
         match_time = oldest.match_time
 
-    LatestHighlight.objects.update_or_create(link=highlight.link,
-                                             img_link=highlight.img_link,
-                                             time_since_added=highlight.time_since_added,
-                                             match_time=match_time,
-                                             team1=team1,
-                                             score1=highlight.score1,
-                                             team2=team2,
-                                             score2=highlight.score2,
-                                             category=category,
-                                             view_count=highlight.view_count,
-                                             source=highlight.source,
-                                             sent=sent,
-                                             goal_data=highlight.goal_data,
-                                             type=highlight.type)
+    highlight, _ = LatestHighlight.objects.update_or_create(link=highlight.link,
+                                                            img_link=highlight.img_link,
+                                                            time_since_added=highlight.time_since_added,
+                                                            match_time=match_time,
+                                                            team1=team1,
+                                                            score1=highlight.score1,
+                                                            team2=team2,
+                                                            score2=highlight.score2,
+                                                            category=category,
+                                                            view_count=highlight.view_count,
+                                                            source=highlight.source,
+                                                            sent=sent,
+                                                            goal_data=highlight.goal_data,
+                                                            type=highlight.type)
+
+    return highlight
 
 
 def delete_highlight(highlight_model):

@@ -3,7 +3,6 @@ import json
 from django.test import TestCase, Client
 
 from fb_bot import scheduler_tasks
-from fb_bot.messenger_manager import sender
 from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
 from fb_highlights.models import LatestHighlight
 from fb_highlights.tests.utils import helper

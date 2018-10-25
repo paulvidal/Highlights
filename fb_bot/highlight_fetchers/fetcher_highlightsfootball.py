@@ -158,8 +158,10 @@ def _get_video_links(full_link):
     types = [_get_type(t.get_text()) for t in types]
 
     for i in range(len(types)):
-        if types[i] == 'alt player':
-            types[i] = types[i-1]
+        j = 1
+        while i-j >= 0 and types[i] == 'alt player':
+            types[i] = types[i-j]
+            j += 1
 
     for i in range(len(types)):
         if not types[i]:

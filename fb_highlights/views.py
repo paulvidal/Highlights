@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from fb_bot import language, analytics
+from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 from fb_bot.messages import EMOJI_CROSS, EMOJI_SMILE, SHOW_BUTTON, HIDE_BUTTON, \
     OTHER_BUTTON, TRY_AGAIN_BUTTON, I_M_GOOD_BUTTON, EMOJI_ADD, EMOJI_TROPHY
@@ -571,6 +572,7 @@ class HighlightsBotView(generic.View):
             return JsonResponse(formatted_response, safe=False)
 
 
+# TODO: delete in the long term
 class HighlightRedirectView(generic.View):
 
     @method_decorator(csrf_exempt)
@@ -619,3 +621,72 @@ class HighlightRedirectView(generic.View):
         highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
 
         return redirect(highlight_to_send.link)
+
+
+class HighlightView(TemplateView):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return generic.View.dispatch(self, request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        param_keys = ['team1', 'score1', 'team2', 'score2', 'date']
+
+        print(request.GET)
+
+        for param_key in param_keys:
+            if param_key not in request.GET:
+                return HttpResponseBadRequest('<h1>Invalid link</h1>')
+
+        team1 = request.GET['team1'].lower()
+        score1 = int(request.GET['score1'])
+        team2 = request.GET['team2'].lower()
+        score2 = int(request.GET['score2'])
+        date = dateparser.parse(request.GET['date'])
+        type = request.GET.get('type')
+
+        # can be optional if coming from the web, use 0 as id for users from the web
+        user_id = int(request.GET.get('user_id')) if request.GET.get('user_id') else 0
+
+        # user tracking recording if user clicked on link
+        user_manager.increment_user_highlight_click_count(user_id)
+
+        highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
+
+        if not highlight_models:
+            return HttpResponseBadRequest('<h1>Invalid link</h1>')
+
+        extended = type == 'extended'
+
+        if extended:
+            # Extended
+            highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=True)
+        else:
+            # Short
+            highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=False)
+
+        # Link click tracking
+        latest_highlight_manager.increment_click_count(highlight_to_send)
+
+        # Highlights event tracking
+        highlight_stat_manager.add_highlight_stat(user_id, highlight_to_send, extended=extended)
+        highlight_notification_stat_manager.update_notification_opened(user_id, highlight_to_send)
+
+        # Display page or redirect
+        acceptable_providers = [
+            providers.DAILYMOTION,
+            providers.STREAMABLE,
+            providers.MATCHAT_ONLINE,
+            providers.CONTENT_VENTURES,
+            providers.OK_RU
+        ]
+
+        if [p for p in acceptable_providers if p in highlight_to_send.link]:
+
+            return TemplateResponse(request, 'highlight.html', {
+                'title': highlight_to_send.get_match_name_no_result(),
+                'link': highlight_to_send.link
+            })
+
+        else:
+            return redirect(highlight_to_send.link)

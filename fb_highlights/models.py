@@ -152,6 +152,7 @@ class RegistrationCompetition(models.Model):
 
 
 class LatestHighlight(models.Model):
+    id = models.PositiveIntegerField()
     link = models.TextField(unique=True, primary_key=True)
     img_link = models.TextField(default="")
     time_since_added = models.DateTimeField()
@@ -176,7 +177,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['link', 'match_time', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'type', 'priority_short', 'priority_extended', 'sent', 'valid', 'ready', 'click_count', 'img_link', 'video_url']
+        return ['id', 'link', 'match_time', 'time_since_added', 'team1', 'score1', 'team2', 'score2', 'category', 'video_duration', 'view_count', 'source', 'type', 'priority_short', 'priority_extended', 'sent', 'valid', 'ready', 'click_count', 'img_link', 'video_url']
 
     @staticmethod
     def to_list_filter():
@@ -184,7 +185,7 @@ class LatestHighlight(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['link', 'team1__name', 'team2__name']
+        return ['id', 'link', 'team1__name', 'team2__name']
 
     def get_match_name(self):
         return "{} {} - {} {}".format(self.team1.name.title(), self.score1, self.score2, self.team2.name.title())

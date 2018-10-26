@@ -43,6 +43,11 @@ def has_highlight(highlight):
     )
 
 
+def get_new_id():
+    values = LatestHighlight.objects.values('id').order_by('-id')
+    return values[0]['id'] + 1 if values else 1
+
+
 def get_recent_highlights_with_incomplete_infos():
     return LatestHighlight.objects.filter(
         (
@@ -61,7 +66,7 @@ def get_recent_unique_highlights(count=10, search=None):
             Q(priority_short__gt=0)
             | Q(time_since_added__lt=datetime.today() - timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
         ) \
-        .values('match_time','team1', 'score1', 'team2', 'score2', 'category') \
+        .values('id', 'match_time','team1', 'score1', 'team2', 'score2', 'category') \
         .annotate(img_link=Min('img_link'), view_count=Sum('click_count')) \
         .order_by('-match_time', '-view_count', 'team1')
 
@@ -98,7 +103,13 @@ def get_highlights(team1, score1, team2, score2, date):
                                           time_since_added__gt=date - timedelta(days=2),
                                           time_since_added__lt=date + timedelta(days=2))
 
-# Group by team1, score1, team2, score2
+
+# searching highlight to show using id
+def get_highlights_by_id(id):
+    return LatestHighlight.objects.filter(id=id,
+                                          valid=True,
+                                          ready=True,
+                                          source__in=sources.get_available_sources())
 
 
 # searching highlight to show when user makes a search for a team or competition
@@ -259,12 +270,16 @@ def add_highlight(highlight, sent=False):
     category = football_competition_manager.get_football_competition(highlight.category)
 
     match_time = datetime.fromordinal(highlight.time_since_added.date().toordinal())
+    id = get_new_id()
+
     oldest = get_oldest_same_highlight(highlight)
 
     if oldest:
         match_time = oldest.match_time
+        id = oldest.id
 
-    highlight, _ = LatestHighlight.objects.update_or_create(link=highlight.link,
+    highlight, _ = LatestHighlight.objects.update_or_create(id=id,
+                                                            link=highlight.link,
                                                             img_link=highlight.img_link,
                                                             time_since_added=highlight.time_since_added,
                                                             match_time=match_time,
@@ -347,7 +362,7 @@ def set_extended_type(highlight_model):
     highlight_model.save()
 
 
-def swap_home_side(highlight_model):
+def swap_home_side(highlight_model, new_id):
     temp_team = highlight_model.team1
     temp_score = highlight_model.score1
 
@@ -357,10 +372,15 @@ def swap_home_side(highlight_model):
     highlight_model.score1 = highlight_model.score2
     highlight_model.score2 = temp_score
 
+    highlight_model.id = new_id
+
+    highlight_model.save()
+
 
 def convert_highlight(highlight_model, new_link, new_source):
     # create a new highlight with information changed
-    LatestHighlight.objects.update_or_create(link=new_link,
+    LatestHighlight.objects.update_or_create(id=highlight_model.id,
+                                             link=new_link,
                                              img_link=highlight_model.img_link,
                                              time_since_added=highlight_model.time_since_added,
                                              team1=highlight_model.team1,

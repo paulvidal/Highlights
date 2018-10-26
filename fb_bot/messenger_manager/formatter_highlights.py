@@ -1,5 +1,3 @@
-from urllib.parse import quote
-
 from highlights import settings
 
 
@@ -41,27 +39,19 @@ def create_link_from_model(fb_id, highlight_model, extended=False):
     Essential method for link creation and redirection to website (and tracking)
     """
 
-    return create_link(highlight_model.team1.name,
-                       highlight_model.score1,
-                       highlight_model.team2.name,
-                       highlight_model.score2,
-                       highlight_model.get_parsed_time_since_added(),
+    return create_link(highlight_model.id,
                        extended=extended,
                        fb_id=fb_id)
 
 
-def create_link(team1, score1, team2, score2, datetime, extended=False, fb_id=None):
+def create_link(id, extended=False, fb_id=None):
     # Form correct url to redirect to server
-    tracking_link = settings.BASE_URL + "/highlight?team1={}&score1={}&team2={}&score2={}&date={}&type={}".format(
-        quote(team1.lower()),
-        score1,
-        quote(team2.lower()),
-        score2,
-        datetime.date(),
-        'extended' if extended else 'short',
-    )
+    tracking_link = settings.BASE_URL + "/highlight/" + str(id)
+
+    if extended:
+        tracking_link += '/extended'
 
     if fb_id:
-        tracking_link += '&user_id={}'.format(fb_id)
+        tracking_link += '?user_id={}'.format(fb_id)
 
     return tracking_link

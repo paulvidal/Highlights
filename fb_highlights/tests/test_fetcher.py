@@ -77,3 +77,14 @@ class FetcherTestCase(TestCase):
 
         self.assertNotEqual(h.time_since_added, ref_h.time_since_added)
         self.assertEqual(h.match_time, ref_h.match_time)
+
+    def test_ids_are_added_incrementally(self):
+        # Given
+
+        # When
+        self.fetch_highlights()
+
+        # Then
+        h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham'][0]
+
+        self.assertEqual(h.id, 9)

@@ -73,7 +73,8 @@ def send_most_recent_highlights():
             inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)
 
             if any([h.sent for h in inverted_highlights]):
-                latest_highlight_manager.swap_home_side(highlight)
+                new_id = inverted_highlights[0].id
+                latest_highlight_manager.swap_home_side(highlight, new_id)
 
             # prevent from sending a highlight if find the same already sent
             if latest_highlight_manager.get_same_highlights_sent(highlight):

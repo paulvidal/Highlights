@@ -74,8 +74,8 @@ class HighlightsView(generic.View):
                           + football_competition_manager.similar_football_competition_names(search)
 
         for h in response:
-            h['link'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], h['match_time'], extended=False)
-            h['link_extended'] = create_link(h['team1'], h['score1'], h['team2'], h['score2'], h['match_time'], extended=True)
+            h['link'] = create_link(h['id'], extended=False)
+            h['link_extended'] = create_link(h['id'], extended=True)
 
         return JsonResponse({
             'highlights': response,
@@ -630,40 +630,36 @@ class HighlightView(TemplateView):
         return generic.View.dispatch(self, request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        param_keys = ['team1', 'score1', 'team2', 'score2', 'date']
+        id = kwargs['id']
+        type = kwargs.get('type')
+        extended = type == 'extended'
 
-        print(request.GET)
+        if type is not None and not extended:
+            # go to the url without the extended option
+            return redirect(request.get_full_path().replace('/' + type, ''))
 
-        for param_key in param_keys:
-            if param_key not in request.GET:
-                return HttpResponseBadRequest('<h1>Invalid link</h1>')
+        if request.GET.get('user_id'):
+            user_id = int(request.GET.get('user_id'))
 
-        team1 = request.GET['team1'].lower()
-        score1 = int(request.GET['score1'])
-        team2 = request.GET['team2'].lower()
-        score2 = int(request.GET['score2'])
-        date = dateparser.parse(request.GET['date'])
-        type = request.GET.get('type')
+            response = redirect(request.get_full_path().replace('?user_id=' + str(user_id), ''))
 
-        # can be optional if coming from the web, use 0 as id for users from the web
-        user_id = int(request.GET.get('user_id')) if request.GET.get('user_id') else 0
+            # place user_id in a cookie
+            response.set_cookie('user_id', user_id)
+
+            # go to the url without the tracking id
+            return response
+
+        user_id = request.COOKIES.get('user_id') if request.COOKIES.get('user_id') else 0
 
         # user tracking recording if user clicked on link
         user_manager.increment_user_highlight_click_count(user_id)
 
-        highlight_models = latest_highlight_manager.get_highlights(team1, score1, team2, score2, date)
+        highlight_models = latest_highlight_manager.get_highlights_by_id(id)
 
         if not highlight_models:
             return HttpResponseBadRequest('<h1>Invalid link</h1>')
 
-        extended = type == 'extended'
-
-        if extended:
-            # Extended
-            highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=True)
-        else:
-            # Short
-            highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=False)
+        highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=extended)
 
         # Link click tracking
         latest_highlight_manager.increment_click_count(highlight_to_send)

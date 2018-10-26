@@ -428,7 +428,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -438,12 +438,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            "url": 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                            "url": 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            "url": 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
+                                            "url": 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -497,7 +497,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -507,12 +507,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -547,7 +547,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -557,12 +557,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -742,8 +742,7 @@ class MessengerBotTestCase(TestCase):
                                     'subtitle': 'Champions League',
                                     'image_url': 'http://hoofoot/img?chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(
-                                            TEST_USER_ID),
+                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -751,14 +750,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=short&user_id=' + str(
-                                                TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight?team1=chelsea&score1=0&team2=barcelona&score2=2&date=' + str(TIME_40_MINUTES_EARLIER.date()) + '&type=extended&user_id=' + str(
-                                                TEST_USER_ID),
+                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]

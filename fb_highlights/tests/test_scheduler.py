@@ -45,6 +45,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
+                id=3,
                 team1='Burnley',
                 score1=0,
                 team2='Barcelona',
@@ -65,6 +66,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_not_in(
             create_formatted_highlight_response(
+                id=6,
                 team1='Barcelona',
                 score1=1,
                 team2='Liverpool',
@@ -88,6 +90,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
+                id=6,
                 team1='Barcelona',
                 score1=1,
                 team2='Liverpool',
@@ -112,6 +115,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
+                id=5,
                 team1='Arsenal',
                 score1=0,
                 team2='Liverpool',
@@ -179,6 +183,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
+                id=3,
                 team1='Burnley',
                 score1=0,
                 team2='Barcelona',
@@ -217,6 +222,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_not_in(
             create_formatted_highlight_response(
+                id=9,
                 team1='Chelsea',
                 score1=0,
                 team2='Barcelona',
@@ -237,6 +243,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_not_in(
             create_formatted_highlight_response(
+                id=9,
                 team1='Barcelona',
                 score1=2,
                 team2='Chelsea',
@@ -257,6 +264,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
+                id=9,
                 team1='Manchester City',
                 score1=0,
                 team2='Tottenham',
@@ -277,6 +285,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_not_in(
             create_formatted_highlight_response(
+                id=9,
                 team1='Marseille',
                 score1=-1,
                 team2='Monaco',
@@ -297,6 +306,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_not_in(
             create_formatted_highlight_response(
+                id=9,
                 team1='Swansea',
                 score1=0,
                 team2='Barcelona',

@@ -14,13 +14,3 @@ Features:
 ### Try it now on Facebook Messenger
 
 http://m.me/highlightsSportBot
-
-### Screenshot gallery
-
-Start screen          |  Search - no spoiler   |  Search - spoiler
-:-------------------------:|:-------------------------:|:-------------------------:
-![](https://highlights-bot.herokuapp.com/static/img/preview-1.png)  |  ![](https://highlights-bot.herokuapp.com/static/img/preview-2.png) | ![](https://highlights-bot.herokuapp.com/static/img/preview-3.png)
-
-Notification - no spoiler  |  Notification - spoiler   |  Redirected video
-:-------------------------:|:-------------------------:|:-------------------------:
-![](https://highlights-bot.herokuapp.com/static/img/preview-4.png)  |  ![](https://highlights-bot.herokuapp.com/static/img/preview-5.png) | ![](https://highlights-bot.herokuapp.com/static/img/preview-6.png)

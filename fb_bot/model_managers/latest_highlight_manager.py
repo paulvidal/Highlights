@@ -6,7 +6,7 @@ from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 
-MIN_MINUTES_TO_SEND_HIGHLIGHTS = 30
+MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 
 
 def get_all_highlights():

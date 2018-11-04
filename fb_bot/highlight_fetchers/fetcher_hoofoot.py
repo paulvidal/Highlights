@@ -8,7 +8,8 @@ from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.proxy import proxy
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, \
+    format_matchat_link
 
 ROOT_URL = 'http://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
@@ -208,7 +209,7 @@ def _get_video_links(full_link):
 
             elif providers.MATCHAT_ONLINE in src:
                 video_links.append(
-                    (types[i], format_link(src))
+                    (types[i], format_matchat_link(src))
                 )
 
     return video_links

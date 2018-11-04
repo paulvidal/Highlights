@@ -22,6 +22,16 @@ def format_streamable_link(link):
     return 'https://streamable.com/e/' + resource_id
 
 
+def format_matchat_link(link):
+    link = format_link(link)
+    return link.replace('/html/', '/')
+
+
+def format_ok_ru_link(link):
+    link = format_link(link)
+    return link.replace('/video/', '/videoembed/')
+
+
 def format_link(link):
     link = link.replace("\"", "").replace("\\", "")
 
@@ -36,4 +46,4 @@ def format_link(link):
 
 
 if __name__ == "__main__":
-    print(format_link('https://\//hfoot.matchat.online/player/0eVL906iPt\\'))
+    print(format_matchat_link('https://footy11.matchat.online/player/html/7TISH8fdfH'))

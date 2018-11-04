@@ -9,7 +9,8 @@ from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, \
+    format_ok_ru_link, format_matchat_link
 from fb_bot.highlight_score_fetcher import fetcher_score_footyroom
 
 ROOT_URL = 'https://footyroom.com/'
@@ -224,10 +225,10 @@ def _get_video_link(soup):
                 return format_streamable_link(link)
 
             elif providers.OK_RU in link:
-                return format_link(link)
+                return format_ok_ru_link(link)
 
             elif providers.MATCHAT_ONLINE in link:
-                return format_link(link)
+                return format_matchat_link(link)
 
             elif 'youtube' in link:
                 return format_link(link)

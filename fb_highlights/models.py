@@ -26,7 +26,7 @@ class User(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['facebook_id', 'first_name', 'last_name', 'message_count', 'highlights_click_count', 'join_date', 'context', 'see_result']
+        return ['facebook_id', 'first_name', 'last_name', 'message_count', 'highlights_click_count', 'locale', 'join_date', 'context', 'see_result']
 
     @staticmethod
     def to_list_filter():

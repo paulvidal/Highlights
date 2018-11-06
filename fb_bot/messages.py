@@ -1,5 +1,6 @@
 import emoji
 
+
 #
 #  EMOJIS
 #
@@ -44,7 +45,6 @@ EMOJI_SPEAKER = emo(':loudspeaker:')
 EMOJI_ANGRY = emo(':angry:')
 EMOJI_CUP_OF_TEA = emo(':coffee:')
 EMOJI_RUNNING = emo(":running:")
-
 
 #
 #  MESSAGES
@@ -96,7 +96,7 @@ THANK_YOU = "Don't say thanks! That's my job " + EMOJI_MUSCLE
 
 SEE_RESULT_SETTING_MESSAGE = "Do you want to receive match results/spoiler (score, goal scorers...) along with your highlight messages, or hide them?\n\nCurrently: {}"
 SEE_RESULT_YES = 'Showing results'
-SEE_RESULT_NO  = 'Hiding results'
+SEE_RESULT_NO = 'Hiding results'
 
 SETTING_INVALID_MESSAGE = "Invalid option " + EMOJI_CROSS + " Please choose one of the suggested options."
 
@@ -267,6 +267,3 @@ NEW_HIGHLIGHT_MESSAGES = [
     "What's new in {}? " + EMOJI_FOOTBALL,
     "It's time for {}! " + EMOJI_FOOTBALL,
 ]
-
-
-

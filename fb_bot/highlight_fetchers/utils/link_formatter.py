@@ -24,7 +24,7 @@ def format_streamable_link(link):
 
 def format_matchat_link(link):
     link = format_link(link)
-    return link.replace('/html/', '/')
+    return link.replace('/html/', '/').replace('/player/', '/embed/')
 
 
 def format_ok_ru_link(link):

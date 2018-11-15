@@ -327,3 +327,23 @@ class ScraperApiKey(models.Model):
     @staticmethod
     def search_fields():
         return ['code']
+
+
+class DeniedForCompetitionHighlight(models.Model):
+    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
+    competition = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, null=True, default=True)
+
+    class Meta:
+        unique_together = ('team', 'competition')
+
+    @staticmethod
+    def to_list_display():
+        return ['team', 'competition']
+
+    @staticmethod
+    def to_list_filter():
+        return []
+
+    @staticmethod
+    def search_fields():
+        return ['team', 'competition']

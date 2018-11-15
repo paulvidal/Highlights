@@ -9,7 +9,7 @@ from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
-    registration_team_manager, registration_competition_manager, user_manager
+    registration_team_manager, registration_competition_manager, user_manager, denied_highlight_manager
 from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
 from fb_bot.video_providers import video_info_fetcher
 
@@ -81,14 +81,18 @@ def send_most_recent_highlights():
                 latest_highlight_manager.set_sent(highlight)
                 continue
 
-            # Log highlights sent
-            logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
-
             # Set highlights for same match to sent
             similar_highlights = latest_highlight_manager.get_similar_highlights(highlight, not_sent_highlights)
 
             for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
+
+            # Verify sending highlight for this team and competition has not been denied
+            if denied_highlight_manager.is_team_for_competition_denied(highlight):
+                continue
+
+            # Log highlights sent
+            logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
 
             # Send highlight to users
             _send_highlight_to_users(highlight)

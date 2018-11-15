@@ -8,8 +8,7 @@ from fb_bot.highlight_fetchers.fetcher_sportyhl import SportyHLHighlight
 from fb_bot.logger import logger
 from fb_bot.model_managers import football_team_manager, football_competition_manager, latest_highlight_manager, \
     context_manager
-from fb_highlights.models import User
-
+from fb_highlights.models import User, DeniedForCompetitionHighlight
 
 TEST_USER_ID = 1119096411506599
 

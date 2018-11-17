@@ -3,7 +3,8 @@ import json
 from django.test import TestCase, Client
 
 from fb_bot import scheduler_tasks
-from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager
+from fb_bot.model_managers import registration_team_manager, registration_competition_manager, user_manager, \
+    blocked_notification_manager
 from fb_highlights.models import LatestHighlight
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in
@@ -28,9 +29,14 @@ class SchedulerTestCase(TestCase):
 
         # Add test registrations
         registration_team_manager.add_team(TEST_USER_ID, "barcelona")
+        registration_team_manager.add_team(TEST_USER_ID, "belgium")
         registration_competition_manager.add_competition(TEST_USER_ID, "premier league")
         registration_competition_manager.add_competition(TEST_USER_ID, "ligue 1")
         registration_competition_manager.add_competition(TEST_USER_ID, "europa league")
+        registration_competition_manager.add_competition(TEST_USER_ID, "nations league")
+
+        # Add block notification
+        blocked_notification_manager.add_blocked_competition_highlight('france', 'nations league')
 
     def setUp(self):
         self.client = Client()
@@ -319,6 +325,48 @@ class SchedulerTestCase(TestCase):
                 competition='Champions League',
                 image_url='http://footyroom/img?swansea-barcelona',
                 time=TIME_3_DAYS_EARLIER
+            ), messages)
+
+    def test_highlights_not_blocked_when_competition_not_flagged_in_blocked_notification(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_in(
+            create_formatted_highlight_response(
+                id=15,
+                team1='France',
+                score1=2,
+                team2='Belgium',
+                score2=0,
+                competition='Nations League',
+                image_url='http://hoofoot/img?france-belgium',
+                time=TIME_40_MINUTES_EARLIER
+            ), messages)
+
+    def test_highlights_blocked_when_competition_flagged_in_blocked_notification(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_not_in(
+            create_formatted_highlight_response(
+                id=16,
+                team1='France',
+                score1=2,
+                team2='England',
+                score2=0,
+                competition='Nations League',
+                image_url='http://hoofoot/img?france-england',
+                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     # TODO: fix problem for qualifying rounds of champions league

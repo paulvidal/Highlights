@@ -9,7 +9,7 @@ from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
-    registration_team_manager, registration_competition_manager, user_manager, denied_highlight_manager
+    registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager
 from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
 from fb_bot.video_providers import video_info_fetcher
 
@@ -86,10 +86,6 @@ def send_most_recent_highlights():
 
             for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
-
-            # Verify sending highlight for this team and competition has not been denied
-            if denied_highlight_manager.is_team_for_competition_denied(highlight):
-                continue
 
             # Log highlights sent
             logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
@@ -194,42 +190,24 @@ def _send_highlight_to_users(highlight):
     user_ids_competition = registration_competition_manager.get_users_for_competition(competition)
 
     # FIXME: stop sending champions league, europa league temporary
-    if (competition == 'europa league' or competition == 'champions league') and datetime.now() < datetime(2018, 9, 1):
+    # if (competition == 'europa league' or competition == 'champions league') and datetime.now() < datetime(2018, 9, 1):
+    #     user_ids_competition = []
+
+    # Verify sending highlight for this team and competition has not been blocked
+    if blocked_notification_manager.is_highlight_for_competition_blocked(highlight):
         user_ids_competition = []
 
     ids = user_ids_team1 + user_ids_team2 + user_ids_competition
     ids = list(set(ids)) # clear duplicates
 
-    win_ids = []
-    draw_ids = []
-    lose_ids = []
-
-    if highlight.score1 > highlight.score2:
-        win_ids = list(set(user_ids_team1 + user_ids_competition))
-        lose_ids = [_id for _id in user_ids_team2 if _id not in win_ids]
-
-    elif highlight.score2 > highlight.score1:
-        win_ids = list(set(user_ids_team2 + user_ids_competition))
-        lose_ids = [_id for _id in user_ids_team1 if _id not in win_ids]
-
-    else:
-        win_ids = user_ids_competition
-        draw_ids = [_id for _id in list(set(user_ids_team1 + user_ids_team2)) if _id not in win_ids]
-
     # Do not send results to users with see result disable
     user_ids_see_result_disable = user_manager.get_user_ids_see_result_setting_disabled()
 
-    win_ids  = [_id for _id in win_ids  if _id not in user_ids_see_result_disable]
-    draw_ids = [_id for _id in draw_ids if _id not in user_ids_see_result_disable]
-    lose_ids = [_id for _id in lose_ids if _id not in user_ids_see_result_disable]
-
+    user_ids_see_result = [_id for _id in ids  if _id not in user_ids_see_result_disable]
     user_ids_see_result_disable = [_id for _id in ids if _id in user_ids_see_result_disable]
 
-    _send_highlight(win_ids, highlight, manager_scheduler.send_highlight_won_introduction_message, see_result=True)
-    _send_highlight(draw_ids, highlight, manager_scheduler.send_highlight_draw_introduction_message, see_result=True)
-    _send_highlight(lose_ids, highlight, manager_scheduler.send_highlight_lost_introduction_message, see_result=True)
-
-    _send_highlight(user_ids_see_result_disable, highlight, manager_scheduler.send_highlight_neutral_introduction_message, see_result=False)
+    _send_highlight(user_ids_see_result, highlight, see_result=True)
+    _send_highlight(user_ids_see_result_disable, highlight, see_result=False)
 
     # TODO: do batch update on database
     for user_id in ids:
@@ -240,13 +218,9 @@ def _send_highlight_to_users(highlight):
         context_manager.set_default_context(user_id)
 
 
-def _send_highlight(fb_ids, highlight, send_intro_message_f, see_result):
+def _send_highlight(fb_ids, highlight, see_result):
 
     for fb_ids_chunk in _chunks(fb_ids, 40): # choose chunks of 40
-
-        # Send introduction message to users
-        # send_intro_message_f(fb_ids_chunk, highlight)
-
         # Send the highlight to users
         manager_scheduler.send_highlight_messages(fb_ids_chunk, [highlight], see_result=see_result)
 

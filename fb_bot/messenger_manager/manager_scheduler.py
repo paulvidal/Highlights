@@ -15,48 +15,6 @@ def send_highlight_messages(fb_ids, highlight_models, see_result):
     return send_batch_different_facebook_messages(fb_ids, attachments)
 
 
-def send_highlight_won_introduction_message(fb_ids, highlight_model):
-
-    if highlight_model.category.name == "champions league" and highlight_model.score1 + highlight_model.score2 >= 5:
-        # CHAMPIONS LEAGUE LOT OF GOALS MESSAGE
-        message = random.choice(NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_LOT_OF_GOALS_MESSAGES)
-
-    elif highlight_model.category.name == "champions league":
-        # CHAMPIONS LEAGUE MESSAGE
-        message = random.choice(NEW_HIGHLIGHT_CHAMPIONS_LEAGUE_MESSAGES)
-
-    elif highlight_model.score1 + highlight_model.score2 >= 5:
-        # LOT OF GOALS MESSAGE
-        message = random.choice(NEW_HIGHLIGHT_LOT_OF_GOALS_MESSAGES).format(highlight_model.category.name.title())
-
-    else:
-        # NORMAL MESSAGE
-        message = random.choice(NEW_HIGHLIGHT_MESSAGES).format(highlight_model.category.name.title())
-
-    return send_batch_facebook_message(fb_ids, create_message(message))
-
-
-def send_highlight_draw_introduction_message(fb_ids, highlight_model):
-    # DRAW MESSAGE
-    message = random.choice(NEW_HIGHLIGHT_DRAW_MATCH).format(highlight_model.category.name.title())
-
-    return send_batch_facebook_message(fb_ids, create_message(message))
-
-
-def send_highlight_lost_introduction_message(fb_ids, highlight_model):
-    # LOSE MESSAGE
-    message = random.choice(NEW_HIGHLIGHT_LOST_MATCH).format(highlight_model.category.name.title())
-
-    return send_batch_facebook_message(fb_ids, create_message(message))
-
-
-def send_highlight_neutral_introduction_message(fb_ids, highlight_model):
-    # NEUTRAL MESSAGE
-    message = random.choice(NEW_HIGHLIGHT_NEUTRAL_MATCH).format(highlight_model.category.name.title())
-
-    return send_batch_facebook_message(fb_ids, create_message(message))
-
-
 def send_score(fb_ids, highlight_model):
     goal_data = highlight_model.goal_data
 

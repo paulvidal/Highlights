@@ -329,9 +329,9 @@ class ScraperApiKey(models.Model):
         return ['code']
 
 
-class DeniedForCompetitionHighlight(models.Model):
+class BlockedNotification(models.Model):
     team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
-    competition = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, null=True, default=True)
+    competition = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     class Meta:
         unique_together = ('team', 'competition')

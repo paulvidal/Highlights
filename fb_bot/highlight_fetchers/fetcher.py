@@ -40,8 +40,14 @@ FETCHERS = {
         'max_days_ago': 20
     },
 
-    'test': {
-        'fetch': helper.fetch_test_highlights,
+    'test_batch_1': {
+        'fetch': helper.fetch_test_highlights_batch_1,
+        'num_pagelet': 0,
+        'max_days_ago': 0
+    },
+
+    'test_batch_2': {
+        'fetch': helper.fetch_test_highlights_batch_2,
         'num_pagelet': 0,
         'max_days_ago': 0
     }

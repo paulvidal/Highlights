@@ -12,25 +12,20 @@ class FetcherTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super(FetcherTestCase, cls).setUpClass()
-
         helper.class_setup()
-        helper.fill_db(TEST_USER_ID)
+
+        helper.init_db(TEST_USER_ID)
+        scheduler_tasks.fetch_highlights('test_batch_1')
+        helper.set_up_db()
+        scheduler_tasks.fetch_highlights('test_batch_2')
 
     def setUp(self):
         self.client = Client()
         helper.set_up(TEST_USER_ID)
 
-    def fetch_highlights(self):
-        scheduler_tasks.fetch_highlights('test')
-
     def test_highlight_inverted_home_and_away_teams_inserted_swapped_if_more_than_1_matches_different(self):
-        # Given
-
-        # When
-        self.fetch_highlights()
-
         # Then
-        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/chelsea-barcelona4'][0]
+        highlight = latest_highlight_manager.get_highlight('http://hoofoot/chelsea-barcelona')
 
         self.assertEqual(highlight.team1.name, 'chelsea')
         self.assertEqual(highlight.score1, 0)
@@ -38,13 +33,8 @@ class FetcherTestCase(TestCase):
         self.assertEqual(highlight.score2, 2)
 
     def test_highlight_inverted_home_and_away_teams_inserted_not_swapped_if_only_one_other_match(self):
-        # Given
-
-        # When
-        self.fetch_highlights()
-
         # Then
-        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://hoofoot/arsenal-liverpool2'][0]
+        highlight = latest_highlight_manager.get_highlight('http://hoofoot/arsenal-liverpool2')
 
         self.assertEqual(highlight.team1.name, 'liverpool')
         self.assertEqual(highlight.score1, 4)
@@ -52,13 +42,8 @@ class FetcherTestCase(TestCase):
         self.assertEqual(highlight.score2, 0)
 
     def test_highlight_inverted_home_and_away_teams_inserted_swapped_if_already_sent_highlight(self):
-        # Given
-
-        # When
-        self.fetch_highlights()
-
         # Then
-        highlight = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://hoofoot/swansea-arsenal2'][0]
+        highlight = latest_highlight_manager.get_highlight('http://hoofoot/swansea-arsenal')
 
         self.assertEqual(highlight.team1.name, 'swansea')
         self.assertEqual(highlight.score1, 4)
@@ -66,25 +51,15 @@ class FetcherTestCase(TestCase):
         self.assertEqual(highlight.score2, 0)
 
     def test_match_time_is_set_to_match_time_of_oldest_match_when_links_are_for_same_match(self):
-        # Given
-
-        # When
-        self.fetch_highlights()
-
         # Then
-        h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham'][0]
-        ref_h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham2'][0]
+        h = latest_highlight_manager.get_highlight('http://footyroom/manchester_city-tottenham')
+        ref_h = latest_highlight_manager.get_highlight('http://footyroom/manchester_city-tottenham2')
 
         self.assertNotEqual(h.time_since_added, ref_h.time_since_added)
         self.assertEqual(h.match_time, ref_h.match_time)
 
     def test_ids_are_added_incrementally(self):
-        # Given
-
-        # When
-        self.fetch_highlights()
-
         # Then
-        h = [h for h in latest_highlight_manager.get_all_highlights() if h.link == 'http://footyroom/manchester_city-tottenham'][0]
+        h = latest_highlight_manager.get_highlight('http://footyroom/manchester_city-tottenham')
 
-        self.assertEqual(h.id, 9)
+        self.assertEqual(h.id, 10)

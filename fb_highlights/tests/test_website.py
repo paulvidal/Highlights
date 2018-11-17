@@ -1,9 +1,10 @@
 from django.test import TestCase, Client
 
+from fb_bot import scheduler_tasks
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 
-from fb_highlights.tests.utils.helper import TIME_40_MINUTES_EARLIER
+from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER
 
 
 class WebsiteTestCase(TestCase):
@@ -12,9 +13,12 @@ class WebsiteTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super(WebsiteTestCase, cls).setUpClass()
-
         helper.class_setup()
-        helper.fill_db(TEST_USER_ID)
+
+        helper.init_db(TEST_USER_ID)
+        scheduler_tasks.fetch_highlights('test_batch_1')
+        helper.set_up_db()
+        scheduler_tasks.fetch_highlights('test_batch_2')
 
     def setUp(self):
         self.client = Client()
@@ -42,20 +46,21 @@ class WebsiteTestCase(TestCase):
         self.assertEqual(json_response, {
             'highlights': [
                 {
-                    'view_count': 2,
-                    'id': 13,
+                    'view_count': 3,
+                    'id': 7,
                     'category': 'premier league',
                     'team1': 'swansea',
                     'score1': 4,
                     'team2': 'arsenal',
                     'score2': 0,
-                    'link': 'http://localhost:8000/highlight/13',
-                    'link_extended': 'http://localhost:8000/highlight/13/extended',
-                    'img_link': 'http://hoofoot/img?swansea-arsenal',
-                    'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
+                    'link': 'http://localhost:8000/highlight/7',
+                    'link_extended': 'http://localhost:8000/highlight/7/extended',
+                    'img_link': 'http://footyroom/img?swansea-arsenal',
+                    'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime(
+                        "%Y-%m-%dT%H:%M:%S"),
                 },
                 {
-                    'view_count': 1,
+                    'view_count': 2,
                     'id': 14,
                     'category': 'europa league',
                     'team1': 'swansea',
@@ -81,16 +86,16 @@ class WebsiteTestCase(TestCase):
         self.assertEqual(json_response, {
             'highlights': [
                 {
-                    'view_count': 0,
-                    'id': 2,
+                    'view_count': 1,
+                    'id': 1,
                     'category': 'champions league',
-                    'team1': 'barcelona',
-                    'score1': 2,
-                    'team2': 'chelsea',
-                    'score2': 0,
-                    'link': 'http://localhost:8000/highlight/2',
-                    'link_extended': 'http://localhost:8000/highlight/2/extended',
-                    'img_link': 'http://hoofoot/img?chelsea-barcelona3',
+                    'team1': 'chelsea',
+                    'score1': 0,
+                    'team2': 'barcelona',
+                    'score2': 2,
+                    'link': 'http://localhost:8000/highlight/1',
+                    'link_extended': 'http://localhost:8000/highlight/1/extended',
+                    'img_link': 'http://hoofoot/img?chelsea-barcelona',
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
             ],

@@ -2,11 +2,12 @@ import json
 
 from django.test import TestCase, Client
 
+from fb_bot import scheduler_tasks
 from fb_bot.messages import HIDE_BUTTON, CANCEL_BUTTON, EMOJI_HEART
 from fb_bot.model_managers import user_manager
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
-from fb_highlights.tests.utils.helper import TIME_40_MINUTES_EARLIER
+from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER
 from highlights import settings
 
 
@@ -16,9 +17,13 @@ class MessengerBotTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super(MessengerBotTestCase, cls).setUpClass()
-
         helper.class_setup()
-        helper.fill_db(TEST_USER_ID)
+
+        helper.init_db(TEST_USER_ID)
+        scheduler_tasks.fetch_highlights('test_batch_1')
+        helper.set_up_db()
+        scheduler_tasks.fetch_highlights('test_batch_2')
+
 
     def setUp(self):
         self.client = Client()

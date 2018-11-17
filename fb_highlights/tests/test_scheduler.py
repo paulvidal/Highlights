@@ -8,6 +8,8 @@ from fb_highlights.models import LatestHighlight
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in
 from fb_highlights.tests.utils.helper import *
+from fb_highlights.tests.utils.test_highlights import TIME_NOW, TIME_40_MINUTES_EARLIER, TIME_1_DAY_EARLIER, \
+    TIME_3_DAYS_EARLIER
 from fb_highlights.tests.utils.utils import create_formatted_highlight_response
 
 
@@ -17,9 +19,12 @@ class SchedulerTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super(SchedulerTestCase, cls).setUpClass()
-
         helper.class_setup()
-        helper.fill_db(TEST_USER_ID)
+
+        helper.init_db(TEST_USER_ID)
+        scheduler_tasks.fetch_highlights('test_batch_1')
+        helper.set_up_db()
+        scheduler_tasks.fetch_highlights('test_batch_2')
 
         # Add test registrations
         registration_team_manager.add_team(TEST_USER_ID, "barcelona")
@@ -45,7 +50,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
-                id=3,
+                id=2,
                 team1='Burnley',
                 score1=0,
                 team2='Barcelona',
@@ -90,7 +95,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
-                id=6,
+                id=3,
                 team1='Barcelona',
                 score1=1,
                 team2='Liverpool',
@@ -183,7 +188,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
-                id=3,
+                id=2,
                 team1='Burnley',
                 score1=0,
                 team2='Barcelona',
@@ -264,7 +269,7 @@ class SchedulerTestCase(TestCase):
 
         assert_highlight_in(
             create_formatted_highlight_response(
-                id=9,
+                id=10,
                 team1='Manchester City',
                 score1=0,
                 team2='Tottenham',

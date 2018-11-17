@@ -9,6 +9,12 @@ from fb_highlights.models import LatestHighlight
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 
 
+def get_highlight(link):
+    return LatestHighlight.objects.filter(
+        link=link
+    )[0]
+
+
 def get_all_highlights():
     return LatestHighlight.objects.all()
 

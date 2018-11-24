@@ -45,6 +45,7 @@ NAME_MAPPING = {
     'english premier league highlights': 'premier league',
     'champions league highlights': 'champions league',
     'league 1': 'ligue 1',
+    'africa cup': 'africa cup of nations'
 }
 
 

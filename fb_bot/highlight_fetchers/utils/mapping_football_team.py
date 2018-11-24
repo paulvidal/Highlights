@@ -218,7 +218,8 @@ NAME_MAPPING = {
     'zurich': 'fc zurich',
     'jablonec': 'fk jablonec',
     'nuernberg': 'nurnberg',
-    'cheivo': 'chievoverona'
+    'cheivo': 'chievoverona',
+    'fortuna duesseldorf': 'fortuna düsseldorf'
 }
 
 

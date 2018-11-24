@@ -177,7 +177,7 @@ def _is_valid_link(link):
     link = link.strip()
 
     # check if it is a football Match highlight video
-    return link.startswith("http://ourmatch.net/videos/")
+    return link.startswith("https://ourmatch.net/videos/")
 
 
 def _get_video_links(soup):

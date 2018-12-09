@@ -643,7 +643,7 @@ class HighlightView(TemplateView):
             user_id = int(request.GET.get('user_id'))
 
             # regex selecting everything before the parameters in the url
-            regex = '( ^.* )?\?'
+            regex = '(^.*?)\?'
             path_no_params = re.compile(regex, 0).search(request.get_full_path()).groups()[0]
 
             response = redirect(path_no_params)

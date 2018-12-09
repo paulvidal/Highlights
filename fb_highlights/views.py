@@ -1,6 +1,7 @@
 import json
 
 import dateparser
+import re
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
@@ -641,7 +642,11 @@ class HighlightView(TemplateView):
         if request.GET.get('user_id'):
             user_id = int(request.GET.get('user_id'))
 
-            response = redirect(request.get_full_path().replace('?user_id=' + str(user_id), ''))
+            # regex selecting everything before the parameters in the url
+            regex = '( ^.* )?\?'
+            path_no_params = re.compile(regex, 0).search(request.get_full_path()).groups()[0]
+
+            response = redirect(path_no_params)
 
             # place user_id in a cookie
             response.set_cookie('user_id', user_id)

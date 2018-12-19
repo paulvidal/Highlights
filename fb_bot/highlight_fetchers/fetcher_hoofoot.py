@@ -11,10 +11,10 @@ from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, \
     format_matchat_link
 
-ROOT_URL = 'http://hoofoot.com/'
+ROOT_URL = 'https://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
 
-POST_URL = 'http://hoofoot.com/videosx.php'
+POST_URL = 'https://hoofoot.com/videosx.php'
 
 
 class HoofootHighlight(Highlight):

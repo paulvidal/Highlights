@@ -12,7 +12,7 @@ def get_scraper_api_keys():
     return ScraperApiKey.objects.filter(
         Q(valid=True) |
         Q(last_invalid_try__lt=datetime.now() - timedelta(days=2))
-    )
+    ).order_by('valid', 'last_invalid_try')
 
 
 def validate_key(scraper_api_key):

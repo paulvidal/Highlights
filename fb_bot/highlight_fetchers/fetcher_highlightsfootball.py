@@ -110,15 +110,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not image:
             continue
 
-        style = image.find("span").get("style")
-
-        regex = "background-image: url\((.*?)\)"
-        search_result = re.compile(regex, 0).search(style)
-
-        img_link = ''
-
-        if search_result:
-            img_link = search_result.groups()[0]
+        img_link = image.find("span").get('data-img-url')
 
         # Extract link
         link_tag = vid.find(class_="td-image-wrap")
@@ -167,42 +159,42 @@ def _get_video_links(full_link):
         if not types[i]:
             continue
 
-        link = None
+        links = []
 
         if i == 0:
-            link = _get_video_link(soup)
+            links += _get_video_links_for_page(soup)
         else:
             page = requests.get(full_link + '{}/'.format(i+1))
             soup = BeautifulSoup(page.content, 'html.parser')
-            link = _get_video_link(soup)
+            links += _get_video_links_for_page(soup)
 
-        if link:
-            video_links.append(
-                (types[i], link)
-            )
+        if links:
+            [video_links.append((types[i], link)) for link in links]
 
     return video_links
 
 
-def _get_video_link(soup):
+def _get_video_links_for_page(soup):
+    links = []
+
     for iframe in soup.find_all("iframe"):
         src = iframe.get("src")
 
         # Only pick video urls coming from the following websites
         if src:
             if providers.DAILYMOTION in src:
-                return format_dailymotion_link(src)
+                links.append(format_dailymotion_link(src))
 
             if providers.STREAMABLE in src:
-                return format_streamable_link(src)
+                links.append(format_streamable_link(src))
 
             if providers.OK_RU in src:
-                return format_ok_ru_link(src)
+                links.append(format_ok_ru_link(src))
 
             if providers.MATCHAT_ONLINE in src:
-                return format_matchat_link(src)
+                links.append(format_matchat_link(src))
 
-    return None
+    return links
 
 
 def _get_type(type):

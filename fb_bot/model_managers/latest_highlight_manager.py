@@ -27,7 +27,8 @@ def get_all_highlights_from_source(sources):
 
 def get_all_highlights_without_info():
     return LatestHighlight.objects.filter(
-        video_duration=0
+        video_duration=0,
+        time_since_added__gt=datetime.today() - timedelta(hours=72)
     )
 
 

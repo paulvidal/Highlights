@@ -122,6 +122,8 @@ def check_highlight_validity():
 def add_videos_info():
     highlights = latest_highlight_manager.get_all_highlights_without_info()
 
+    logger.log('Total highlights info to add: {}'.format(len(highlights)), forward=True)
+
     for h in highlights:
         info = video_info_fetcher.get_info(h.link)
 

@@ -14,7 +14,6 @@ def get_video_info(link):
         return None
 
     browser = None
-    response = None
 
     try:
         browser = Browser()
@@ -34,7 +33,7 @@ def get_video_info(link):
 
     except Exception:
         client.captureException()
-        logger.log('matchat.online status: error | Error url: ' + link, forward=True)
+        logger.log('matchat.online status: ERROR | url: ' + link, forward=True)
         return None
 
     finally:
@@ -42,17 +41,20 @@ def get_video_info(link):
             browser.close()
 
     soup = BeautifulSoup(response, 'html.parser')
-    duration = soup.find(class_="rmp-duration").get_text()
+    duration_text = soup.find(class_="rmp-duration").get_text()
 
-    if not ':' in duration:
+    if not ':' in duration_text:
         return None
 
-    duration = duration.split(':')
+    duration_text_parts = duration_text.split(':')
+    duration = int(duration_text_parts[0]) * 60 + int(duration_text_parts[1])
 
     info = {
-        'duration': int(duration[0]) * 60 + int(duration[1]),
+        'duration': duration,
         'video_url': None
     }
+
+    logger.log('matchat.online status: SUCCESS | url: ' + link + ' | duration: ' + str(duration), forward=True)
 
     return info
 

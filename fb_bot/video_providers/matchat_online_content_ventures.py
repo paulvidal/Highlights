@@ -21,7 +21,7 @@ def get_video_info(link):
 
         browser.wait(3)
         browser.click_on_element('.rmp-overlay-button')
-        browser.wait(4)
+        browser.wait(10)
 
         response = browser.get_html()
 
@@ -42,6 +42,9 @@ def get_video_info(link):
 
     soup = BeautifulSoup(response, 'html.parser')
     duration_text = soup.find(class_="rmp-duration").get_text()
+
+    logger.log('response: ' + str(response), forward=True)
+    logger.log('duration_text: ' + str(duration_text), forward=True)
 
     if not ':' in duration_text:
         return None

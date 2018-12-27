@@ -1,8 +1,6 @@
-from bs4 import BeautifulSoup
-from raven.contrib.django.raven_compat.models import client, settings
-from selenium.common.exceptions import NoSuchElementException
+import re
+import requests
 
-from fb_bot.highlight_fetchers.drivers.browser import Browser
 from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 
@@ -13,54 +11,25 @@ def get_video_info(link):
     if not providers.MATCHAT_ONLINE in link and not providers.CONTENT_VENTURES in link:
         return None
 
-    browser = None
+    page = requests.get(link)
 
-    try:
-        browser = Browser()
-        browser.get(link)
+    regex = "settings.bitrates = {hls:\"(.*?)\""
+    streaming_link_search_result = re.compile(regex, 0).search(page.text)
 
-        browser.wait(3)
-        browser.click_on_element('.rmp-overlay-button')
-        browser.wait(10)
+    streaming_link = 'https://' + streaming_link_search_result.groups()[0].replace('//', '').replace('0.m3u8', '360p.m3u8')
 
-        response = browser.get_html()
+    text = requests.get(streaming_link).text
 
-    except NoSuchElementException:
-        return {
-            'duration': -1,
-            'video_url': None
-        }
+    regex = "#EXTINF:(.*?),"
+    durations_search_result = re.findall(regex, text)
 
-    except Exception:
-        client.captureException()
-        logger.log('matchat.online status: ERROR | url: ' + link, forward=True)
-        return None
-
-    finally:
-        if browser:
-            browser.close()
-
-    soup = BeautifulSoup(response, 'html.parser')
-    duration_text = soup.find(class_="rmp-duration").get_text()
-
-    logger.log('response: ' + str(response), forward=True)
-    logger.log('duration_text: ' + str(duration_text), forward=True)
-
-    if not ':' in duration_text:
-        return None
-
-    duration_text_parts = duration_text.split(':')
-    duration = int(duration_text_parts[0]) * 60 + int(duration_text_parts[1])
+    duration = int(sum([float(d) for d in durations_search_result]))
 
     info = {
         'duration': duration,
         'video_url': None
     }
 
-    logger.log('matchat.online status: SUCCESS | url: ' + link + ' | duration: ' + str(duration), forward=True)
+    logger.log('matchat.online INFO | url: ' + link + ' | duration: ' + str(duration), forward=True)
 
     return info
-
-
-if __name__ == "__main__":
-    print(get_video_info('https://hfoot.matchat.online/player/49641'))

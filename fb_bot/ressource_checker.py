@@ -1,8 +1,6 @@
 import requests
 import time
 
-from fb_bot.highlight_fetchers.drivers.browser import Browser
-
 
 def check(link):
     """

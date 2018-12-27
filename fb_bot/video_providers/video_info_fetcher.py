@@ -52,12 +52,4 @@ def get_info(link):
         if info:
             return info
 
-    # Leave duration to 0 to allow a retry
-    for fetcher in ALL_VIDEO_INFO_FETCHER:
-        if fetcher['name'] in link:
-            return {
-                'duration': 0,
-                'video_url': None
-            }
-
     return None

@@ -1,8 +1,10 @@
 import re
 import requests
+from raven.contrib.django.models import client
 
 from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
+from fb_bot.model_managers import scrapping_status_manager
 
 
 def get_video_info(link):
@@ -11,25 +13,36 @@ def get_video_info(link):
     if not providers.MATCHAT_ONLINE in link and not providers.CONTENT_VENTURES in link:
         return None
 
-    page = requests.get(link)
+    try:
 
-    regex = "settings.bitrates = {hls:\"(.*?)\""
-    streaming_link_search_result = re.compile(regex, 0).search(page.text)
+        page = requests.get(link)
 
-    streaming_link = 'https://' + streaming_link_search_result.groups()[0].replace('//', '').replace('0.m3u8', '360p.m3u8')
+        regex = "settings.bitrates = {hls:\"(.*?)\""
+        streaming_link_search_result = re.compile(regex, 0).search(page.text)
 
-    text = requests.get(streaming_link).text
+        streaming_link = 'https://' + streaming_link_search_result.groups()[0].replace('//', '').replace('0.m3u8', '360p.m3u8')
 
-    regex = "#EXTINF:(.*?),"
-    durations_search_result = re.findall(regex, text)
+        text = requests.get(streaming_link).text
 
-    duration = int(sum([float(d) for d in durations_search_result]))
+        regex = "#EXTINF:(.*?),"
+        durations_search_result = re.findall(regex, text)
 
-    info = {
-        'duration': duration,
-        'video_url': None
-    }
+        duration = int(sum([float(d) for d in durations_search_result]))
 
-    logger.log('matchat.online INFO | url: ' + link + ' | duration: ' + str(duration), forward=True)
+        info = {
+            'duration': duration,
+            'video_url': None
+        }
 
-    return info
+        scrapping_status_manager.update_scrapping_status('m3u8', True)
+        logger.log('matchat.online SUCCESS | url: ' + link + ' | duration: ' + str(duration), forward=True)
+
+        return info
+
+    except:
+        client.captureException()
+
+        scrapping_status_manager.update_scrapping_status('m3u8', False)
+        logger.log('matchat.online FAILURE | url: ' + link, forward=True)
+
+        return None

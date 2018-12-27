@@ -2,7 +2,7 @@ from fb_highlights.models import ScrappingStatus
 
 
 def get_all_scrapping_status():
-    return [(status.site_name.title(), status.ok) for status in ScrappingStatus.objects.all()]
+    return [(status.site_name.title(), status.ok) for status in ScrappingStatus.objects.all().order_by('site_name')]
 
 
 def update_scrapping_status(site_name, ok):

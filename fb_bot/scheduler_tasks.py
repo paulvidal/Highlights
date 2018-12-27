@@ -107,14 +107,25 @@ def send_most_recent_highlights():
 
 # Check if highlight links are still alive (not taken down) and set it to invalid if so
 
-def check_highlight_validity():
-    highlights = latest_highlight_manager.get_all_highlights()
+def check_recent_highlight_validity():
+    _check_validity(
+        latest_highlight_manager.get_recent_highlights(hours=72)
+    )
 
+
+def check_highlight_validity():
+    _check_validity(
+        latest_highlight_manager.get_all_highlights()
+    )
+
+
+def _check_validity(highlights):
     for h in highlights:
         is_valid = ressource_checker.check(h.link)
 
         if not is_valid:
             latest_highlight_manager.set_invalid(h)
+
 
 
 # Add the video info such as duration
@@ -147,7 +158,7 @@ def add_videos_info():
 
 # Create streamable video from matchat.online video
 def create_streamable_videos():
-    highlights = latest_highlight_manager.get_recent_highlight(minutes=300)
+    highlights = latest_highlight_manager.get_recent_highlights(minutes=300)
     highlights_time_since_added = [h.time_since_added for h in highlights]
 
     # remove all highlight with same date, as already converted videos

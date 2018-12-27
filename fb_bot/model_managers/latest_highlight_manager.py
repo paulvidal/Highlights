@@ -31,9 +31,9 @@ def get_all_highlights_without_info():
     )
 
 
-def get_recent_highlight(minutes):
+def get_recent_highlights(hours=0, minutes=0):
     return LatestHighlight.objects.filter(
-        time_since_added__gt=datetime.today() - timedelta(minutes=minutes)
+        time_since_added__gt=datetime.today() - timedelta(hours=hours, minutes=minutes)
     )
 
 

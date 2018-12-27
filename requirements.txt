@@ -10,6 +10,7 @@ django-webpack-loader==0.6.0
 emoji==0.4.5
 gunicorn==19.7.1
 html5lib==1.0.1
+iso8601==0.1.12
 Logentries==0.17
 nltk==3.2.5
 psycopg2==2.7.3.2

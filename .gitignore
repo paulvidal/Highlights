@@ -9,3 +9,6 @@ static/build
 webpack-stats-dev.json
 test_explore.py
 forest_admin/
+.env
+docker-compose.yml
+Dockerfile

@@ -1,5 +1,6 @@
 import requests
 import time
+from fb_bot.highlight_fetchers.info import providers
 
 
 def check(link):
@@ -10,30 +11,21 @@ def check(link):
     :return: True if the video is still available
     """
 
-    if 'dailymotion' in link:
+    if providers.DAILYMOTION in link:
         page = requests.get(link).text
         return not ('Content rejected.' in page or 'Content deleted.' in page)
 
-    elif 'streamable' in link:
+    elif providers.STREAMABLE in link:
         page = requests.get(link).text
         return not ('Oops!' in page or "There's nothing here!" in page)
 
-    elif 'ok.ru' in link:
+    elif providers.OK_RU in link:
         page = requests.get(link).text
         return not ('vp_video_stub_txt' in page or 'page-not-found' in page) # first is for content deleted, second for content not found
 
-    # elif 'matchat.online' in link:
-    #     page = None
-    #     browser = None
-    #
-    #     try:
-    #         browser = Browser()
-    #         page = browser.get(link).get_html()
-    #     finally:
-    #         if browser:
-    #             browser.close()
-    #
-    #     return not 'rmp-no-play-text' in page
+    elif providers.CONTENT_VENTURES in link or providers.MATCHAT_ONLINE in link:
+        page = requests.get(link).text
+        return 'Blocked Video' not in page
 
     # For all other content provider, return True by default
     return True

@@ -2,6 +2,7 @@ import re
 import requests
 from raven.contrib.django.models import client
 
+from fb_bot import ressource_checker
 from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
 from fb_bot.model_managers import scrapping_status_manager
@@ -42,7 +43,13 @@ def get_video_info(link):
     except:
         client.captureException()
 
-        scrapping_status_manager.update_scrapping_status('m3u8', False)
-        logger.log('matchat.online FAILURE | url: ' + link, forward=True)
+        if ressource_checker.check(link):
+            scrapping_status_manager.update_scrapping_status('m3u8', False)
+            logger.log('matchat.online FAILURE | url: ' + link, forward=True)
+
+            return {
+                'duration': 0,  # Allow for retries if link is valid but scrapping not working
+                'video_url': None
+            }
 
         return None

@@ -1,24 +1,14 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2
-jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
-      - image: circleci/python:3.6.1
-        environment:
-          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built img
-      # documented at https://circleci.com/docs/2.0/circleci-images/
+jobs:
+  test:
+    docker:
+      - image: python:3.6.8
+
       - image: circleci/postgres:9.6.2
         environment:
           POSTGRES_USER: root
-          POSTGRES_DB: circle_test
+          POSTGRES_DB: circle_test§
 
     working_directory: ~/repo
 
@@ -28,12 +18,24 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-  # fallback to using the latest cache if no exact match is found
 
       - run:
-          name: install dependencies
+          name: Define environment variables
+          command: |
+            echo 'export SECRET_KEY=${TEST_SECRET_KEY}' >> $BASH_ENV
+            echo 'export DATABASE_URL=${TEST_DATABASE_URL}' >> $BASH_ENV
+            echo 'export MESSENGER_ACCESS_TOKEN=${TEST_MESSENGER_ACCESS_TOKEN}' >> $BASH_ENV
+            echo 'export DEBUG_ENABLE=${TEST_DEBUG_ENABLE}' >> $BASH_ENV
+            echo 'export LOGENTRIES_TOKEN=${TEST_LOGENTRIES_TOKEN}' >> $BASH_ENV
+            echo 'export BASE_URL=${TEST_BASE_URL}' >> $BASH_ENV
+            echo 'export PROD_STATUS=${TEST_PROD_STATUS}' >> $BASH_ENV
+            echo 'export SENTRY_URL=${TEST_SENTRY_URL}' >> $BASH_ENV
+            echo 'export STREAMABLE_PASSWORD=${TEST_STREAMABLE_PASSWORD}' >> $BASH_ENV
+
+      - run:
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
@@ -44,13 +46,8 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
       - run:
-          name: run tests
+          name: Run tests
           command: |
             . venv/bin/activate
             python manage.py test
@@ -58,3 +55,69 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+  build_and_push_image:
+    machine: true
+
+    steps:
+      - checkout
+
+      - run:
+          name: Push to google container registry
+          command: |
+            echo ${GCLOUD_SERVICE_KEY} > ${HOME}/gcp-key.json
+            docker build --rm=false -t eu.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_IMAGE_NAME} .
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud docker -- push eu.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_IMAGE_NAME}
+
+  deploy_prod:
+    docker:
+      - image: google/cloud-sdk
+
+    steps:
+      - checkout
+
+      - run:
+          name: Define environment variables
+          command: |
+            echo 'export SECRET_KEY=${PROD_SECRET_KEY}' >> $BASH_ENV
+            echo 'export DATABASE_URL=${PROD_DATABASE_URL}' >> $BASH_ENV
+            echo 'export MESSENGER_ACCESS_TOKEN=${PROD_MESSENGER_ACCESS_TOKEN}' >> $BASH_ENV
+            echo 'export DEBUG_ENABLE=${PROD_DEBUG_ENABLE}' >> $BASH_ENV
+            echo 'export LOGENTRIES_TOKEN=${PROD_LOGENTRIES_TOKEN}' >> $BASH_ENV
+            echo 'export BASE_URL=${PROD_BASE_URL}' >> $BASH_ENV
+            echo 'export PROD_STATUS=${PROD_PROD_STATUS}' >> $BASH_ENV
+            echo 'export SENTRY_URL=${PROD_SENTRY_URL}' >> $BASH_ENV
+            echo 'export STREAMABLE_PASSWORD=${PROD_STREAMABLE_PASSWORD}' >> $BASH_ENV
+
+      - run:
+          name: Deploy to kubernetes
+          command: |
+            apt-get install -qq -y gettext
+            envsubst < kubernetes.yaml > patched_kubernetes.yaml
+            cat patched_kubernetes.yaml
+            echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
+            gcloud auth activate-service-account --key-file gcp-key.json
+            gcloud container clusters get-credentials highlights-bot-cluster --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
+            kubectl apply -f patched_kubernetes.yaml
+            kubectl rollout status deployment/${GOOGLE_IMAGE_NAME}
+
+workflows:
+  version: 2
+  deployment:
+    jobs:
+      - test
+      - build_and_push_image:
+          requires:
+            - test
+#          filters:
+#            branches:
+#              only: master
+#      - deploy_approval:
+#          type: approval
+#          requires:
+#            - build_and_push_image
+      - deploy_prod:
+          requires:
+            - build_and_push_image

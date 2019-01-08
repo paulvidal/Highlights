@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: highlights-bot-load-balancer
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8000
+  selector:
+    app: highlights-bot-web
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: highlights-bot-web-deployment
+  labels:
+    app: highlights-bot-web
+spec:
+  selector:
+    matchLabels:
+      app: highlights-bot-web
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: highlights-bot-web
+    spec:
+      containers:
+      - name: web
+        image: eu.gcr.io/oceanic-throne-227920/highlights-bot
+        command: ["/bin/bash", "-c", "gunicorn highlights.wsgi -b 0.0.0.0:8000"]
+        ports:
+          - containerPort: 8000
+        resources:
+          requests:
+            cpu: 0.25
+        env:
+          - name: DEBUG_ENABLE
+            value: "${DEBUG_ENABLE}"
+
+          - name: BASE_URL
+            value: "${BASE_URL}"
+
+          - name: PROD_STATUS
+            value: "${PROD_STATUS}"
+
+          - name: STREAMABLE_PASSWORD
+            value: "${STREAMABLE_PASSWORD}"
+
+          - name: DATABASE_URL
+            value: "${DATABASE_URL}"
+
+          - name: LOGENTRIES_TOKEN
+            value: "${LOGENTRIES_TOKEN}"
+
+          - name: MESSENGER_ACCESS_TOKEN
+            value: "${MESSENGER_ACCESS_TOKEN}"
+
+          - name: SECRET_KEY
+            value: "${SECRET_KEY}"
+
+          - name: SENTRY_URL
+            value: "${SENTRY_URL}"
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: highlights-bot-horizontal-pod-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: highlights-bot-web-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50

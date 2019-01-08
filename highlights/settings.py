@@ -56,9 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'fb_highlights.static.CustomStaticFilesConfig',
     'fb_highlights',
-    'webpack_loader'
+    'webpack_loader',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [

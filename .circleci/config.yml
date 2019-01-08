@@ -3,12 +3,12 @@ version: 2
 jobs:
   test:
     docker:
-      - image: python:3.6.8
+      - image: python:3.6
 
       - image: circleci/postgres:9.6.2
         environment:
           POSTGRES_USER: root
-          POSTGRES_DB: circle_test§
+          POSTGRES_DB: circle_test
 
     working_directory: ~/repo
 
@@ -71,6 +71,7 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud docker -- push eu.gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_IMAGE_NAME}
 
+
   deploy_prod:
     docker:
       - image: google/cloud-sdk
@@ -90,18 +91,65 @@ jobs:
             echo 'export PROD_STATUS=${PROD_PROD_STATUS}' >> $BASH_ENV
             echo 'export SENTRY_URL=${PROD_SENTRY_URL}' >> $BASH_ENV
             echo 'export STREAMABLE_PASSWORD=${PROD_STREAMABLE_PASSWORD}' >> $BASH_ENV
+            echo 'export DJANGO_STATIC_HOST=${PROD_DJANGO_STATIC_HOST}' >> $BASH_ENV
 
       - run:
           name: Deploy to kubernetes
           command: |
             apt-get install -qq -y gettext
             envsubst < kubernetes.yaml > patched_kubernetes.yaml
-            cat patched_kubernetes.yaml
             echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
             gcloud container clusters get-credentials highlights-bot-cluster --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
             kubectl apply -f patched_kubernetes.yaml
-            kubectl rollout status deployment/${GOOGLE_IMAGE_NAME}
+            kubectl rollout status deployment.v1.apps/${GOOGLE_IMAGE_NAME}-web-deployment
+
+
+  deploy_static_assets:
+    docker:
+      - image: google/cloud-sdk
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-  # fallback to using the latest cache if no exact match is found
+
+      - run:
+          name: Define environment variables
+          command: |
+            echo 'export SECRET_KEY=${PROD_SECRET_KEY}' >> $BASH_ENV
+            echo 'export DATABASE_URL=${PROD_DATABASE_URL}' >> $BASH_ENV
+            echo 'export MESSENGER_ACCESS_TOKEN=${PROD_MESSENGER_ACCESS_TOKEN}' >> $BASH_ENV
+            echo 'export DEBUG_ENABLE=${PROD_DEBUG_ENABLE}' >> $BASH_ENV
+            echo 'export LOGENTRIES_TOKEN=${PROD_LOGENTRIES_TOKEN}' >> $BASH_ENV
+            echo 'export BASE_URL=${PROD_BASE_URL}' >> $BASH_ENV
+            echo 'export PROD_STATUS=${PROD_PROD_STATUS}' >> $BASH_ENV
+            echo 'export SENTRY_URL=${PROD_SENTRY_URL}' >> $BASH_ENV
+            echo 'export STREAMABLE_PASSWORD=${PROD_STREAMABLE_PASSWORD}' >> $BASH_ENV
+            echo 'export DJANGO_STATIC_HOST=${PROD_DJANGO_STATIC_HOST}' >> $BASH_ENV
+
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get install -qq -y python3-pip python3-venv
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - run:
+          name: Upload static files
+          command: |
+            . venv/bin/activate
+            python manage.py collectstatic --noinput --ignore src/
+            echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
+            gcloud auth activate-service-account --key-file gcp-key.json
+            gsutil -m rsync -R staticfiles/ gs://highlights-bot/static
 
 workflows:
   version: 2
@@ -114,10 +162,13 @@ workflows:
 #          filters:
 #            branches:
 #              only: master
-#      - deploy_approval:
-#          type: approval
-#          requires:
-#            - build_and_push_image
-      - deploy_prod:
+      - deploy_approval:
+          type: approval
           requires:
             - build_and_push_image
+      - deploy_prod:
+          requires:
+            - deploy_approval
+      - deploy_static_assets:
+          requires:
+            - deploy_prod

@@ -105,7 +105,7 @@ jobs:
             kubectl rollout status deployment.v1.apps/${GOOGLE_IMAGE_NAME}-web-deployment
 
 
-  deploy_static_assets:
+  deploy_static_assets_and_migrate:
     docker:
       - image: google/cloud-sdk
         environment:
@@ -158,13 +158,19 @@ jobs:
             yarn run prod
 
       - run:
-          name: Upload static files
+          name: Upload static files and migrate
           command: |
             . venv/bin/activate
             python manage.py collectstatic --noinput --ignore src/
             echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
             gsutil -m rsync -d -r staticfiles/ gs://highlights-bot/static
+
+      - run:
+          name: Migrate application
+          command: |
+              . venv/bin/activate
+              python manage.py migrate
 
       - save_cache:
           paths:
@@ -189,6 +195,6 @@ workflows:
       - deploy_prod:
           requires:
             - deploy_approval
-      - deploy_static_assets:
+      - deploy_static_assets_and_migrate:
           requires:
             - deploy_prod

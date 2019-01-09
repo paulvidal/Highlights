@@ -35,13 +35,13 @@ spec:
     spec:
       containers:
       - name: web
-        image: eu.gcr.io/oceanic-throne-227920/highlights-bot
+        image: eu.gcr.io/oceanic-throne-227920/highlights-bot:${CIRCLE_SHA1}
         command: ["/bin/bash", "-c", "gunicorn highlights.wsgi -b 0.0.0.0:8000"]
         ports:
           - containerPort: 8000
         resources:
           requests:
-            cpu: 0.25
+            cpu: 0.2
         env:
           - name: DEBUG_ENABLE
             value: "${DEBUG_ENABLE}"
@@ -86,7 +86,7 @@ spec:
     name: highlights-bot-web-deployment
   minReplicas: 2
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 70
 
 ---
 
@@ -136,10 +136,10 @@ spec:
         resources:
           requests:
             memory: "256Mi"
-            cpu: "200m"
+            cpu: "150m"
           limits:
             memory: "256Mi"
-            cpu: "200m"
+            cpu: "150m"
         volumeMounts:
           - name: dockersocket
             mountPath: /var/run/docker.sock

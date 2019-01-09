@@ -1,6 +1,5 @@
 var path = require("path");
 var webpack = require('webpack');
-var BundleTracker = require('webpack-bundle-tracker');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
 
   output: {
     path: path.resolve('./build/'),
-    filename: '[name]-[hash].js',
+    filename: '[name].js',
   },
 
   plugins: [],
@@ -33,4 +32,4 @@ module.exports = {
       }
     ],
   }
-}
+};

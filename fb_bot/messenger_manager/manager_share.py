@@ -17,7 +17,7 @@ def create_share_message():
         {
             "title": "Start a conversation with me!",
             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-            "image_url": settings.STATIC_URL + "/img/share.png",
+            "image_url": settings.STATIC_URL + "img/share.png",
             "buttons": [
                 {
                     "type": "element_share",
@@ -25,7 +25,7 @@ def create_share_message():
                         {
                             "title": "Start a conversation with me!",
                             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                            "image_url": settings.STATIC_URL + "/img/share.png",
+                            "image_url": settings.STATIC_URL + "img/share.png",
                             "default_action": {
                                 "type": "web_url",
                                 "url": "https://m.me/highlightsSportBot/"

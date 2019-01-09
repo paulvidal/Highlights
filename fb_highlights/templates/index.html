@@ -1,5 +1,4 @@
 {% load static %}
-{% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +19,7 @@
     <link href="{% static 'lib/css/bootstrap4.min.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
-    {% render_bundle 'main' 'css' %}
+    <link href="{% static 'dist/main.css' %}" rel="stylesheet">
 
     <script>var STATIC_URL = "{% get_static_prefix %}"</script>
 </head>
@@ -80,13 +79,13 @@
       </div>
     </footer>
 
-    <!-- Library JS r-->
+    <!-- Library JS -->
     <script src="{% static 'lib/js/jquery.min.js' %}"></script>
     <script src="{% static 'lib/js/bootstrap4.min.js' %}"></script>
     <script src="{% static 'lib/js/lodash.min.js' %}"></script>
 
     <!-- Custom JS -->
-    {% render_bundle 'main' 'js' %}
+    <script src="{% static 'dist/main.js' %}"></script>
 
 </body>
 </html>

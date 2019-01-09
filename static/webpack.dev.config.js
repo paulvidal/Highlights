@@ -1,9 +1,7 @@
-var path = require("path")
-var webpack = require('webpack')
-var BundleTracker = require('webpack-bundle-tracker')
+var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var config = require('./webpack.base.config.js')
+var config = require('./webpack.base.config.js');
 
 // DEVELOPMENT
 config.mode = 'development';
@@ -14,19 +12,18 @@ for (var name in config.entry) {
 }
 
 // Override django's STATIC_URL for webpack bundles
-config.output.publicPath = 'http://localhost:3000/assets/bundles/'
+config.output.publicPath = 'http://localhost:3000/assets/bundles/';
 
 // Simplify name of generated file
-config.output.filename = '[name].js',
+config.output.filename = '[name].js';
 
 // Add HotModuleReplacementPlugin and BundleTracker plugins
 config.plugins = config.plugins.concat([
   new webpack.NoEmitOnErrorsPlugin(), // don't reload if there is an error
-  new BundleTracker({filename: './webpack-stats-dev.json'}),
   new webpack.HotModuleReplacementPlugin({}),
   new webpack.NamedModulesPlugin(),
   new ExtractTextPlugin('[name].css')
-])
+]);
 
 // Add a loader for JS files with react-hot enabled
 config.module.rules.push(
@@ -42,6 +39,6 @@ config.module.rules.push(
       plugins: ['react-hot-loader/babel'],
     },
   },
-)
+);
 
-module.exports = config
+module.exports = config;

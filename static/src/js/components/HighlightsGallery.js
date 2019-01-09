@@ -125,7 +125,7 @@ class HighlightsGallery extends Component {
               <div className="no-result row justify-content-center">
                 <h2>{'No results found' + (this.props.search ? ' for ': '')} <strong>{this.props.search ? this.props.search : ''}</strong></h2>
                 <div className="col-9 col-md-8 col-lg-5">
-                  <img id="no-result-image" className="img-fluid" src={`${STATIC_URL}/img/logo.png`} />
+                  <img id="no-result-image" className="img-fluid" src={`${STATIC_URL}img/logo.png`} />
                 </div>
               </div>
             </div>

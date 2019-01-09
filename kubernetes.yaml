@@ -150,7 +150,7 @@ spec:
             mountPath: /host/sys/fs/cgroup
             readOnly: true
           - name: pointerdir
-            mountPath: /opt/datadog-agent/run
+            mountPath: /var/run/logs
         livenessProbe:
           exec:
             command:
@@ -168,5 +168,5 @@ spec:
           path: /sys/fs/cgroup
         name: cgroups
       - hostPath:
-          path: /opt/datadog-agent/run
+          path: /var/run/logs
         name: pointerdir

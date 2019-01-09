@@ -1,6 +1,5 @@
 var path = require("path");
-var webpack = require('webpack')
-var BundleTracker = require('webpack-bundle-tracker')
+var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -12,11 +11,10 @@ var config = require('./webpack.base.config.js');
 config.mode = 'production';
 
 // Give distribution path
-config.output.path = path.resolve('./dist')
+config.output.path = path.resolve('./dist');
 
 config.plugins = config.plugins.concat([
-  new BundleTracker({filename: './webpack-stats-prod.json'}),
-  new ExtractTextPlugin('[name]-[hash].css'),
+  new ExtractTextPlugin('[name].css'),
 
   // Removes a lot of debugging code in React
   new webpack.DefinePlugin({
@@ -26,7 +24,7 @@ config.plugins = config.plugins.concat([
 
   // Keeps hashes consistent between compilations
   new webpack.optimize.OccurrenceOrderPlugin(),
-])
+]);
 
 // Minifies the code
 config.optimization = {
@@ -34,7 +32,7 @@ config.optimization = {
     new UglifyJsPlugin({}),
     new OptimizeCssAssetsPlugin({})
   ]
-}
+};
 
 // Add a loader for JS files with react-hot enabled
 config.module.rules.push(
@@ -43,6 +41,6 @@ config.module.rules.push(
     exclude: /node_modules/,
     loader: 'babel-loader',
   }
-)
+);
 
-module.exports = config
+module.exports = config;

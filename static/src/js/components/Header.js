@@ -47,7 +47,7 @@ class Header extends Component {
       <div className="navbar navbar-dark bg-dark shadow-sm">
         <div className="container d-flex justify-content-between">
           <a href="/" className="brand navbar-brand d-flex align-items-center col-md-auto col-12">
-            <img className="logo" src={`${STATIC_URL}/img/logo.png`} alt="Card image cap"/>
+            <img className="logo" src={`${STATIC_URL}img/logo.png`} alt="Card image cap"/>
             <strong>Highlights Bot</strong>
           </a>
 

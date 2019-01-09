@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'fb_highlights.static.CustomStaticFilesConfig',
     'fb_highlights',
-    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -168,13 +167,4 @@ STATICFILES_DIRS = (
 
 RAVEN_CONFIG = {
     'dsn': get_env_var('SENTRY_URL'),
-}
-
-# For WEBPACK
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'build/' if DEBUG else 'dist/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'static/webpack-stats-dev.json' if DEBUG else 'static/webpack-stats-prod.json'),
-    }
 }

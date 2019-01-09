@@ -17,7 +17,7 @@ class Command(CustomCommand):
             {
                 "title": "Don’t be selfish...",
                 "subtitle": "Your friends also deserve to see the goals! " + EMOJI_WINK,
-                "image_url": settings.BASE_URL + "/static/img/share_world_cup_meme.png",
+                "image_url": settings.STATIC_URL + "/img/share_world_cup_meme.png",
                 "buttons": [
                     {
                         "type": "element_share",
@@ -25,7 +25,7 @@ class Command(CustomCommand):
                             {
                                 "title": "Don't miss the World Cup!",
                                 "subtitle": "I will send you World Cup highlight videos for your favourite teams ASAP",
-                                "image_url": settings.BASE_URL + "/static/img/logo_share.png",
+                                "image_url": settings.STATIC_URL + "/img/logo_share.png",
                                 "default_action": {
                                     "type": "web_url",
                                     "url": "https://m.me/highlightsSportBot/"

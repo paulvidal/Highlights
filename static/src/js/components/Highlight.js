@@ -16,7 +16,7 @@ const Highlight = ({ img_link, category, team1, team2, score1, score2, match_tim
     <div className="col-lg-4 col-md-6" onClick={onClickShort}>
       <div className="card mb-4 shadow-sm highlight">
         <div className="card-img-top">
-            <img className="col image img-fluid" src={img_link} onError={(e)=>{e.target.src="/static/img/logo.png"}} alt="Card image cap"/>
+            <img className="col image img-fluid" src={img_link} onError={(e)=>{e.target.src=`${STATIC_URL}/img/logo.png`}} alt="Card image cap"/>
             <p className="category">{formattedCategory}</p>
         </div>
 

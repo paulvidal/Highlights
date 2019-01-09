@@ -31,7 +31,7 @@
   },
   "scripts": {
     "server": "node server",
-    "prod": "rm -r dist && webpack --config webpack.prod.config.js && node herokuwebpack",
+    "prod": "webpack --config webpack.prod.config.js",
     "clean": "rm -r build && rm -r dist"
   },
   "author": "Paul Vidal",

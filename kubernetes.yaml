@@ -136,10 +136,10 @@ spec:
         resources:
           requests:
             memory: "256Mi"
-            cpu: "150m"
+            cpu: "200m"
           limits:
             memory: "256Mi"
-            cpu: "150m"
+            cpu: "200m"
         volumeMounts:
           - name: dockersocket
             mountPath: /var/run/docker.sock

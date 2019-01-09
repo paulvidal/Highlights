@@ -6,8 +6,10 @@ set_prod_db.sh
 miscellaneous
 static/node_modules
 static/build
+static/dist
 webpack-stats-dev.json
+webpack-stats-prod.json
 test_explore.py
-forest_admin/
 .env
 docker-compose.yml
+yarn.lock

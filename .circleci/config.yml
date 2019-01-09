@@ -18,8 +18,8 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            - v1-dependencies-  # fallback to using the latest cache if no exact match is found
+            - test-dependencies-{{ checksum "requirements.txt" }}
+            - test-dependencies-  # fallback to using the latest cache if no exact match is found
 
       - run:
           name: Define environment variables
@@ -108,6 +108,9 @@ jobs:
   deploy_static_assets:
     docker:
       - image: google/cloud-sdk
+        environment:
+          TERM: linux
+          TERMINFO: /etc/terminfo
 
     working_directory: ~/repo
 
@@ -117,8 +120,8 @@ jobs:
       # Download dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-debian-{{ checksum "requirements.txt" }}
-            - v1-dependencies-debian-  # fallback to using the latest cache if no exact match is found
+            - deploy-dependencies-{{ checksum "requirements.txt" }}
+            - deploy-dependencies-  # fallback to using the latest cache if no exact match is found
 
       - run:
           name: Define environment variables
@@ -143,18 +146,30 @@ jobs:
             pip install -r requirements.txt
 
       - run:
+          name: Generate static files
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+            curl -sL https://deb.nodesource.com/setup_8.x | bash -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+            apt-get update
+            apt-get install -qq -y nodejs yarn
+            cd static
+            yarn install
+            yarn run prod
+
+      - run:
           name: Upload static files
           command: |
             . venv/bin/activate
             python manage.py collectstatic --noinput --ignore src/
             echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
-            gsutil -m rsync -R staticfiles/ gs://highlights-bot/static
+            gsutil -m rsync -d -r staticfiles/ gs://highlights-bot/static
 
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-debian-{{ checksum "requirements.txt" }}
+          key: deploy-dependencies-{{ checksum "requirements.txt" }}
 
 workflows:
   version: 2

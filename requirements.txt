@@ -24,5 +24,4 @@ selenium==3.11.0
 six==1.10.0
 tzlocal==1.4
 webencodings==0.5.1
-whitenoise==3.3.0
 zope.interface==4.4.0

@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-run: prod
+run:
 	sh runserver.sh
 
 dev:

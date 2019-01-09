@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     'fb_highlights.static.CustomStaticFilesConfig',
     'fb_highlights',
     'webpack_loader',
-    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -170,12 +169,6 @@ STATICFILES_DIRS = (
 RAVEN_CONFIG = {
     'dsn': get_env_var('SENTRY_URL'),
 }
-
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
 
 # For WEBPACK
 

@@ -4,6 +4,7 @@ from fb_bot import scheduler_tasks
 from fb_bot.model_managers import latest_highlight_manager
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
+from highlights import settings
 
 
 class FetcherTestCase(TestCase):
@@ -63,3 +64,9 @@ class FetcherTestCase(TestCase):
         h = latest_highlight_manager.get_highlight('http://footyroom/manchester_city-tottenham')
 
         self.assertEqual(h.id, 10)
+
+    def test_default_image_url_is_replaced_by_website_logo(self):
+        # Then
+        h = latest_highlight_manager.get_highlight('http://hoofoot/france-england')
+
+        self.assertEqual(h.img_link, settings.STATIC_URL + "img/logo.png")

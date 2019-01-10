@@ -31,7 +31,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/chelsea-barcelona',
         'Chelsea 0 - 2 Barcelona',
-        'http://hoofoot/img?chelsea-barcelona',
+        'http://hoofoot/img/chelsea-barcelona',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER
@@ -40,7 +40,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/chelsea-barcelona2',
         'Chelsea 0 - 2 Barcelona',
-        'http://hoofoot/img?chelsea-barcelona2',
+        'http://hoofoot/img/chelsea-barcelona2',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER
@@ -49,7 +49,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/chelsea-barcelona3',
         'Barcelona 2 - 0 Chelsea',
-        'http://hoofoot/img?chelsea-barcelona3',
+        'http://hoofoot/img/chelsea-barcelona3',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER
@@ -60,7 +60,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/burnley-barcelona',
         'Burnley 0 - 2 Barcelona',
-        'http://hoofoot/img?burnley-barcelona',
+        'http://hoofoot/img/burnley-barcelona',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER
@@ -71,7 +71,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/barcelona-liverpool',
         'Barcelona 1 - 1 Liverpool',
-        'http://hoofoot/img?barcelona-liverpool',
+        'http://hoofoot/img/barcelona-liverpool',
         0,
         'Champions League',
         TIME_NOW
@@ -82,7 +82,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/chelsea-real_madrid',
         'Arsenal 1 - 0 Real Madrid',
-        'http://hoofoot/img?chelsea-real_madrid',
+        'http://hoofoot/img/chelsea-real_madrid',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER
@@ -93,7 +93,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/arsenal-liverpool',
         'Arsenal 0 - 4 Liverpool',
-        'http://hoofoot/img?arsenal-liverpool',
+        'http://hoofoot/img/arsenal-liverpool',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER
@@ -102,7 +102,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight( # Different
         'http://hoofoot/arsenal-liverpool2',
         'Liverpool 4 - 0 Arsenal',
-        'http://hoofoot/img?arsenal-liverpool',
+        'http://hoofoot/img/arsenal-liverpool',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER
@@ -113,7 +113,7 @@ TEST_HIGHLIGHTS = [
     FootyroomHighlight(
         'http://footyroom/swansea-arsenal',
         'Swansea 4 - 0 Arsenal',
-        'http://footyroom/img?swansea-arsenal',
+        'http://footyroom/img/swansea-arsenal',
         0,
         'Premier League',
         str(TIME_40_MINUTES_EARLIER)
@@ -124,7 +124,7 @@ TEST_HIGHLIGHTS = [
     FootyroomVideoHighlight(
         'http://hoofoot/barcelona-real_madrid',
         'Barcelona 3 - 2 Real Madrid',
-        'http://footyroom/img?barcelona-real_madrid',
+        'http://footyroom/img/barcelona-real_madrid',
         0,
         'La Liga',
         TIME_40_MINUTES_EARLIER,
@@ -142,7 +142,7 @@ TEST_HIGHLIGHTS = [
     FootyroomVideoHighlight(
         'http://hoofoot/barcelona-arsenal',
         'Barcelona 0 - 1 Arsenal',
-        'http://footyroom/img?barcelona-arsenal',
+        'http://footyroom/img/barcelona-arsenal',
         0,
         'Champions League',
         TIME_40_MINUTES_EARLIER,
@@ -156,7 +156,7 @@ TEST_HIGHLIGHTS = [
     FootyroomHighlight(
         'http://footyroom/manchester_city-tottenham',
         'Manchester City 0 - 0 Tottenham',
-        'http://footyroom/img?manchester_city-tottenham',
+        'http://footyroom/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER
@@ -165,7 +165,7 @@ TEST_HIGHLIGHTS = [
     FootyroomHighlight(
         'http://footyroom/manchester_city-tottenham2',
         'Manchester City 0 - 0 Tottenham',
-        'http://footyroom/img?manchester_city-tottenham',
+        'http://footyroom/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_1_DAY_EARLIER
@@ -174,7 +174,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/manchester_city-tottenham',
         'Manchester City 0 - 0 Tottenham',
-        'http://hoofoot/img?manchester_city-tottenham',
+        'http://hoofoot/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER
@@ -183,7 +183,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/manchester_city-tottenham',
         'Manchester City 0 - 0 Tottenham',
-        'http://hoofoot/img?manchester_city-tottenham',
+        'http://hoofoot/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER
@@ -192,7 +192,7 @@ TEST_HIGHLIGHTS = [
     OurMatchHighlight(
         'http://ourmatch/manchester_city-tottenham',
         'Manchester City vs Tottenham',
-        'http://ourmatch/img?manchester_city-tottenham',
+        'http://ourmatch/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER, [], 'normal'
@@ -203,7 +203,7 @@ TEST_HIGHLIGHTS = [
     SportyHLHighlight(
         'http://sportyhl/marseille-monaco',
         'Marseille vs Monaco',
-        'http://sportyhl/img?marseille-monaco',
+        'http://sportyhl/img/marseille-monaco',
         0,
         'Ligue 1',
         TIME_40_MINUTES_EARLIER, 'normal'
@@ -212,7 +212,7 @@ TEST_HIGHLIGHTS = [
     SportyHLHighlight( # Different
         'http://sportyhl/marseille-monaco-2',
         'Marseille vs Monaco',
-        'http://sportyhl/img?marseille-monaco',
+        'http://sportyhl/img/marseille-monaco',
         0,
         'Ligue 1',
         TIME_3_DAYS_EARLIER, 'normal'
@@ -223,7 +223,7 @@ TEST_HIGHLIGHTS = [
     FootyroomHighlight(
         'http://footyroom/swansea-barcelona',
         'Swansea 0 - 3 Barcelona',
-        'http://footyroom/img?swansea-barcelona',
+        'http://footyroom/img/swansea-barcelona',
         0,
         'Champions League',
         TIME_3_DAYS_EARLIER
@@ -234,7 +234,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/swansea-liverpool',
         'Swansea 2 - 0 Liverpool',
-        'http://hoofoot/img?swansea-liverpool',
+        'http://hoofoot/img/swansea-liverpool',
         0,
         'Europa League',
         TIME_40_MINUTES_EARLIER
@@ -245,7 +245,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/france-belgium',
         'France 2 - 0 Belgium',
-        'http://hoofoot/img?france-belgium',
+        'http://hoofoot/img/france-belgium',
         0,
         'Nations League',
         TIME_40_MINUTES_EARLIER
@@ -256,7 +256,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/france-england',
         'France 2 - 0 England',
-        'http://hoofoot/img?france-england',
+        'http://hoofoot/img/default',
         0,
         'Nations League',
         TIME_40_MINUTES_EARLIER
@@ -270,7 +270,7 @@ TEST_HIGHLIGHTS_2 = [
     HoofootHighlight(
         'http://hoofoot/swansea-arsenal',
         'Arsenal 0 - 4 Swansea',
-        'http://hoofoot/img?swansea-arsenal',
+        'http://hoofoot/img/swansea-arsenal',
         0,
         'Premier League',
         str(TIME_40_MINUTES_EARLIER)

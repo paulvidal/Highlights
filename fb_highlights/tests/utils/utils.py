@@ -1,5 +1,6 @@
 from fb_highlights.tests.utils.helper import TEST_USER_ID
-from urllib.parse import quote
+
+from highlights import settings
 
 
 def create_formatted_highlight_response(id, team1, score1, team2, score2, competition, image_url, time, score_hidden=False):
@@ -11,7 +12,7 @@ def create_formatted_highlight_response(id, team1, score1, team2, score2, compet
         team2
     )
 
-    url_start = "http://localhost:8000/highlight/{}".format(id)
+    url_start = settings.BASE_URL + "/highlight/{}".format(id)
 
     return {
             'recipient': {

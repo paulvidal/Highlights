@@ -431,9 +431,9 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -443,12 +443,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            "url": 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            "url": settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            "url": 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            "url": settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -500,9 +500,9 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -512,12 +512,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -550,9 +550,9 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -562,12 +562,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -602,7 +602,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     "title": "Marseille -1 - -1 Monaco",
                                     "subtitle": "Ligue 1",
-                                    "image_url": "http://sportyhl/img?marseille-monaco",
+                                    "image_url": "http://sportyhl/img/marseille-monaco",
                                     "default_action": {
                                         "type": "web_url",
                                         "messenger_extensions": "false",
@@ -745,9 +745,9 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'title': 'Chelsea - Barcelona',
                                     'subtitle': 'Champions League',
-                                    'image_url': 'http://hoofoot/img?chelsea-barcelona',
+                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
                                     'default_action': {
-                                        'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -755,12 +755,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': 'http://localhost:8000/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]

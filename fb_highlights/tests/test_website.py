@@ -5,6 +5,7 @@ from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 
 from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER
+from highlights import settings
 
 
 class WebsiteTestCase(TestCase):
@@ -53,9 +54,9 @@ class WebsiteTestCase(TestCase):
                     'score1': 4,
                     'team2': 'arsenal',
                     'score2': 0,
-                    'link': 'http://localhost:8000/highlight/7',
-                    'link_extended': 'http://localhost:8000/highlight/7/extended',
-                    'img_link': 'http://footyroom/img?swansea-arsenal',
+                    'link': settings.BASE_URL + '/highlight/7',
+                    'link_extended': settings.BASE_URL + '/highlight/7/extended',
+                    'img_link': 'http://footyroom/img/swansea-arsenal',
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime(
                         "%Y-%m-%dT%H:%M:%S"),
                 },
@@ -67,9 +68,9 @@ class WebsiteTestCase(TestCase):
                     'score1': 2,
                     'team2': 'liverpool',
                     'score2': 0,
-                    'link': 'http://localhost:8000/highlight/14',
-                    'link_extended': 'http://localhost:8000/highlight/14/extended',
-                    'img_link': 'http://hoofoot/img?swansea-liverpool',
+                    'link': settings.BASE_URL + '/highlight/14',
+                    'link_extended': settings.BASE_URL + '/highlight/14/extended',
+                    'img_link': 'http://hoofoot/img/swansea-liverpool',
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
             ],
@@ -93,9 +94,9 @@ class WebsiteTestCase(TestCase):
                     'score1': 0,
                     'team2': 'barcelona',
                     'score2': 2,
-                    'link': 'http://localhost:8000/highlight/1',
-                    'link_extended': 'http://localhost:8000/highlight/1/extended',
-                    'img_link': 'http://hoofoot/img?chelsea-barcelona',
+                    'link': settings.BASE_URL + '/highlight/1',
+                    'link_extended': settings.BASE_URL + '/highlight/1/extended',
+                    'img_link': 'http://hoofoot/img/chelsea-barcelona',
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
             ],

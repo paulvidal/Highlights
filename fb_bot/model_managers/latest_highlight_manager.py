@@ -5,6 +5,7 @@ from django.db.models import Q, Min, Sum
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
+from highlights import settings
 
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 
@@ -275,6 +276,9 @@ def add_highlight(highlight, sent=False):
 
     category = football_competition_manager.get_football_competition(highlight.category)
 
+    img_link = highlight.img_link if not is_default_highlight_img(highlight.img_link) else settings.STATIC_URL + "img/logo.png"
+
+    # Get the match time and id
     match_time = datetime.fromordinal(highlight.time_since_added.date().toordinal())
     id = get_new_id()
 
@@ -286,7 +290,7 @@ def add_highlight(highlight, sent=False):
 
     highlight, _ = LatestHighlight.objects.update_or_create(id=id,
                                                             link=highlight.link,
-                                                            img_link=highlight.img_link,
+                                                            img_link=img_link,
                                                             time_since_added=highlight.time_since_added,
                                                             match_time=match_time,
                                                             team1=team1,
@@ -301,6 +305,16 @@ def add_highlight(highlight, sent=False):
                                                             type=highlight.type)
 
     return highlight
+
+
+# Helper
+def is_default_highlight_img(img_link):
+    return img_link and \
+           any([default_keyword in img_link for default_keyword in [
+               'nothumb',
+               'default',
+               'logo.png'
+           ]])
 
 
 def delete_highlight(highlight_model):

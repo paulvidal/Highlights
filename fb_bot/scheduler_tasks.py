@@ -51,7 +51,7 @@ def send_most_recent_highlights():
             continue
 
         # Do not override if default image for reference highlight
-        if not 'nothumb' in reference_highlight.img_link and not 'default' in reference_highlight.img_link:
+        if not latest_highlight_manager.is_default_highlight_img(reference_highlight.img_link):
             latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
 
         latest_highlight_manager.set_goal_data(h, reference_highlight.goal_data)

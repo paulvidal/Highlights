@@ -22,7 +22,7 @@ spec:
   selector:
     matchLabels:
       app: highlights-bot-web
-  replicas: 2
+  replicas: 1
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -84,7 +84,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: highlights-bot-web-deployment
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
 

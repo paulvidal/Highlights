@@ -110,7 +110,7 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not image:
             continue
 
-        img_link = image.find("span").get('data-img-url')
+        img_link = str(image.find("span").get('data-img-url'))
 
         # Extract link
         link_tag = vid.find(class_="td-image-wrap")

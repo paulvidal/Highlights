@@ -188,13 +188,13 @@ workflows:
 #          filters:
 #            branches:
 #              only: master
-      - deploy_approval:
-          type: approval
-          requires:
-            - build_and_push_image
+#      - deploy_approval:
+#          type: approval
+#          requires:
+#            - build_and_push_image
       - deploy_prod:
           requires:
-            - deploy_approval
+            - build_and_push_image
       - deploy_static_assets_and_migrate:
           requires:
             - deploy_prod

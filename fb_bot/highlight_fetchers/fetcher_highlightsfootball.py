@@ -110,7 +110,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if not image:
             continue
 
-        img_link = str(image.find("span").get('data-img-url'))
+        img_style = image.find("span").get('style')
+        img_link = re.findall('background-image: url\((.*?)\)', img_style)[0]
 
         # Extract link
         link_tag = vid.find(class_="td-image-wrap")
@@ -124,6 +125,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
 
         for type, video_link in video_links:
             highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added, type))
+
+        return highlights
 
     return highlights
 

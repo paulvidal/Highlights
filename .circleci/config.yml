@@ -33,6 +33,19 @@ jobs:
           - v1-dependencies-
 
       - run:
+          name: Define environment variables
+          command: |
+            echo 'export SECRET_KEY=${TEST_SECRET_KEY}' >> $BASH_ENV
+            echo 'export DATABASE_URL=${TEST_DATABASE_URL}' >> $BASH_ENV
+            echo 'export MESSENGER_ACCESS_TOKEN=${TEST_MESSENGER_ACCESS_TOKEN}' >> $BASH_ENV
+            echo 'export DEBUG_ENABLE=${TEST_DEBUG_ENABLE}' >> $BASH_ENV
+            echo 'export LOGENTRIES_TOKEN=${TEST_LOGENTRIES_TOKEN}' >> $BASH_ENV
+            echo 'export BASE_URL=${TEST_BASE_URL}' >> $BASH_ENV
+            echo 'export PROD_STATUS=${TEST_PROD_STATUS}' >> $BASH_ENV
+            echo 'export SENTRY_URL=${TEST_SENTRY_URL}' >> $BASH_ENV
+            echo 'export STREAMABLE_PASSWORD=${TEST_STREAMABLE_PASSWORD}' >> $BASH_ENV
+
+      - run:
           name: install dependencies
           command: |
             python3 -m venv venv

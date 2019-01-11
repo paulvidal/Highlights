@@ -126,8 +126,6 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         for type, video_link in video_links:
             highlights.append(HighlightsFootballHighlight(video_link, match_name, img_link, view_count, category, time_since_added, type))
 
-        return highlights
-
     return highlights
 
 

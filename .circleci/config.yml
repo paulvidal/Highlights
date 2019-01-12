@@ -94,14 +94,18 @@ jobs:
             echo 'export DJANGO_STATIC_HOST=${PROD_DJANGO_STATIC_HOST}' >> $BASH_ENV
 
       - run:
-          name: Deploy to kubernetes
+          name: Substitute environment variables in kubernetes files
           command: |
             apt-get install -qq -y gettext
-            envsubst < kubernetes.yaml > patched_kubernetes.yaml
+            sh sub_env_vars_k8s.sh
+
+      - run:
+          name: Kubernetes deployment
+          command: |
             echo ${GCLOUD_SERVICE_KEY} > gcp-key.json
             gcloud auth activate-service-account --key-file gcp-key.json
             gcloud container clusters get-credentials highlights-bot-cluster --zone ${GOOGLE_COMPUTE_ZONE} --project ${GOOGLE_PROJECT_ID}
-            kubectl apply -f patched_kubernetes.yaml
+            kubectl apply -f kubernetes --recursive
             kubectl rollout status deployment.v1.apps/${GOOGLE_IMAGE_NAME}-web-deployment
 
 

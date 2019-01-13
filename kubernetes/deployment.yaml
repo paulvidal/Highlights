@@ -47,7 +47,7 @@ spec:
       containers:
       - name: web
         image: eu.gcr.io/oceanic-throne-227920/highlights-bot:${CIRCLE_SHA1}
-        command: ["/bin/bash", "-c", "gunicorn highlights.wsgi -b 0.0.0.0:8000"]
+        command: ["gunicorn", "highlights.wsgi", "-b", "0.0.0.0:8000"]
         ports:
           - containerPort: 8000
         resources:
@@ -71,3 +71,37 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 70
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: highlights-bot-schedule-tasks-deployment
+  labels:
+    app: highlights-bot-schedule-tasks
+spec:
+  selector:
+    matchLabels:
+      app: highlights-bot-schedule-tasks
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: highlights-bot-schedule-tasks
+    spec:
+      containers:
+      - name: schedule-tasks
+        image: eu.gcr.io/oceanic-throne-227920/highlights-bot:${CIRCLE_SHA1}
+        command: ["./manage.py", "scheduler"]
+        resources:
+          requests:
+            cpu: 0.2
+        envFrom:
+          - configMapRef:
+              name: django-env-config

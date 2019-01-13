@@ -156,8 +156,9 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', BASE_URL)
+STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', '')
 STATIC_URL = STATIC_HOST + '/static/'
+STATIC_URL_MESSENGER = (STATIC_HOST if STATIC_HOST else BASE_URL) + '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),

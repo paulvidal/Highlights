@@ -6,7 +6,6 @@ from fb_highlights import views
 urlpatterns = [
     url(r'^d08fcf03937a116ab14ea30725c72d33ac715bcfa085e296cd/?$', views.HighlightsBotView.as_view()),
     url(r'^highlights/?$', views.HighlightsView.as_view()),
-    url(r'^highlight/?$', views.HighlightRedirectView.as_view()),
     path('highlight/<int:id>', views.HighlightView.as_view()),
     path('highlight/<int:id>/<slug:type>', views.HighlightView.as_view()),
     url(r'^debug', views.DebugPageView.as_view()),

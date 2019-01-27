@@ -1,23 +1,68 @@
+{% load static %}
+
 <!DOCTYPE html>
 
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>{{ title }}</title>
-    <meta name="description" content="Watch the latest highlights and goals for the match {{ title }}">
+  <title>{{ title }}</title>
+  <meta name="description" content="Watch the latest highlights and goals for the match {{ title }}">
 
-    <!-- Favicons -->
-    {% include "favicons.html" %}
+  <!-- Favicons -->
+  {% include "favicons.html" %}
 
-    <!-- Google Analytics -->
-    {% include "google_analytics.html" %}
+  <!-- Google Analytics -->
+  {% include "google_analytics.html" %}
+
+  <link href="{% static 'lib/css/bootstrap4.min.css' %}" rel="stylesheet">
 </head>
 
 <body>
-    <iframe style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border-width: 0;" src="{{ link }}" frameborder="0" scrolling="no" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" kwframeid="3"></iframe>
+{% if recommendations %}
+<iframe style="position: absolute; width: 100%; height: 60%; top: 0; left: 0; border-width: 0;" src="{{ link }}?autoplay=1" frameborder="0" scrolling="no" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" kwframeid="3"></iframe>
+
+<div style="position: absolute; width: 100%; height: 40%; top: 60%; left: 0;">
+  <div class="container">
+
+    <div class="row justify-content-center">
+
+      <div class="col-12 col-md-8">
+
+        <h4 class="mt-4 mb-4" style="font-family: Helvetica Neue">Suggestions</h4>
+
+        <div class="row">
+
+          {% for recommendation in recommendations %}
+
+          <div class="col-12 col-md-6">
+            <a href="{{ recommendation.0 }}" style="text-decoration: none; color: black">
+              <img style="object-fit: cover; height: 65%; width: 100%;" class="img-fluid" src="{{ recommendation.1 }}"
+                   onerror="this.src = '{% static 'img/logo.png' %}';">
+              <h5 class="mt-2 text-center">{{ recommendation.2 }}</h5>
+              <p class="mt-1 text-center">{{ recommendation.3 }}</p>
+            </a>
+          </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<iframe style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border-width: 0;" src="{{ link }}?autoplay=1" frameborder="0" scrolling="no" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" kwframeid="3"></iframe>
+
+{% endif %}
 </body>
+
+
 
 </html>

@@ -9,6 +9,7 @@ def add_highlight_stat(fb_id, highlight_model, extended):
     time = datetime.today()
 
     highlight_stats = HighlightStat.objects.filter(user=user,
+                                                   match_id=highlight_model.id,
                                                    team1=highlight_model.team1,
                                                    score1=highlight_model.score1,
                                                    team2=highlight_model.team2,
@@ -25,6 +26,7 @@ def add_highlight_stat(fb_id, highlight_model, extended):
             return
 
     HighlightStat.objects.update_or_create(user=user,
+                                           match_id=highlight_model.id,
                                            team1=highlight_model.team1,
                                            score1=highlight_model.score1,
                                            team2=highlight_model.team2,
@@ -33,3 +35,8 @@ def add_highlight_stat(fb_id, highlight_model, extended):
                                            time=time,
                                            extended=extended,
                                            video_duration=highlight_model.video_duration)
+
+
+def get_highlight_stats_id_for_user(fb_id):
+    user = user_manager.get_user(fb_id)
+    return [h.match_id for h in HighlightStat.objects.filter(user=user)]

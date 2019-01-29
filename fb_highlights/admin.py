@@ -2,7 +2,7 @@ from django.contrib import admin
 from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, \
     HighlightStat, \
     HighlightNotificationStat, RegistrationCompetition, FootballCompetition, ScrappingStatus, ScraperApiKey, \
-    BlockedNotification
+    BlockedNotification, Recommendation
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -85,6 +85,12 @@ class BlockedNotificationAdmin(admin.ModelAdmin):
     search_fields = BlockedNotification.search_fields()
 
 
+class RecommendationAdmin(admin.ModelAdmin):
+    list_display = Recommendation.to_list_display()
+    list_filter = Recommendation.to_list_filter()
+    search_fields = Recommendation.search_fields()
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(RegistrationTeam, RegistrationTeamAdmin)
 admin.site.register(RegistrationCompetition, RegistrationCompetitionAdmin)
@@ -97,3 +103,4 @@ admin.site.register(HighlightNotificationStat, HighlightNotificationStatAdmin)
 admin.site.register(ScrappingStatus, ScrappingStatusAdmin)
 admin.site.register(ScraperApiKey, ScraperApiKeysAdmin)
 admin.site.register(BlockedNotification, BlockedNotificationAdmin)
+admin.site.register(Recommendation, RecommendationAdmin)

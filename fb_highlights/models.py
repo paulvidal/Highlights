@@ -239,6 +239,7 @@ class LatestHighlight(models.Model):
 
 class HighlightStat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    match_id = models.PositiveIntegerField()
     team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="highlight_stat_team1")
     score1 = models.SmallIntegerField()
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_stat_team2")
@@ -253,7 +254,7 @@ class HighlightStat(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['user', 'team1', 'score1', 'team2', 'score2', 'time', 'link', 'extended', 'video_duration']
+        return ['user', 'match_id', 'team1', 'score1', 'team2', 'score2', 'time', 'link', 'extended', 'video_duration']
 
     @staticmethod
     def to_list_filter():
@@ -261,11 +262,12 @@ class HighlightStat(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['user__first_name', 'team1__name', 'team2__name']
+        return ['user__first_name', 'team1__name', 'team2__name', 'match_id']
 
 
 class HighlightNotificationStat(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    match_id = models.PositiveIntegerField()
     team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="highlight_notification_stat_team1")
     score1 = models.SmallIntegerField()
     team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="highlight_notification_stat_team2")
@@ -280,7 +282,7 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['user', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time']
+        return ['user', 'match_id', 'team1', 'score1', 'team2', 'score2', 'match_time', 'send_time', 'opened', 'open_time']
 
     @staticmethod
     def to_list_filter():
@@ -288,10 +290,36 @@ class HighlightNotificationStat(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['user__first_name', 'team1__name', 'team2__name']
+        return ['user__first_name', 'team1__name', 'team2__name', 'match_id']
 
     def get_parsed_match_time(self):
         return dateparser.parse(str(self.match_time))
+
+
+class Recommendation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user")
+    match_id = models.PositiveIntegerField()
+    team1 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team1", related_name="recommendation_team1")
+    score1 = models.SmallIntegerField()
+    team2 = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, db_column="team2", related_name="recommendation_team2")
+    score2 = models.SmallIntegerField()
+    match_time = models.DateTimeField()
+    click_time = models.DateTimeField()
+
+    class Meta:
+        unique_together = ('user', 'click_time')
+
+    @staticmethod
+    def to_list_display():
+        return ['user', 'match_id', 'team1', 'score1', 'team2', 'score2', 'match_time', 'click_time']
+
+    @staticmethod
+    def to_list_filter():
+        return []
+
+    @staticmethod
+    def search_fields():
+        return ['user__first_name', 'team1__name', 'team2__name']
 
 
 class ScrappingStatus(models.Model):

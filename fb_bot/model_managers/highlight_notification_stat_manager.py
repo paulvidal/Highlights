@@ -13,6 +13,7 @@ def add_notification_stat(fb_id, highlight):
     team2 = football_team_manager.get_football_team(highlight.team2)
 
     HighlightNotificationStat.objects.update_or_create(user=user,
+                                                       match_id=highlight.id,
                                                        team1=team1,
                                                        score1=highlight.score1,
                                                        team2=team2,

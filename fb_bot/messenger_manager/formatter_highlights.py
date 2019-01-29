@@ -44,7 +44,7 @@ def create_link_from_model(fb_id, highlight_model, extended=False):
                        fb_id=fb_id)
 
 
-def create_link(id, extended=False, fb_id=None):
+def create_link(id, extended=False, fb_id=None, recommendation=False):
     # Form correct url to redirect to server
     tracking_link = settings.BASE_URL + "/highlight/" + str(id)
 
@@ -53,5 +53,8 @@ def create_link(id, extended=False, fb_id=None):
 
     if fb_id:
         tracking_link += '?user_id={}'.format(fb_id)
+
+    if recommendation:
+        tracking_link += '?recommendation=true'
 
     return tracking_link

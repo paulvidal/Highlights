@@ -20,7 +20,8 @@ from fb_bot.messenger_manager import manager_response, manager_highlights, sende
 from fb_bot.messenger_manager.formatter_highlights import create_link
 from fb_bot.model_managers import context_manager, user_manager, football_team_manager, latest_highlight_manager, \
     highlight_stat_manager, highlight_notification_stat_manager, football_competition_manager, \
-    registration_competition_manager, new_football_registration_manager, scrapping_status_manager
+    registration_competition_manager, new_football_registration_manager, scrapping_status_manager, \
+    recommendation_manager
 from fb_bot.model_managers import registration_team_manager
 from fb_bot.model_managers.context_manager import ContextType
 from fb_bot.recomendations import recommendation_engine
@@ -614,6 +615,9 @@ class HighlightView(TemplateView):
         if not highlight_models:
             return HttpResponseBadRequest('<h1>Invalid link</h1>')
 
+        if request.GET.get('recommendation'):
+            recommendation_manager.add_recommendation(user_id, highlight_models[0])
+
         highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=extended)
 
         # Link click tracking
@@ -633,10 +637,10 @@ class HighlightView(TemplateView):
         ]
 
         # recommendations
-        recommendations = recommendation_engine.get_recommendations(highlight_to_send)
+        recommendations = recommendation_engine.get_recommendations(highlight_to_send, user_id)
         recommendations = [
             [
-                create_link(r['id']),
+                create_link(r['id'], recommendation=True),
                 r['img_link'],
                 r['team1'].title() + ' - ' + r['team2'].title(),
                 r['match_time'].strftime('%A %d %B')

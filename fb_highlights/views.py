@@ -655,6 +655,7 @@ class HighlightView(TemplateView):
             return TemplateResponse(request, 'highlight.html', {
                 'title': highlight_to_send.get_match_name_no_result(),
                 'link': highlight_to_send.link,
+                'img_link': highlight_to_send.img_link,
                 'recommendations': recommendations
             })
 

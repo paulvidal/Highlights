@@ -11,6 +11,13 @@
   <title>{{ title }}</title>
   <meta name="description" content="Watch the latest highlights and goals for the match {{ title }}">
 
+  <meta property="og:title" content="{{ title }}" />
+  <meta property="og:description" content="Watch the latest highlights and goals for the match {{ title }}" />
+  <meta property="og:image" content="{{ img_link }}" />
+  <meta name="twitter:title" content="{{ title }}">
+  <meta name="twitter:description" content="Watch the latest highlights and goals for the match {{ title }}">
+  <meta name="twitter:image" content="{{ img_link }}">
+
   <!-- Favicons -->
   {% include "favicons.html" %}
 
@@ -39,8 +46,7 @@
 
           <div class="col-12 col-md-6">
             <a href="{{ recommendation.0 }}" style="text-decoration: none; color: black">
-              <img style="object-fit: cover; height: 65%; width: 100%;" class="img-fluid" src="{{ recommendation.1 }}"
-                   onerror="this.src = '{% static 'img/logo.png' %}';">
+              <img style="object-fit: cover; height: 65%; width: 100%;" class="img-fluid" src="{{ recommendation.1 }}" onerror="this.src = '{% static 'img/logo.png' %}';">
               <h5 class="mt-2 text-center">{{ recommendation.2 }}</h5>
               <p class="mt-1 text-center">{{ recommendation.3 }}</p>
             </a>

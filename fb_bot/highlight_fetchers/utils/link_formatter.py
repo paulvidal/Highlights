@@ -24,6 +24,7 @@ def format_streamable_link(link):
 
 def format_matchat_link(link):
     link = format_link(link)
+    link = link.split('?')[0]
     return link.replace('/html/', '/').replace('/player/', '/embed/')
 
 
@@ -46,4 +47,4 @@ def format_link(link):
 
 
 if __name__ == "__main__":
-    print(format_matchat_link('https://footy11.matchat.online/player/html/7TISH8fdfH'))
+    print(format_matchat_link('https://footy11.videostreamlet.net/player/html/WlsUWPSKVd?popup=yes&autoplay=1'))

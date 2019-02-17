@@ -195,6 +195,9 @@ def _get_video_links_for_page(soup):
             if providers.MATCHAT_ONLINE in src:
                 links.append(format_matchat_link(src))
 
+            if providers.VIDEO_STREAMLET in src:
+                links.append(format_matchat_link(src))
+
     return links
 
 

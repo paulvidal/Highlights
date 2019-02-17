@@ -219,6 +219,9 @@ class LatestHighlight(models.Model):
         elif providers.MATCHAT_ONLINE in self.link:
             priority = 4
 
+        elif providers.VIDEO_STREAMLET in self.link:
+            priority = 4
+
         elif providers.CONTENT_VENTURES in self.link:
             priority = 4
 

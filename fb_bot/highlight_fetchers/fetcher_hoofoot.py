@@ -212,6 +212,11 @@ def _get_video_links(full_link):
                     (types[i], format_matchat_link(src))
                 )
 
+            elif providers.VIDEO_STREAMLET in src:
+                video_links.append(
+                    (types[i], format_matchat_link(src))
+                )
+
     return video_links
 
 

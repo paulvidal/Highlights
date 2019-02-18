@@ -312,7 +312,7 @@ def is_default_highlight_img(img_link):
     return img_link and \
            any([default_keyword in img_link for default_keyword in [
                'nothumb',
-               'default',
+               '/default.jpg',
                'logo.png'
            ]])
 

@@ -3,7 +3,7 @@ import time
 from raven.contrib.django.raven_compat.models import client
 
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_sportyhl, fetcher_highlightsfootball, fetcher_hoofoot, \
-    fetcher_our_match
+    fetcher_our_match, fetcher_youtube
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.model_managers import scrapping_status_manager
 from fb_highlights.tests.utils import helper
@@ -24,7 +24,7 @@ FETCHERS = {
 
     sources.HIGHLIGHTS_FOOTBALL: {
         'fetch': fetcher_highlightsfootball.fetch_highlights,
-        'num_pagelet': 1,
+        'num_pagelet': 1,  # Not used
         'max_days_ago': 20
     },
 
@@ -38,6 +38,12 @@ FETCHERS = {
         'fetch': fetcher_our_match.fetch_highlights,
         'num_pagelet': 5,
         'max_days_ago': 20
+    },
+
+    sources.YOUTUBE: {
+        'fetch': fetcher_youtube.fetch_highlights,
+        'num_pagelet': 0,  # Not used
+        'max_days_ago': 30
     },
 
     'test_batch_1': {

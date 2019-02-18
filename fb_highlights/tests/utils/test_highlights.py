@@ -8,7 +8,7 @@ from fb_bot.highlight_fetchers.fetcher_sportyhl import SportyHLHighlight
 TIME_NOW = datetime.now()
 TIME_40_MINUTES_EARLIER = datetime.now() - timedelta(minutes=40)
 TIME_1_DAY_EARLIER = datetime.now() - timedelta(hours=24)
-TIME_3_DAYS_EARLIER = datetime.now() - timedelta(hours=72)
+TIME_4_DAYS_EARLIER = datetime.now() - timedelta(hours=96)
 
 SENT_HIGHLIGHTS = [
     'http://hoofoot/chelsea-barcelona',
@@ -215,7 +215,7 @@ TEST_HIGHLIGHTS = [
         'http://sportyhl/img/marseille-monaco',
         0,
         'Ligue 1',
-        TIME_3_DAYS_EARLIER, 'normal'
+        TIME_4_DAYS_EARLIER, 'normal'
     ),
 
     #13 Swansea 0 - 3 Barcelona
@@ -226,7 +226,7 @@ TEST_HIGHLIGHTS = [
         'http://footyroom/img/swansea-barcelona',
         0,
         'Champions League',
-        TIME_3_DAYS_EARLIER
+        TIME_4_DAYS_EARLIER
     ),
 
     #14 Swansea 2 - 0 Liverpool

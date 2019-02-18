@@ -261,7 +261,7 @@ if __name__ == "__main__":
     print("\nFetch highlights ------------------------------ \n")
 
     start_time = time.time()
-    highlights = fetch_highlights(num_pagelet=4, max_days_ago=40)
+    highlights = fetch_highlights(num_pagelet=1, max_days_ago=40)
 
     for highlight in highlights:
         print(highlight)

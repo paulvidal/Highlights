@@ -10,7 +10,7 @@ from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.assertions import assert_highlight_in, assert_highlight_not_in
 from fb_highlights.tests.utils.helper import *
 from fb_highlights.tests.utils.test_highlights import TIME_NOW, TIME_40_MINUTES_EARLIER, TIME_1_DAY_EARLIER, \
-    TIME_3_DAYS_EARLIER
+    TIME_4_DAYS_EARLIER
 from fb_highlights.tests.utils.utils import create_formatted_highlight_response
 
 
@@ -324,7 +324,7 @@ class SchedulerTestCase(TestCase):
                 score2=3,
                 competition='Champions League',
                 image_url='http://footyroom/img/swansea-barcelona',
-                time=TIME_3_DAYS_EARLIER
+                time=TIME_4_DAYS_EARLIER
             ), messages)
 
     def test_highlights_not_blocked_when_competition_not_flagged_in_blocked_notification(self):

@@ -4,6 +4,7 @@ HOOFOOT = 'hoofoot'
 SPORTYHL = 'sportyhl'
 HIGHLIGHTS_FOOTBALL = 'highlightsfootball'
 OUR_MATCH = 'ourmatch'
+YOUTUBE = 'youtube'
 BOT = 'bot'
 
 
@@ -15,6 +16,7 @@ def get_available_sources():
         HOOFOOT,
         HIGHLIGHTS_FOOTBALL,
         SPORTYHL,
+        YOUTUBE,
         BOT,
         OUR_MATCH
     ]
@@ -38,5 +40,6 @@ def get_sources_with_incomplete_data():
         SPORTYHL,
         HIGHLIGHTS_FOOTBALL,
         BOT,
-        OUR_MATCH
+        OUR_MATCH,
+        YOUTUBE
     ]

@@ -75,6 +75,7 @@ NAME_MAPPING = {
     'rcl': 'lens',
     'str': 'rennes',
     'stade rennais': 'rennes',
+    'stade rennais fc': 'rennes',
     'se': 'saint etienne',
     'asse': 'saint etienne',
     'soc': 'sochaux',
@@ -219,7 +220,21 @@ NAME_MAPPING = {
     'jablonec': 'fk jablonec',
     'nuernberg': 'nurnberg',
     'cheivo': 'chievoverona',
-    'fortuna duesseldorf': 'fortuna düsseldorf'
+    'fortuna duesseldorf': 'fortuna düsseldorf',
+    'ea guingamp': 'guingamp',
+    'stade de reims': 'reims',
+    'montpellier hérault sc': 'montpellier',
+    'montpellier hérault': 'montpellier',
+    'montpellier herault sc': 'montpellier',
+    'montpellier herault': 'montpellier',
+    'amiens sc': 'amiens',
+    'rc strasbourg alsace': 'strasbourg',
+    'rc strasbourg': 'strasbourg',
+    'nîmes olympique': 'nimes',
+    'dijon fco': 'dijon',
+    'girondins de bordeaux': 'bordeaux',
+    'toulouse fc': 'toulouse',
+    'as saint-etienne': 'saint etienne',
 }
 
 

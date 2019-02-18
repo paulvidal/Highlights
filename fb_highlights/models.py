@@ -234,6 +234,9 @@ class LatestHighlight(models.Model):
         elif providers.FOOYTROOM in self.link:
             priority = 1
 
+        elif providers.YOUTUBE in self.link:
+            priority = 1
+
         return priority
 
     def __str__(self):

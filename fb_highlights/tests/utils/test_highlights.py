@@ -256,7 +256,7 @@ TEST_HIGHLIGHTS = [
     HoofootHighlight(
         'http://hoofoot/france-england',
         'France 2 - 0 England',
-        'http://hoofoot/img/default',
+        'http://hoofoot/img/default.jpg',
         0,
         'Nations League',
         TIME_40_MINUTES_EARLIER

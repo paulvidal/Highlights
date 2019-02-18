@@ -23,7 +23,7 @@ def check(link):
         page = requests.get(link).text
         return not ('vp_video_stub_txt' in page or 'page-not-found' in page) # first is for content deleted, second for content not found
 
-    elif providers.CONTENT_VENTURES in link or providers.MATCHAT_ONLINE in link:
+    elif providers.CONTENT_VENTURES in link or providers.VIDEO_STREAMLET in link:
         page = requests.get(link).text
         return 'Blocked Video' not in page
 

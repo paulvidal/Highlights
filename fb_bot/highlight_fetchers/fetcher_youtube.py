@@ -59,12 +59,13 @@ def fetch_highlights(num_pagelet, max_days_ago):
     items = response['items']
 
     for video in items:
-        id = video['id']['videoId']
         match_name = video['snippet']['title']
-        img_url = video['snippet']['thumbnails']['high']['url'] if video['snippet']['thumbnails'].get('high') else video['snippet']['thumbnails']['default']['url']
-        time_since_added = dateparser.parse(video['snippet']['publishedAt']).replace(tzinfo=None)
 
         if '- Résumé -' in match_name:
+            id = video['id']['videoId']
+            img_url = video['snippet']['thumbnails']['high']['url'] if video['snippet']['thumbnails'].get('high') else video['snippet']['thumbnails']['default']['url']
+            time_since_added = dateparser.parse(video['snippet']['publishedAt']).replace(tzinfo=None)
+
             highlights.append(YoutubeHighlight(
                 form_link(id),
                 match_name,

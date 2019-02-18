@@ -11,7 +11,9 @@ from fb_bot.model_managers import scrapping_status_manager
 def get_video_info(link):
 
     # Make sure video is from matchat.online
-    if not providers.MATCHAT_ONLINE in link and not providers.CONTENT_VENTURES in link:
+    if not providers.MATCHAT_ONLINE in link \
+            and not providers.CONTENT_VENTURES in link \
+            and not providers.VIDEO_STREAMLET in link:
         return None
 
     try:

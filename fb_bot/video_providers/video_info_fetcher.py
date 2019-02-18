@@ -18,10 +18,6 @@ ALL_VIDEO_INFO_FETCHER = [
     {
         'name': 'matchat.online',
         'fetch': matchat_online_content_ventures.get_video_info
-    },
-    {
-        'name': 'content-ventures.com',
-        'fetch': matchat_online_content_ventures.get_video_info
     }
 ]
 

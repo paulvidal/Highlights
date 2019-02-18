@@ -216,9 +216,6 @@ class LatestHighlight(models.Model):
         if providers.STREAMABLE in self.link:
             priority = 4
 
-        elif providers.MATCHAT_ONLINE in self.link:
-            priority = 4
-
         elif providers.VIDEO_STREAMLET in self.link:
             priority = 4
 
@@ -236,6 +233,9 @@ class LatestHighlight(models.Model):
 
         elif providers.YOUTUBE in self.link:
             priority = 1
+
+        elif providers.MATCHAT_ONLINE in self.link:
+            priority = 0
 
         return priority
 

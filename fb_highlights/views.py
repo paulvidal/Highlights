@@ -633,7 +633,8 @@ class HighlightView(TemplateView):
             providers.STREAMABLE,
             providers.MATCHAT_ONLINE,
             providers.CONTENT_VENTURES,
-            providers.OK_RU
+            providers.OK_RU,
+            providers.VIDEO_STREAMLET
         ]
 
         # recommendations

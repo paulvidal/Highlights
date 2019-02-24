@@ -10,14 +10,17 @@ from fb_bot.model_managers import scrapping_status_manager
 
 def get_video_info(link):
 
-    # Make sure video is from matchat.online
+    # Make sure video is from matchat.online or videostreamlet.net
     if not providers.MATCHAT_ONLINE in link \
             and not providers.CONTENT_VENTURES in link \
             and not providers.VIDEO_STREAMLET in link:
         return None
 
-    try:
+    # Disable temporarily matchat.online as not working anymore
+    if providers.MATCHAT_ONLINE in link or providers.CONTENT_VENTURES in link:
+        return None
 
+    try:
         page = requests.get(link)
 
         regex = "settings.bitrates = {hls:\"(.*?)\""

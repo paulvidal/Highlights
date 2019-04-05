@@ -216,6 +216,9 @@ class LatestHighlight(models.Model):
         if providers.STREAMABLE in self.link:
             priority = 4
 
+        elif providers.VEUCLIPS in self.link:
+            priority = 4
+
         elif providers.VIDEO_STREAMLET in self.link:
             priority = 4
 

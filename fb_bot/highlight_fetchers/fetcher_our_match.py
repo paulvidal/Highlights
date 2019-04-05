@@ -235,10 +235,13 @@ def _get_video_links(soup):
                             video_link = format_matchat_link(video)
 
                         elif providers.CONTENT_VENTURES in video:
-                            video_link = video
+                            video_link = format_matchat_link(video)
 
                         elif providers.VIDEO_STREAMLET in video:
-                            video_link = video
+                            video_link = format_matchat_link(video)
+
+                        elif providers.VEUCLIPS in video:
+                            video_link = format_matchat_link(video)
 
                         # Add link if known provider
                         if video_link:

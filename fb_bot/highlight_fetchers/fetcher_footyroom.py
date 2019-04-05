@@ -233,6 +233,9 @@ def _get_video_link(soup):
             elif providers.VIDEO_STREAMLET in link:
                 return format_matchat_link(link)
 
+            elif providers.VEUCLIPS in link:
+                return format_matchat_link(link)
+
             elif 'youtube' in link:
                 return format_link(link)
 

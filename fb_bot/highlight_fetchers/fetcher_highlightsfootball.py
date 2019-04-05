@@ -198,6 +198,9 @@ def _get_video_links_for_page(soup):
             if providers.VIDEO_STREAMLET in src:
                 links.append(format_matchat_link(src))
 
+            if providers.VEUCLIPS in src:
+                links.append(format_matchat_link(src))
+
     return links
 
 

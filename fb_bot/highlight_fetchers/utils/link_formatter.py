@@ -25,16 +25,22 @@ def format_streamable_link(link):
 def format_matchat_link(link):
     link = format_link(link)
     link = link.split('?')[0]
-    return link.replace('/html/', '/').replace('/player/', '/embed/')
+    return link \
+        .replace('/html/', '/') \
+        .replace('/player/', '/embed/') \
+        .replace('/PopUpIframe/', '/')
 
 
 def format_ok_ru_link(link):
     link = format_link(link)
-    return link.replace('/video/', '/videoembed/')
+    return link \
+        .replace('/video/', '/videoembed/')
 
 
 def format_link(link):
-    link = link.replace("\"", "").replace("\\", "")
+    link = link \
+        .replace("\"", "") \
+        .replace("\\", "")
 
     # remove double // at start if present
     if link[:2] == '//':
@@ -47,4 +53,4 @@ def format_link(link):
 
 
 if __name__ == "__main__":
-    print(format_matchat_link('https://footy11.videostreamlet.net/player/html/WlsUWPSKVd?popup=yes&autoplay=1'))
+    print(format_matchat_link('https://hofoot.veuclips.com/player/PopUpIframe/mLmruJjcaF?iframe=popup&u='))

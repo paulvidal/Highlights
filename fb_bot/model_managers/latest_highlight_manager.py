@@ -142,7 +142,7 @@ def get_highlights_for_team_or_competition(team_or_competition_name):
               score1__gte=0,
               score2__gte=0,
               source__in=sources.get_available_sources()))\
-            .order_by('-time_since_added')
+            .order_by('-match_time', '-time_since_added')
 
     # competition
     elif has_competition(team_or_competition_name):
@@ -155,7 +155,7 @@ def get_highlights_for_team_or_competition(team_or_competition_name):
                                                     score1__gte=0,
                                                     score2__gte=0,
                                                     source__in=sources.get_available_sources())\
-            .order_by('-time_since_added')
+            .order_by('-match_time', '-time_since_added')
 
     return list(highlights)
 

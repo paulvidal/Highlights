@@ -19,7 +19,7 @@ def get(url, render=False):
 
         if response.status_code == requests.codes.unauthorized:
             logger.log('Scrapper API key invalid - removing: ' + key.code, forward=True)
-            scraper_api_key_manager.remove_key(key)
+            # scraper_api_key_manager.remove_key(key)
             continue
 
         if response.status_code == requests.codes.forbidden:

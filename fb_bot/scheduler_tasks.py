@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-import dateparser
 import requests
 
 from fb_bot.messenger_manager import manager_scheduler
@@ -60,14 +59,11 @@ def send_most_recent_highlights():
     # Send highlights not already sent
     not_sent_highlights = latest_highlight_manager.get_valid_not_sent_highlights(AVAILABLE_SOURCES)
 
-    today = datetime.today()
+    time_now = datetime.now()
 
     for highlight in not_sent_highlights:
-        time_since_added = highlight.get_parsed_time_since_added()
 
-        # Add time to make sure video is good
-        if timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(today - time_since_added) < timedelta(hours=30) \
-                or highlight.priority_short > 0:
+        if should_send_highlight(time_now, highlight):
 
             # prevent sending 2 times same highlight with inverted home and away teams
             inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)
@@ -101,8 +97,22 @@ def send_most_recent_highlights():
         time_since_added = highlight.get_parsed_time_since_added()
 
         # Old highlight, delete
-        if (today - time_since_added) > timedelta(days=60):
+        if (time_now - time_since_added) > timedelta(days=60):
             latest_highlight_manager.delete_highlight(highlight)
+
+
+def should_send_highlight(time_now, highlight):
+    """Determine if we should send the highlight - send if:
+    - match highlight is older than MIN_MINUTES_TO_SEND_HIGHLIGHTS and younger than 30 hours
+    - match has a priority set on it
+    - no goals have been scored in the last 10 minutes of the game (otherwise we might miss a goal on the highlight)
+    """
+    time_since_added = highlight.get_parsed_time_since_added()
+    goals_elapsed = highlight.get_goals_elapsed()
+
+    return timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30) \
+           or highlight.priority_short > 0 \
+           or not any([g > 80 for g in goals_elapsed])
 
 
 # Check if highlight links are still alive (not taken down) and set it to invalid if so
@@ -129,7 +139,6 @@ def _check_validity(highlights):
 
 
 # Add the video info such as duration
-
 def add_videos_info():
     highlights = latest_highlight_manager.get_all_highlights_without_info()
 

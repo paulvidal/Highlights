@@ -210,6 +210,9 @@ class LatestHighlight(models.Model):
         team_name = mapping_football_team.get_exact_name(team_name.lower())
         return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
+    def get_goals_elapsed(self):
+        return [int(g['elapsed']) for g in self.goal_data]
+
     def provider_priority(self):
         priority = 0
 

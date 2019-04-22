@@ -260,6 +260,44 @@ TEST_HIGHLIGHTS = [
         0,
         'Nations League',
         TIME_40_MINUTES_EARLIER
+    ),
+
+    #17 Liverpool 1 - 0 England
+
+    FootyroomVideoHighlight(
+        'http://footyroom/liverpool-england',
+        'Liverpool 1 - 0 England',
+        'http://footyroom/img/liverpool-england',
+        0,
+        'Nations League',
+        TIME_NOW,
+        goal_data=[
+            {
+                'team': 1,
+                'player': 'Sane',
+                'elapsed': '50',
+                'goal_type': 'goal'
+            }
+        ]
+    ),
+
+    #18 Liverpool 1 - 0 France
+
+    FootyroomVideoHighlight(
+        'http://footyroom/liverpool-france',
+        'Liverpool 2 - 0 France',
+        'http://footyroom/img/liverpool-france',
+        0,
+        'Nations League',
+        TIME_NOW,
+        goal_data=[
+            {
+                'team': 1,
+                'player': 'Salah',
+                'elapsed': '90',
+                'goal_type': 'goal'
+            }
+        ]
     )
 ]
 

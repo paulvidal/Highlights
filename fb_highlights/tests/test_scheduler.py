@@ -243,6 +243,48 @@ class SchedulerTestCase(TestCase):
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
+    def test_scheduler_sends_highlights_straight_if_no_goals_scored_in_last_minutes_of_match(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_in(
+            create_formatted_highlight_response(
+                id=17,
+                team1='Liverpool',
+                score1=1,
+                team2='England',
+                score2=0,
+                competition='Nations League',
+                image_url='http://footyroom/img/liverpool-england',
+                time=TIME_NOW
+            ), messages)
+
+    def test_scheduler_does_not_send_highlights_straight_if_goals_scored_in_last_minutes_of_match(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_not_in(
+            create_formatted_highlight_response(
+                id=18,
+                team1='Liverpool',
+                score1=1,
+                team2='France',
+                score2=0,
+                competition='Nations League',
+                image_url='http://footyroom/img/liverpool-france',
+                time=TIME_NOW
+            ), messages)
+
     def test_scheduler_does_not_send_highlight_if_highlight_inverted_home_and_away_teams(self):
         # Given
 

@@ -23,9 +23,14 @@ def check(link):
         page = requests.get(link).text
         return not ('vp_video_stub_txt' in page or 'page-not-found' in page) # first is for content deleted, second for content not found
 
-    elif providers.CONTENT_VENTURES in link or providers.VIDEO_STREAMLET in link:
+    elif providers.CONTENT_VENTURES in link \
+            or providers.VIDEO_STREAMLET in link:
         page = requests.get(link).text
         return 'Blocked Video' not in page
+
+    elif providers.VEUCLIPS in link:
+        page = requests.get(link).text
+        return 'removed due to a copyright claim' not in page
 
     # For all other content provider, return True by default
     return True
@@ -48,6 +53,7 @@ if __name__ == "__main__":
                   'https://hfoot.matchat.online/player/49500354',  # False
                   'https://hfoot.matchat.online/player/49422',  # True
                   'https://footy1.matchat.online/player/49639',  # True
+                  'https://oms.veuclips.com/embed/F1VwPzibOr'  # False
                   ]
 
     for highlight in highlights:

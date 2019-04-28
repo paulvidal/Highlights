@@ -13,6 +13,7 @@ gunicorn==19.7.1
 html5lib==1.0.1
 idna==2.8
 iso8601==0.1.12
+JSON-log-formatter==0.2.0
 Logentries==0.17
 nltk==3.2.5
 psycopg2==2.7.3.2

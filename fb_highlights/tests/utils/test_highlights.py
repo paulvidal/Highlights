@@ -192,7 +192,7 @@ TEST_HIGHLIGHTS = [
     OurMatchHighlight(
         'http://ourmatch/manchester_city-tottenham',
         'Manchester City vs Tottenham',
-        'http://ourmatch/img/manchester_city-tottenham',
+        'http://hoofoot/img/manchester_city-tottenham',
         0,
         'Premier League',
         TIME_40_MINUTES_EARLIER, [], 'normal'

@@ -7,6 +7,7 @@ from fb_bot import streamable_converter, ressource_checker
 from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
+from fb_bot.messenger_manager.sender import CLIENT
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager
 from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
@@ -118,24 +119,29 @@ def should_send_highlight(time_now, highlight):
 # Check if highlight links are still alive (not taken down) and set it to invalid if so
 
 def check_recent_highlight_validity():
-    _check_validity(
-        latest_highlight_manager.get_recent_highlights(hours=72)
-    )
+    recent_highlights = latest_highlight_manager.get_recent_valid_highlights(hours=72)
+    logger.log("Checking validity of {} recent highlights (< 72 hours)".format(len(recent_highlights)))
+    _check_validity(recent_highlights)
 
 
 def check_highlight_validity():
-    _check_validity(
-        latest_highlight_manager.get_all_highlights()
-    )
+    highlights = latest_highlight_manager.get_all_valid_highlights()
+    logger.log("Checking validity of {} highlights (all)".format(len(highlights)))
+    _check_validity(highlights)
 
 
 def _check_validity(highlights):
     for h in highlights:
-        is_valid = ressource_checker.check(h.link)
+        try:
+            is_valid = ressource_checker.check(h.link)
 
-        if not is_valid:
-            latest_highlight_manager.set_invalid(h)
+            if not is_valid:
+                logger.log("Invalidated highlight: " + h.link)
+                latest_highlight_manager.set_invalid(h)
 
+        except:
+            print(h.link)
+            logger.error("Failed to validate link: {}".format(h.link))
 
 
 # Add the video info such as duration

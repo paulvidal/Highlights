@@ -18,7 +18,7 @@ def get_video_info(link):
         response = requests.get(link)
     except Exception:
         client.captureException()
-        logger.log('Ok.ru status: error | Error url: ' + link, forward=True)
+        logger.error('Ok.ru status: error | Error url: ' + link)
         return None
 
     duration_search_result = re.compile('duration\\\\&quot;:\\\\&quot;(.*?)\\\\&quot;', 0).search(response.text)

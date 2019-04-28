@@ -323,7 +323,7 @@ class SchedulerTestCase(TestCase):
                 team2='Tottenham',
                 score2=0,
                 competition='Premier League',
-                image_url='http://ourmatch/img/manchester_city-tottenham',
+                image_url='http://footyroom/img/manchester_city-tottenham',
                 time=TIME_1_DAY_EARLIER
             ), messages)
 

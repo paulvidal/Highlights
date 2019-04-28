@@ -42,7 +42,7 @@ def get_video_info(link):
         }
 
         scrapping_status_manager.update_scrapping_status('m3u8', True)
-        logger.log('matchat.online SUCCESS | url: ' + link + ' | duration: ' + str(duration), forward=True)
+        logger.info('matchat.online SUCCESS | url: ' + link + ' | duration: ' + str(duration))
 
         return info
 
@@ -51,7 +51,7 @@ def get_video_info(link):
 
         if ressource_checker.check(link):
             scrapping_status_manager.update_scrapping_status('m3u8', False)
-            logger.log('matchat.online FAILURE | url: ' + link, forward=True)
+            logger.error('matchat.online FAILURE | url: ' + link)
 
             return {
                 'duration': 0,  # Allow for retries if link is valid but scrapping not working

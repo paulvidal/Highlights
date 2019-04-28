@@ -32,7 +32,15 @@ class Client:
             try:
                 return requests.post(url, headers={"Content-Type": "application/json"}, data=message)
             except Timeout:
-                logger.log("Message timeout to send: " + str(message), forward=True)
+                logger.error("Facebook message sending timed out", extra={
+                    'url': url,
+                    'data': message
+                })
+            except:
+                logger.error("Facebook message sending failed", extra={
+                    'url': url,
+                    'data': message
+                })
 
         else:
             self.messages.append(message)

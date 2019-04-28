@@ -20,6 +20,11 @@ def get_all_highlights():
     return LatestHighlight.objects.all()
 
 
+def get_all_valid_highlights():
+    return LatestHighlight.objects.filter(
+        valid=True
+    )
+
 def get_all_highlights_from_source(sources):
     return LatestHighlight.objects.filter(
         source__in=sources
@@ -35,6 +40,13 @@ def get_all_highlights_without_info():
 def get_recent_highlights(hours=0, minutes=0):
     return LatestHighlight.objects.filter(
         time_since_added__gt=datetime.today() - timedelta(hours=hours, minutes=minutes)
+    )
+
+
+def get_recent_valid_highlights(hours=0, minutes=0):
+    return LatestHighlight.objects.filter(
+        time_since_added__gt=datetime.today() - timedelta(hours=hours, minutes=minutes),
+        valid=True
     )
 
 

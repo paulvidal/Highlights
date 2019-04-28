@@ -30,7 +30,7 @@ def check(link):
 
     elif providers.VEUCLIPS in link:
         page = requests.get(link).text
-        return 'removed due to a copyright claim' not in page
+        return not ('removed due to a copyright claim' in page or 'video has been deleted' in page)
 
     # For all other content provider, return True by default
     return True
@@ -53,7 +53,10 @@ if __name__ == "__main__":
                   'https://hfoot.matchat.online/player/49500354',  # False
                   'https://hfoot.matchat.online/player/49422',  # True
                   'https://footy1.matchat.online/player/49639',  # True
-                  'https://oms.veuclips.com/embed/F1VwPzibOr'  # False
+                  'https://oms.veuclips.com/embed/F1VwPzibOr',  # False
+                  'https://hofoot.veuclips.com/embed/dlFtGhhRYg',  # False
+                  'https://footy11.veuclips.com/embed/LUPjgkJtZE', # False
+                  'https://footy11.veuclips.com/embed/saA1N6177U' # True
                   ]
 
     for highlight in highlights:

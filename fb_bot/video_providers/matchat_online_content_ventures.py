@@ -48,14 +48,26 @@ def get_video_info(link):
 
     except:
         client.captureException()
+        logger.error("Failed to fetch info for link {}".format(link))
 
-        if ressource_checker.check(link):
-            scrapping_status_manager.update_scrapping_status('m3u8', False)
-            logger.error('matchat.online FAILURE | url: ' + link)
+        try:
+            if ressource_checker.check(link):
+                scrapping_status_manager.update_scrapping_status('m3u8', False)
+                logger.error('matchat.online FAILURE | url: ' + link)
+
+                return {
+                    'duration': 0,  # Allow for retries if link is valid but scrapping not working
+                    'video_url': None
+                }
+
+            else:
+                return None
+
+        except:
+            client.captureException()
+            logger.error("Failed to fetch info for link {} and resource check failed".format(link))
 
             return {
                 'duration': 0,  # Allow for retries if link is valid but scrapping not working
                 'video_url': None
             }
-
-        return None

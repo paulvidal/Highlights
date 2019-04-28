@@ -22,7 +22,7 @@ class CustomCommand(BaseCommand):
                 # Report to sentry if problem detected
                 client.captureException()
                 # Report task had a problem
-                logger.log("Task " + str(self.get_task_name(options)) + " failed", forward=True)
+                logger.error("Task " + str(self.get_task_name(options)) + " failed")
             else:
                 raise error
 

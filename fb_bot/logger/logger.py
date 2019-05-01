@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 from logentries import LogentriesHandler
 import logging
@@ -30,7 +31,20 @@ class LoggerWrapper:
         if not self.enabled:
             return
 
+        # Add stack trace if error or critical
         exc_info = level in [logging.ERROR, logging.CRITICAL]
+
+        # Add level field to determine log level
+        level_name = logging.getLevelName(level)
+        extra['level'] = level_name
+
+        # Add time to log
+        time = datetime.utcnow()
+        extra['time'] = time
+
+        # Add level in message
+        message = '{} [{}] {}'.format(level_name, time, message)
+
         self.logger.log(level, message, exc_info=exc_info, extra=extra)
 
     def is_enabled(self):

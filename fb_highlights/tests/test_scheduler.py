@@ -348,6 +348,48 @@ class SchedulerTestCase(TestCase):
                 time=TIME_40_MINUTES_EARLIER
             ), messages)
 
+    def test_scheduler_does_not_send_highlight_when_no_goals_info_before_30_minutes(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_not_in(
+            create_formatted_highlight_response(
+                id=19,
+                team1='Belgium',
+                score1=1,
+                team2='Liverpool',
+                score2=0,
+                competition='Nations League',
+                image_url='http://footyroom/img/belgium-liverpool',
+                time=TIME_NOW
+            ), messages)
+
+    def test_scheduler_should_send_highlight_when_no_goal_info_but_no_goals_in_match(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_in(
+            create_formatted_highlight_response(
+                id=20,
+                team1='Belgium',
+                score1=0,
+                team2='England',
+                score2=0,
+                competition='Nations League',
+                image_url='http://footyroom/img/belgium-england',
+                time=TIME_NOW
+            ), messages)
+
     def test_scheduler_does_not_send_highlight_when_date_too_old(self):
         # Given
 

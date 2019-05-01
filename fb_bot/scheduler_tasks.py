@@ -64,7 +64,7 @@ def send_most_recent_highlights():
 
     for highlight in not_sent_highlights:
 
-        if should_send_highlight(time_now, highlight):
+        if _should_send_highlight(time_now, highlight):
 
             # prevent sending 2 times same highlight with inverted home and away teams
             inverted_highlights = latest_highlight_manager.get_inverted_teams_highlights(highlight)
@@ -102,18 +102,27 @@ def send_most_recent_highlights():
             latest_highlight_manager.delete_highlight(highlight)
 
 
-def should_send_highlight(time_now, highlight):
+def _should_send_highlight(time_now, highlight):
     """Determine if we should send the highlight - send if:
     - match highlight is older than MIN_MINUTES_TO_SEND_HIGHLIGHTS and younger than 30 hours
     - match has a priority set on it
     - no goals have been scored in the last 10 minutes of the game (otherwise we might miss a goal on the highlight)
     """
     time_since_added = highlight.get_parsed_time_since_added()
-    goals_elapsed = highlight.get_goals_elapsed()
 
     return timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30) \
            or highlight.priority_short > 0 \
-           or not any([g > 80 for g in goals_elapsed])
+           or _has_all_goal_data(highlight)
+
+
+def _has_all_goal_data(highlight):
+    # If there are no goals, send the highlight
+    if highlight.score1 + highlight.score2 == 0:
+        return True
+
+    # Otherwise, make sure we have goal data before sending the highlight
+    goals_elapsed = highlight.get_goals_elapsed()
+    return len(goals_elapsed) > 0 and not any([g > 80 for g in goals_elapsed])
 
 
 # Check if highlight links are still alive (not taken down) and set it to invalid if so

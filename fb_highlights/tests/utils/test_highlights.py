@@ -298,6 +298,30 @@ TEST_HIGHLIGHTS = [
                 'goal_type': 'goal'
             }
         ]
+    ),
+
+    #19 Belgium 1 - 0 Liverpool
+
+    FootyroomVideoHighlight(
+        'http://footyroom/belgium-liverpool',
+        'Belgium 1 - 0 Liverpool',
+        'http://footyroom/img/belgium-liverpool',
+        0,
+        'Nations League',
+        TIME_NOW,
+        goal_data=[]
+    ),
+
+    #20 Belgium 0 - 0 England
+
+    FootyroomVideoHighlight(
+        'http://footyroom/belgium-england',
+        'Belgium 0 - 0 England',
+        'http://footyroom/img/belgium-england',
+        0,
+        'Nations League',
+        TIME_NOW,
+        goal_data=[]
     )
 ]
 

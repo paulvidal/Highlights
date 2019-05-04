@@ -110,9 +110,15 @@ def _should_send_highlight(time_now, highlight):
     """
     time_since_added = highlight.get_parsed_time_since_added()
 
-    return timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30) \
-           or highlight.priority_short > 0 \
-           or _has_all_goal_data(highlight)
+    # TODO: bad heuristic to prevent old footyroom videos from being sent bug, TEMPORARY fix, replace when check if match existed
+    return (
+            timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30)
+            or highlight.priority_short > 0
+            or _has_all_goal_data(highlight)
+        ) and (
+            not (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
+            and not (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)
+    )
 
 
 def _has_all_goal_data(highlight):

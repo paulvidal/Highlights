@@ -7,11 +7,13 @@ from fb_bot.messenger_manager import sender
 # TODO: refactor and place it in messenger manager
 def get_facebook_user_info(fb_id):
     response = requests.get("https://graph.facebook.com/{}/{}".format(sender.GRAPH_VERSION, fb_id),
-                            params={"fields": "first_name, last_name, locale, timezone",
+                            params={"fields": "first_name, last_name, locale",
                                     "access_token": sender.ACCESS_TOKEN})
 
     if response.status_code != 200:
-        logger.log_for_user("Could not retrieve facebook information", fb_id)
+        logger.log_error_for_user("Could not retrieve facebook information", fb_id, extra={
+            'fb_response': response.json()
+        })
         return None
 
     json_response = response.json()

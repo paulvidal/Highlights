@@ -2,7 +2,7 @@
 *.pyc
 runserver.sh
 set_env_var.sh
-set_prod_db.sh
+set_prod_env_var.sh
 miscellaneous
 static/node_modules
 static/build

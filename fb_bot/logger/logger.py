@@ -1,7 +1,6 @@
 import sys
 from datetime import datetime
 
-from logentries import LogentriesHandler
 import logging
 
 import json_log_formatter
@@ -11,28 +10,26 @@ from highlights import settings
 
 class LoggerWrapper:
     def __init__(self):
-        self.logger = logging.getLogger('logentries')
+        self.logger = logging.getLogger('logger')
         self.logger.setLevel(logging.INFO)
-
-        # Logentries
-        logentries_token = settings.get_env_var("LOGENTRIES_TOKEN")
-        self.logger.addHandler(LogentriesHandler(logentries_token))
 
         # Stdout
         formatter = json_log_formatter.JSONFormatter()
         stream_handler = logging.StreamHandler(sys.stdout)
+
         if not settings.DEBUG:
             stream_handler.setFormatter(formatter)
+
         self.logger.addHandler(stream_handler)
 
         self.enabled = True
 
-    def log(self, message, level, extra):
+    def log(self, message, level, extra, show_error_stack=True):
         if not self.enabled:
             return
 
         # Add stack trace if error or critical
-        exc_info = level in [logging.ERROR, logging.CRITICAL]
+        exc_info = level in [logging.ERROR, logging.CRITICAL] and show_error_stack
 
         # Add level field to determine log level
         level_name = logging.getLevelName(level)
@@ -46,6 +43,10 @@ class LoggerWrapper:
         message = '{} [{}] {}'.format(level_name, time, message)
 
         self.logger.log(level, message, exc_info=exc_info, extra=extra)
+
+        # Show in debug the params
+        if settings.DEBUG:
+            self.logger.log(level, '{} [{}] {}'.format(level_name, time, str(extra)))
 
     def is_enabled(self):
         return self.enabled
@@ -85,3 +86,8 @@ def critical(message, extra={}):
 def log_for_user(message, user_id, extra={}):
     extra['user_id'] = user_id
     LOGGER.log(message, logging.INFO, extra)
+
+
+def log_error_for_user(message, user_id, extra={}):
+    extra['user_id'] = user_id
+    LOGGER.log(message, logging.ERROR, extra, show_error_stack=False)

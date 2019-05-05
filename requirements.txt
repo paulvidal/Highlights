@@ -6,7 +6,7 @@ contextlib2==0.5.5
 dateparser==0.6.0
 DateTime==4.2
 dj-database-url==0.4.2
-Django==2.1.2
+Django==2.2.1
 django-webpack-loader==0.6.0
 emoji==0.4.5
 gunicorn==19.7.1
@@ -24,8 +24,9 @@ requests==2.21.0
 ruamel.yaml==0.14.10
 selenium==3.11.0
 six==1.10.0
+sqlparse==0.3.0
 tzlocal==1.4
-urllib3==1.24.1
+urllib3==1.24.3
 webencodings==0.5.1
 whitenoise==3.3.0
 zope.interface==4.4.0

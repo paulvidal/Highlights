@@ -106,7 +106,9 @@ class HighlightsBotView(generic.View):
         # Converts the text payload into a python dictionary
         incoming_message = json.loads(request.body.decode('utf-8'))
 
-        logger.log("Message received: " + str(incoming_message))
+        logger.info("Message received", extra={
+            'incoming_message': incoming_message
+        })
 
         response_msg = []
 
@@ -121,7 +123,7 @@ class HighlightsBotView(generic.View):
                 user_manager.increment_user_message_count(sender_id)
 
                 logger.log_for_user("Message received", sender_id, extra={
-                    'message': message
+                    'full_msg': message
                 })
 
                 # Events
@@ -131,8 +133,8 @@ class HighlightsBotView(generic.View):
                     message = language.remove_accents(text.lower())
 
                     logger.log_for_user("Text message received", sender_id, extra={
-                        'message': message,
-                        'type': 'message'
+                        'full_msg': message,
+                        'msg_type': 'message'
                     })
 
                     # Do not respond in those cases
@@ -535,8 +537,8 @@ class HighlightsBotView(generic.View):
                     postback = message['postback']['payload']
 
                     logger.log_for_user("Postback message received", sender_id, extra={
-                        'message': message,
-                        'type': 'postback'
+                        'full_msg': message,
+                        'msg_type': 'postback'
                     })
 
                     if postback == 'get_started':
@@ -597,10 +599,12 @@ class HighlightsBotView(generic.View):
                             view_message_helper.send_send_see_result_settings(sender_id)
                         )
 
-                logger.log_for_user("Message sent", sender_id, extra={
-                    'message': response_msg,
-                    'type': 'response'
-                })
+                # Log the responses
+                for msg in response_msg:
+                    logger.log_for_user("Message sent", sender_id, extra={
+                        'full_msg': msg,
+                        'msg_type': 'response'
+                    })
                 HighlightsBotView.LATEST_SENDER_ID = 0
 
         if not settings.DEBUG:

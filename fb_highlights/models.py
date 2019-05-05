@@ -71,6 +71,7 @@ class FootballTeam(models.Model):
 class NewFootballRegistration(models.Model):
     name = models.CharField(max_length=200)
     source = models.CharField(max_length=80)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user", null=True, blank=True)
     time = models.DateTimeField(default=datetime.now)
 
     class Meta:
@@ -78,7 +79,7 @@ class NewFootballRegistration(models.Model):
 
     @staticmethod
     def to_list_display():
-        return ['name', 'source', 'time']
+        return ['name', 'source', 'user', 'time']
 
     @staticmethod
     def to_list_filter():

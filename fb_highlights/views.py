@@ -117,6 +117,7 @@ class HighlightsBotView(generic.View):
                 sender_id = message['sender'].get('id')
                 HighlightsBotView.LATEST_SENDER_ID = sender_id
 
+                user = user_manager.get_user(sender_id)
                 user_manager.increment_user_message_count(sender_id)
 
                 logger.log_for_user("Message received", sender_id, extra={
@@ -259,7 +260,7 @@ class HighlightsBotView(generic.View):
                             # Registration recommendation
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(message, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user', user)
 
                             recommendations = football_team_manager.similar_football_team_names(message) \
                                               + football_competition_manager.similar_football_competition_names(message)
@@ -275,7 +276,7 @@ class HighlightsBotView(generic.View):
                             # No team or recommendation found
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(message, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user', user)
 
                             response_msg.append(
                                 manager_highlights.send_team_not_found_tutorial_message(sender_id)
@@ -375,7 +376,7 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(message, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user', user)
 
                             recommendations = football_team_manager.similar_football_team_names(message)\
                                               + football_competition_manager.similar_football_competition_names(message)
@@ -392,7 +393,7 @@ class HighlightsBotView(generic.View):
                             context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(message, 'user')
+                            new_football_registration_manager.add_football_registration(message, 'user', user)
 
                             response_msg.append(
                                 manager_response.send_registration_not_found_message(sender_id)
@@ -502,7 +503,7 @@ class HighlightsBotView(generic.View):
                             # Recommendation found
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(team_or_competition, 'user')
+                            new_football_registration_manager.add_football_registration(team_or_competition, 'user', user)
 
                             recommendations = football_team_manager.similar_football_team_names(team_or_competition) \
                                               + football_competition_manager.similar_football_competition_names(team_or_competition)
@@ -524,7 +525,7 @@ class HighlightsBotView(generic.View):
                             # No team or recommendation found
 
                             # Register wrong search
-                            new_football_registration_manager.add_football_registration(team_or_competition, 'user')
+                            new_football_registration_manager.add_football_registration(team_or_competition, 'user', user)
 
                             response_msg.append(
                                 manager_highlights.send_team_not_found_tutorial_message(sender_id)
@@ -542,8 +543,6 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("GET STARTED POSTBACK", sender_id, extra={
                             'action': 'start'
                         })
-
-                        user = user_manager.get_user(sender_id)
 
                         response_msg.append(
                             manager_response.send_getting_started_message(sender_id, user.first_name)

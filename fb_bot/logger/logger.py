@@ -82,7 +82,6 @@ def critical(message, extra={}):
     LOGGER.log(message, logging.CRITICAL, extra)
 
 
-# Deprecated - use more specific methods
-def log_for_user(message, user_id, forward=False):
-    message = "User: {} | {}".format(user_id, message)
-    LOGGER.log(message, logging.INFO, extra={'user_id': user_id})
+def log_for_user(message, user_id, extra={}):
+    extra['user_id'] = user_id
+    LOGGER.log(message, logging.INFO, extra)

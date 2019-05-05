@@ -1,23 +1,23 @@
 from fb_bot.exceptions.TooManyRequestException import TooManyRequestsException
 from fb_bot.logger import logger
-from fb_bot.video_providers import dailymotion, ok_ru, streamable, matchat_online_content_ventures
+from fb_bot.highlight_info_fetchers import dailymotion_info_fetcher, ok_ru_info_fetcher, streamable_info_fetcher, matchat_online_info_fetcher
 
 ALL_VIDEO_INFO_FETCHER = [
     {
         'name': 'dailymotion',
-        'fetch': dailymotion.get_video_info
+        'fetch': dailymotion_info_fetcher.get_video_info
     },
     {
         'name': 'streamable',
-        'fetch': streamable.get_video_info
+        'fetch': streamable_info_fetcher.get_video_info
     },
     {
         'name': 'ok.ru',
-        'fetch': ok_ru.get_video_info
+        'fetch': ok_ru_info_fetcher.get_video_info
     },
     {
         'name': 'matchat.online',
-        'fetch': matchat_online_content_ventures.get_video_info
+        'fetch': matchat_online_info_fetcher.get_video_info
     }
 ]
 

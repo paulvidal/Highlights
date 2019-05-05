@@ -119,7 +119,9 @@ class HighlightsBotView(generic.View):
 
                 user_manager.increment_user_message_count(sender_id)
 
-                logger.log_for_user("Message received: " + str(message), sender_id)
+                logger.log_for_user("Message received", sender_id, extra={
+                    'message': message
+                })
 
                 # Events
                 if 'message' in message:
@@ -127,8 +129,14 @@ class HighlightsBotView(generic.View):
                     text = message['message'].get('text') if message['message'].get('text') else ''
                     message = language.remove_accents(text.lower())
 
+                    logger.log_for_user("Text message received", sender_id, extra={
+                        'message': message,
+                        'type': 'message'
+                    })
+
                     # Do not respond in those cases
                     if 'no' == message or 'nothing' == message or 'ok' == message or 'shut up' in message or message == '':
+                        logger.log_for_user('No response', sender_id)
                         continue
 
                     # Send typing event - so user is aware received message
@@ -137,7 +145,7 @@ class HighlightsBotView(generic.View):
                     # Special replies
                     # TODO: remove at some point
                     if message == EMOJI_TROPHY + ' add nations league':
-                        logger.log_for_user("ADD NATIONS LEAGUE", sender_id, forward=True)
+                        logger.log_for_user("ADD NATIONS LEAGUE", sender_id)
 
                         context_manager.update_context(sender_id, ContextType.SUBSCRIPTIONS_SETTING)
 
@@ -154,7 +162,7 @@ class HighlightsBotView(generic.View):
                     # Special replies
                     # TODO: remove at some point
                     elif message == EMOJI_CROSS + ' no thanks':
-                        logger.log_for_user("NO THANKS NATIONS LEAGUE", sender_id, forward=True)
+                        logger.log_for_user("NO THANKS NATIONS LEAGUE", sender_id)
 
                         response_msg.append(
                             manager_response.send_facebook_message(
@@ -163,7 +171,7 @@ class HighlightsBotView(generic.View):
 
                     # Cancel quick reply
                     elif 'cancel' in message:
-                        logger.log("CANCEL")
+                        logger.log_for_user("CANCEL", sender_id)
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -172,7 +180,7 @@ class HighlightsBotView(generic.View):
 
                     # Done quick reply
                     elif 'done' in message:
-                        logger.log("DONE")
+                        logger.log_for_user("DONE", sender_id)
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -181,7 +189,7 @@ class HighlightsBotView(generic.View):
 
                     # HELP
                     elif 'help' in message:
-                        logger.log("HELP")
+                        logger.log_for_user("HELP", sender_id)
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -190,7 +198,7 @@ class HighlightsBotView(generic.View):
 
                     elif accepted_messages(message, ['thank you', 'thanks', 'cheers', 'merci', 'cimer',
                                                      'good job', 'good bot']):
-                        logger.log("THANK YOU MESSAGE")
+                        logger.log_for_user("THANK YOU MESSAGE", sender_id)
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -199,7 +207,9 @@ class HighlightsBotView(generic.View):
 
                     # TUTORIAL CONTEXT
                     elif context_manager.is_tutorial_context(sender_id):
-                        logger.log("TUTORIAL ADD REGISTRATION")
+                        logger.log_for_user("TUTORIAL ADD REGISTRATION", sender_id, extra={
+                            'action': 'tutorial'
+                        })
 
                         message = message
 
@@ -273,7 +283,7 @@ class HighlightsBotView(generic.View):
 
                     # SEE RESULT CHANGE SETTING
                     elif context_manager.is_see_result_setting_context(sender_id):
-                        logger.log("SEE RESULT CHANGE SETTING", forward=True)
+                        logger.log_for_user("SEE RESULT CHANGE SETTING", sender_id)
 
                         if text in [SHOW_BUTTON, HIDE_BUTTON]:
                             user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
@@ -295,7 +305,7 @@ class HighlightsBotView(generic.View):
 
                     # ADD REGISTRATION SETTING
                     elif accepted_messages(message, ['add']) and context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("ADD REGISTRATION SETTING")
+                        logger.log_for_user("ADD REGISTRATION SETTING", sender_id)
 
                         context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
@@ -305,7 +315,7 @@ class HighlightsBotView(generic.View):
 
                     # REMOVE REGISTRATION SETTING
                     elif accepted_messages(message, ['remove']) and context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("REMOVE REGISTRATION SETTING")
+                        logger.log_for_user("REMOVE REGISTRATION SETTING", sender_id)
 
                         context_manager.update_context(sender_id, ContextType.REMOVE_REGISTRATION)
 
@@ -318,7 +328,7 @@ class HighlightsBotView(generic.View):
                     # ADDING REGISTRATION
                     elif context_manager.is_adding_registration_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
-                        logger.log("ADDING REGISTRATION")
+                        logger.log_for_user("ADDING REGISTRATION", sender_id)
 
                         message = message
 
@@ -390,7 +400,7 @@ class HighlightsBotView(generic.View):
 
                     # REMOVING REGISTRATION
                     elif context_manager.is_deleting_team_context(sender_id):
-                        logger.log("REMOVING REGISTRATION")
+                        logger.log_for_user("REMOVING REGISTRATION", sender_id)
                         registration_to_delete = message.lower()
 
                         if football_team_manager.has_football_team(registration_to_delete):
@@ -429,16 +439,20 @@ class HighlightsBotView(generic.View):
 
                     # SUBSCRIPTION SETTING
                     elif accepted_messages(message, ['subscription', 'teams', 'subscribe', 'notification', 'add', 'remove']):
-                        logger.log("SUBSCRIPTION SETTING", forward=True)
+                        logger.log_for_user("SUBSCRIPTION SETTING", sender_id, extra={
+                            'action': 'subscriptions'
+                        })
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
                         )
 
                     # SEE RESULT SETTING
-                    elif accepted_messages(message, ['see result setting', 'spoiler', 'show result', 'hide result',
-                                                     'show score', 'hide score']):
-                        logger.log("SEE RESULT SETTING", forward=True)
+                    elif accepted_messages(message, ['settings', 'see result setting', 'spoiler', 'show result', 'hide result',
+                                                     'show score', 'hide score', 'no score']):
+                        logger.log_for_user("SEE RESULT SETTING", sender_id, extra={
+                            'action': 'settings'
+                        })
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)
@@ -446,7 +460,9 @@ class HighlightsBotView(generic.View):
 
                     # SHARE
                     elif accepted_messages(message, ['share', 'send to a friend']):
-                        logger.log("SHARE", forward=True)
+                        logger.log_for_user("SHARE", sender_id, extra={
+                            'action': 'share'
+                        })
 
                         response_msg.append(
                             manager_share.send_share_introduction_message(sender_id)
@@ -457,7 +473,9 @@ class HighlightsBotView(generic.View):
 
                     # SEARCH HIGHLIGHT OPTION
                     elif accepted_messages(message, ['search', 'search again']):
-                        logger.log("SEARCH HIGHLIGHTS", forward=True)
+                        logger.log_for_user("SEARCH HIGHLIGHTS", sender_id, extra={
+                            'action': 'search'
+                        })
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -465,7 +483,9 @@ class HighlightsBotView(generic.View):
 
                     # SEARCHING HIGHLIGHTS
                     elif context_manager.is_searching_highlights_context(sender_id):
-                        logger.log("SEARCHING HIGHLIGHTS", forward=True)
+                        logger.log_for_user("SEARCHING HIGHLIGHTS", sender_id, extra={
+                            'action': 'searching'
+                        })
 
                         team_or_competition = message
 
@@ -513,8 +533,15 @@ class HighlightsBotView(generic.View):
                 if 'postback' in message:
                     postback = message['postback']['payload']
 
+                    logger.log_for_user("Postback message received", sender_id, extra={
+                        'message': message,
+                        'type': 'postback'
+                    })
+
                     if postback == 'get_started':
-                        logger.log("GET STARTED POSTBACK", forward=True)
+                        logger.log_for_user("GET STARTED POSTBACK", sender_id, extra={
+                            'action': 'start'
+                        })
 
                         user = user_manager.get_user(sender_id)
 
@@ -530,7 +557,9 @@ class HighlightsBotView(generic.View):
 
                     # SEARCH HIGHLIGHT SETTING POSTBACK
                     elif postback == 'search_highlights':
-                        logger.log("SEARCH HIGHLIGHTS POSTBACK", forward=True)
+                        logger.log_for_user("SEARCH HIGHLIGHTS POSTBACK", sender_id, extra={
+                            'action': 'search'
+                        })
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -538,7 +567,9 @@ class HighlightsBotView(generic.View):
 
                     # SUBSCRIPTION SETTING POSTBACK
                     elif postback == 'my_subscriptions':
-                        logger.log("SUBSCRIPTION SETTING POSTBACK", forward=True)
+                        logger.log_for_user("SUBSCRIPTION SETTING POSTBACK", sender_id, extra={
+                            'action': 'subscriptions'
+                        })
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
@@ -546,7 +577,9 @@ class HighlightsBotView(generic.View):
 
                     # SHARE POSTBACK
                     elif postback == 'share':
-                        logger.log("SHARE POSTBACK", forward=True)
+                        logger.log_for_user("SHARE POSTBACK", sender_id, extra={
+                            'action': 'share'
+                        })
 
                         response_msg.append(
                             manager_share.send_share_introduction_message(sender_id)
@@ -557,13 +590,18 @@ class HighlightsBotView(generic.View):
 
                     # SEE RESULT SETTING POSTBACK
                     elif postback == 'see_result_setting':
-                        logger.log("SEE RESULT SETTING POSTBACK", forward=True)
+                        logger.log_for_user("SEE RESULT SETTING POSTBACK", sender_id, extra={
+                            'action': 'settings'
+                        })
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)
                         )
 
-                logger.log_for_user("Message sent: " + str(response_msg), sender_id)
+                logger.log_for_user("Message sent", sender_id, extra={
+                    'message': response_msg,
+                    'type': 'response'
+                })
                 HighlightsBotView.LATEST_SENDER_ID = 0
 
         if not settings.DEBUG:
@@ -650,7 +688,9 @@ class HighlightView(TemplateView):
             for r in recommendations
         ]
 
-        logger.log(recommendations)
+        logger.log_for_user('Recommendations for user ' + str(user_id), user_id, extra={
+            'recommendations': recommendations
+        })
 
         if [p for p in acceptable_providers if p in highlight_to_send.link]:
 

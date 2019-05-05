@@ -11,7 +11,7 @@ from fb_bot.messenger_manager.sender import CLIENT
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager
 from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
-from fb_bot.video_providers import video_info_fetcher
+from fb_bot.highlight_info_fetchers import info_fetcher
 
 
 AVAILABLE_SOURCES = sources.get_available_sources()
@@ -166,7 +166,7 @@ def add_videos_info():
     logger.log('Total highlights info to add: {}'.format(len(highlights)), forward=True)
 
     for h in highlights:
-        info = video_info_fetcher.get_info(h.link)
+        info = info_fetcher.get_info(h.link)
 
         if not info:
             latest_highlight_manager.set_video_duration(h, -1)

@@ -74,9 +74,6 @@ class NewFootballRegistration(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, db_column="user", null=True, blank=True)
     time = models.DateTimeField(default=datetime.now)
 
-    class Meta:
-        unique_together = ('name', 'source')
-
     @staticmethod
     def to_list_display():
         return ['name', 'source', 'user', 'time']

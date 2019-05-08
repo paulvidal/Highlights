@@ -536,7 +536,7 @@ def get_best_highlight(highlight_models, extended=False):
 
 
 def determine_best_highlight(h1, h2, total_goals):
-    if h1.source == h2.source and abs(h2.video_duration - h1.video_duration) < 5:
+    if h1.source == h2.source and abs(h2.video_duration - h1.video_duration) < 15:
         # choose streamable over other videos in case where videos have the same duration
         return h1 if providers.STREAMABLE in h1.link else h2
 

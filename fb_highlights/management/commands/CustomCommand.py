@@ -10,19 +10,29 @@ from highlights import settings
 class CustomCommand(BaseCommand):
 
     def handle(self, *args, **options):
+        task_name = self.get_task_name(options)
+
         try:
             start_time = time.time()
             self.run_task(options)
+
             # Monitor duration of the task
-            logger.log("Task " + str(self.get_task_name(options)) + " executed in " + str(round(time.time() - start_time, 2)) + "s", forward=True)
+            logger.info("Task " + task_name + " executed in " + str(round(time.time() - start_time, 2)) + "s", extra={
+                'task': task_name,
+                'success': True
+            })
+
         except Exception as error:
             if not settings.DEBUG:
-                # Say if PROD or PRE-PROD
+                # Say if PROD or PRE-PROD and report to sentry a problem has been detected
                 client.user_context({ 'prod_status': settings.PROD_STATUS })
-                # Report to sentry if problem detected
                 client.captureException()
-                # Report task had a problem
-                logger.error("Task " + str(self.get_task_name(options)) + " failed")
+
+                # Log the error
+                logger.error("Task " + task_name + " failed", extra={
+                    'task': task_name,
+                    'success': False
+                })
             else:
                 raise error
 

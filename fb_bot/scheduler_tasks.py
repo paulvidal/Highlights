@@ -103,10 +103,14 @@ def send_most_recent_highlights():
 
 
 def _should_send_highlight(time_now, highlight):
-    """Determine if we should send the highlight - send if:
+    """Determine if we should send the highlight - send if ONE OF THE FOLLOWING:
     - match highlight is older than MIN_MINUTES_TO_SEND_HIGHLIGHTS and younger than 30 hours
     - match has a priority set on it
     - no goals have been scored in the last 10 minutes of the game (otherwise we might miss a goal on the highlight)
+
+    Requirements to send:
+    - not footyroom video with unknown duration (as footyroom often puts old youtube videos, which can be send)
+    - not a default image if less than MIN_MINUTES_TO_SEND_HIGHLIGHTS
     """
     time_since_added = highlight.get_parsed_time_since_added()
 
@@ -115,9 +119,10 @@ def _should_send_highlight(time_now, highlight):
             timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30)
             or highlight.priority_short > 0
             or _has_all_goal_data(highlight)
-        ) and (
-            not (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
-            and not (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)
+        ) and not (
+            (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
+            or (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)
+            or (latest_highlight_manager.is_default_highlight_img(highlight.img_link) and abs(time_now - time_since_added) < timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
     )
 
 

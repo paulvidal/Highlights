@@ -1,3 +1,4 @@
+import inspect
 import sys
 from datetime import datetime
 
@@ -38,6 +39,12 @@ class LoggerWrapper:
         # Add time to log
         time = datetime.utcnow()
         extra['time'] = time
+
+        # Add caller info
+        func_info = inspect.stack()[2]  # Go back 2 time backward the call stack to get original function call
+        extra['function_filename'] = func_info.filename
+        extra['function_name'] = func_info.function
+        extra['function_position'] = func_info.lineno
 
         # Add level in message
         message = '{} [{}] {}'.format(level_name, time, message)

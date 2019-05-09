@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 
+from fb_bot.logger import logger
 from fb_bot.messenger_manager import manager_response
 from fb_highlights.views import HighlightsBotView
 
@@ -30,5 +31,12 @@ class MessengerMiddleware(object):
             'user_id': id
         })
         got_request_exception.send(sender=self, request=request)
+
+        # Log the error
+        logger.error("An error occurred: " + str(exception), extra={
+            'user_id': id,
+            'method': request.method,
+            'full_path': request.get_full_path()
+        })
 
         return HttpResponse()

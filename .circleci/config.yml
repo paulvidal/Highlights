@@ -29,6 +29,8 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
 
       - run:
           name: Define environment variables
@@ -61,9 +63,10 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
-          name: run tests
+          name: migrate and run tests
           command: |
             . venv/bin/activate
+            python manage.py migrate
             python manage.py test
 
       - store_artifacts:

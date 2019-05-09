@@ -95,12 +95,14 @@ class FootballTeamMappingAdmin(admin.ModelAdmin):
     list_display = FootballTeamMapping.to_list_display()
     list_filter = FootballTeamMapping.to_list_filter()
     search_fields = FootballTeamMapping.search_fields()
+    ordering = 'team',
 
 
 class FootballCompetitionMappingAdmin(admin.ModelAdmin):
     list_display = FootballCompetitionMapping.to_list_display()
     list_filter = FootballCompetitionMapping.to_list_filter()
     search_fields = FootballCompetitionMapping.search_fields()
+    ordering = 'competition',
 
 
 admin.site.register(User, UserAdmin)

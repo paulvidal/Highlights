@@ -16,10 +16,13 @@ class CustomCommand(BaseCommand):
             start_time = time.time()
             self.run_task(options)
 
+            runtime = round(time.time() - start_time, 2)
+
             # Monitor duration of the task
-            logger.info("Task " + task_name + " executed in " + str(round(time.time() - start_time, 2)) + "s", extra={
+            logger.info("Task " + task_name + " executed in " + str(runtime) + "s", extra={
                 'task': task_name,
-                'success': True
+                'success': True,
+                'runtime': runtime
             })
 
         except Exception as error:

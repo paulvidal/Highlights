@@ -7,7 +7,6 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 
 from fb_bot.highlight_fetchers.info import providers
-from fb_bot.highlight_fetchers.utils import mapping_football_team
 
 
 class User(models.Model):
@@ -199,14 +198,6 @@ class LatestHighlight(models.Model):
 
     def get_formatted_date(self):
         return self.get_parsed_time_since_added().strftime('%d %B %Y')
-
-    def is_match_of(self, team_name):
-        """
-        :param team_name: the name of the football team
-        :return: True if the highlight is for a match with this team
-        """
-        team_name = mapping_football_team.get_exact_name(team_name.lower())
-        return self.team1.name.startswith(team_name) or self.team2.name.startswith(team_name)
 
     def get_goals_elapsed(self):
         return [int(g['elapsed']) for g in self.goal_data]
@@ -404,7 +395,7 @@ class FootballTeamMapping(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['team_name', 'team']
+        return ['team_name', 'team__name']
 
 
 class FootballCompetitionMapping(models.Model):
@@ -424,4 +415,4 @@ class FootballCompetitionMapping(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['competition_name', 'competition']
+        return ['competition_name', 'competition__name']

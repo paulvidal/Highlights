@@ -385,3 +385,43 @@ class BlockedNotification(models.Model):
     @staticmethod
     def search_fields():
         return ['team', 'competition']
+
+
+class FootballTeamMapping(models.Model):
+    team_name = models.CharField(max_length=200, db_column="team_name_mapping")
+    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('team_name', 'team')
+
+    @staticmethod
+    def to_list_display():
+        return ['team_name', 'team']
+
+    @staticmethod
+    def to_list_filter():
+        return []
+
+    @staticmethod
+    def search_fields():
+        return ['team_name', 'team']
+
+
+class FootballCompetitionMapping(models.Model):
+    competition_name = models.CharField(max_length=200, db_column="competition_name_mapping")
+    competition = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('competition_name', 'competition')
+
+    @staticmethod
+    def to_list_display():
+        return ['competition_name', 'competition']
+
+    @staticmethod
+    def to_list_filter():
+        return []
+
+    @staticmethod
+    def search_fields():
+        return ['competition_name', 'competition']

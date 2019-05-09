@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 import requests
 
+from fb_bot.highlight_fetchers.info.sources import OUR_MATCH
 from fb_bot.messenger_manager import manager_scheduler
 from fb_bot import streamable_converter, ressource_checker
 from fb_bot.highlight_fetchers import fetcher
@@ -115,6 +116,7 @@ def _should_send_highlight(time_now, highlight):
     time_since_added = highlight.get_parsed_time_since_added()
 
     # TODO: bad heuristic to prevent old footyroom videos from being sent bug, TEMPORARY fix, replace when check if match existed
+    # FIXME: remove ourmatch when finish using their images - should use footballHighlights images or footyroom
     return (
             timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30)
             or highlight.priority_short > 0
@@ -122,7 +124,13 @@ def _should_send_highlight(time_now, highlight):
         ) and not (
             (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
             or (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)
-            or (latest_highlight_manager.is_default_highlight_img(highlight.img_link) and abs(time_now - time_since_added) < timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS))
+            or (
+                    (
+                            latest_highlight_manager.is_default_highlight_img(highlight.img_link)
+                            or OUR_MATCH in highlight.img_link
+                    )
+                    and abs(time_now - time_since_added) < timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS)
+                )
     )
 
 

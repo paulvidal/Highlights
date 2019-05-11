@@ -1,6 +1,5 @@
 import json
 import re
-from datetime import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse, JsonResponse, HttpResponseBadRequest

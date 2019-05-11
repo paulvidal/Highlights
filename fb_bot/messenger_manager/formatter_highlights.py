@@ -1,4 +1,4 @@
-from fb_bot.highlight_fetchers.info.sources import OUR_MATCH
+from fb_bot.highlight_fetchers.info.sources import OUR_MATCH, HOOFOOT
 from highlights import settings
 
 
@@ -12,7 +12,7 @@ def _highlight_to_json(fb_id, highlight_model, see_result):
 
     # FIXME: huge hack to wait until ourmatch is not ban anymore from messenger platform
     # when deleting this, check also that get_sources_with_complete_data_in_order_of_priority is set back to ourmatch 1st
-    if OUR_MATCH in highlight_model.img_link:
+    if OUR_MATCH in highlight_model.img_link or HOOFOOT in highlight_model.img_link:
         highlight_model.img_link = settings.STATIC_URL + "img/logo.png"
 
     return {

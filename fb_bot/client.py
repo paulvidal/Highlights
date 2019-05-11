@@ -33,13 +33,15 @@ class Client:
                 response = requests.post(url, headers={"Content-Type": "application/json"}, data=message)
 
                 if response.status_code != 200:
-                    logger.error("Facebook message sending error", extra={
-                        'content': response.content,
+                    logger.warning("Facebook message sending error", extra={
+                        'url': url,
+                        'content': str(response.content),
                         'response_code': response.status_code
                     })
                 else:
-                    logger.error("Facebook message sending success", extra={
-                        'content': response.content,
+                    logger.info("Facebook message sending success", extra={
+                        'url': url,
+                        'content': str(response.content),
                         'response_code': response.status_code
                     })
 

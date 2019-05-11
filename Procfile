@@ -1,3 +1,3 @@
 release: sh heroku_release.sh
 
-web: gunicorn highlights.wsgi --workers 3
+web: ddtrace-run gunicorn highlights.wsgi --workers 3 --name=highlightsbot

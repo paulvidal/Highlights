@@ -1,0 +1,16 @@
+init_config:
+
+instances:
+  - host: <HOSTNAME>
+    port: <PORT>
+    username: <USERNAME>
+    password: <PASSWORD>
+    dbname: <DBNAME>
+    ssl: True
+
+logs:
+    - type: file
+      path: /var/log/postgresql/pg.log
+      source: postgresql
+      sourcecategory: database
+      service: my_database

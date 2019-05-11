@@ -38,7 +38,7 @@ DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
 # GET BASE URL OF SERVER
 BASE_URL = get_env_var('BASE_URL')
 
-# STATUS OF SERVER - either "test | preprod | prod"
+# STATUS OF SERVER - either "test | staging | prod"
 PROD_STATUS = get_env_var('PROD_STATUS')
 
 
@@ -58,7 +58,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fb_highlights',
-    'webpack_loader'
+    'webpack_loader',
+    'ddtrace.contrib.django',  # ENABLES Datadog tracing
 ]
 
 MIDDLEWARE = [
@@ -183,4 +184,34 @@ WEBPACK_LOADER = {
         'BUNDLE_DIR_NAME': 'build/' if DEBUG else 'dist/',
         'STATS_FILE': os.path.join(BASE_DIR, 'static/webpack-stats-dev.json' if DEBUG else 'static/webpack-stats-prod.json'),
     }
+}
+
+# For Datadog tracer
+
+DATADOG_TRACE = {
+    'DEFAULT_SERVICE': 'django',
+    'TAGS': {'env': PROD_STATUS},
+    'ANALYTICS_ENABLED': True  # Enable trace analytics
+}
+
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'ddtrace': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
+    },
 }

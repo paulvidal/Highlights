@@ -6,7 +6,7 @@ import dateparser
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from fb_bot.highlight_fetchers.info import providers
+from fb_bot.highlight_fetchers.info import providers, sources
 
 
 class User(models.Model):
@@ -416,3 +416,48 @@ class FootballCompetitionMapping(models.Model):
     @staticmethod
     def search_fields():
         return ['competition_name', 'competition__name']
+
+
+class HighlightImage(models.Model):
+    match_id = models.PositiveIntegerField()
+    img_link = models.TextField(default="")
+    img_uploaded_link = models.TextField(default="")
+    source = models.CharField(max_length=80)
+
+    class Meta:
+        unique_together = ('match_id', 'img_link')
+
+    def image_source_priority(self):
+        priority = 0
+
+        if sources.OUR_MATCH == self.source:
+            priority = 4
+
+        elif sources.HIGHLIGHTS_FOOTBALL == self.source:
+            priority = 3
+
+        elif sources.HOOFOOT == self.source:
+            priority = 2
+
+        elif sources.YOUTUBE == self.source:
+            priority = 2
+
+        elif sources.FOOTYROOM_VIDEOS == self.source or sources.FOOTYROOM == self.source:
+            priority = 2
+
+        elif sources.SPORTYHL == self.source:
+            priority = 2
+
+        return priority
+
+    @staticmethod
+    def to_list_display():
+        return ['match_id', 'img_link', 'img_uploaded_link', 'source']
+
+    @staticmethod
+    def to_list_filter():
+        return ['source']
+
+    @staticmethod
+    def search_fields():
+        return ['match_id', 'img_link', 'img_uploaded_link']

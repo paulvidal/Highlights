@@ -1,11 +1,9 @@
 import inspect
 import sys
-from datetime import datetime
-
 import logging
-
 import json_log_formatter
 
+from datetime import datetime
 from highlights import settings
 
 

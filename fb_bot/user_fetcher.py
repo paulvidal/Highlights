@@ -4,7 +4,6 @@ from fb_bot.logger import logger
 from fb_bot.messenger_manager import sender
 
 
-# TODO: refactor and place it in messenger manager
 def get_facebook_user_info(fb_id):
     response = requests.get("https://graph.facebook.com/{}/{}".format(sender.GRAPH_VERSION, fb_id),
                             params={"fields": "first_name, last_name, locale",

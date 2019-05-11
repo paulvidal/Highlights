@@ -2,6 +2,7 @@ beautifulsoup4==4.5.3
 bs4==0.0.1
 certifi==2017.4.17
 chardet==3.0.4
+cloudinary==1.15.0
 contextlib2==0.5.5
 dateparser==0.6.0
 DateTime==4.2
@@ -14,6 +15,7 @@ html5lib==1.0.1
 idna==2.8
 iso8601==0.1.12
 JSON-log-formatter==0.2.0
+mock==3.0.5
 nltk==3.2.5
 psycopg2==2.7.3.2
 python-dateutil==2.6.0

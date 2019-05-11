@@ -4,7 +4,7 @@ from fb_bot import scheduler_tasks
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 
-from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER
+from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER, DEFAULT_TEST_IMAGE
 from highlights import settings
 
 
@@ -56,7 +56,7 @@ class WebsiteTestCase(TestCase):
                     'score2': 0,
                     'link': settings.BASE_URL + '/highlight/7',
                     'link_extended': settings.BASE_URL + '/highlight/7/extended',
-                    'img_link': 'http://footyroom/img/swansea-arsenal',
+                    'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime(
                         "%Y-%m-%dT%H:%M:%S"),
                 },
@@ -70,7 +70,7 @@ class WebsiteTestCase(TestCase):
                     'score2': 0,
                     'link': settings.BASE_URL + '/highlight/14',
                     'link_extended': settings.BASE_URL + '/highlight/14/extended',
-                    'img_link': 'http://hoofoot/img/swansea-liverpool',
+                    'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
             ],
@@ -96,7 +96,7 @@ class WebsiteTestCase(TestCase):
                     'score2': 2,
                     'link': settings.BASE_URL + '/highlight/1',
                     'link_extended': settings.BASE_URL + '/highlight/1/extended',
-                    'img_link': 'http://hoofoot/img/chelsea-barcelona',
+                    'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
             ],

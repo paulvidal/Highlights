@@ -6,7 +6,6 @@ from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.highlight_fetchers.utils import mapping_football_team, mapping_football_competition
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
-from highlights import settings
 
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 
@@ -277,12 +276,12 @@ def add_highlight(highlight, sent=False):
     # Add team to new team if does not exists and return
     if not has_teams_in_db(highlight):
         add_new_team_to_db(highlight)
-        return
+        return None
 
     # Add competition to new competition if does not exists and return
     if not has_competition_in_db(highlight):
         add_new_competition_to_db(highlight)
-        return
+        return None
 
     # Run mapping for football team names as team can be named differently
     mapped_team1 = mapping_football_team.get_exact_name(highlight.team1)
@@ -296,8 +295,6 @@ def add_highlight(highlight, sent=False):
 
     category = football_competition_manager.get_football_competition(mapped_competition)
 
-    img_link = highlight.img_link if not is_default_highlight_img(highlight.img_link) else settings.STATIC_URL + "img/logo.png"
-
     # Get the match time and id
     match_time = datetime.fromordinal(highlight.time_since_added.date().toordinal())
     id = get_new_id()
@@ -308,9 +305,9 @@ def add_highlight(highlight, sent=False):
         match_time = oldest.match_time
         id = oldest.id
 
-    highlight, _ = LatestHighlight.objects.update_or_create(id=id,
+    new_highlight, _ = LatestHighlight.objects.update_or_create(id=id,
                                                             link=highlight.link,
-                                                            img_link=img_link,
+                                                            img_link=highlight.img_link,
                                                             time_since_added=highlight.time_since_added,
                                                             match_time=match_time,
                                                             team1=team1,
@@ -324,17 +321,7 @@ def add_highlight(highlight, sent=False):
                                                             goal_data=highlight.goal_data,
                                                             type=highlight.type)
 
-    return highlight
-
-
-# Helper
-def is_default_highlight_img(img_link):
-    return img_link and \
-           any([default_keyword in img_link for default_keyword in [
-               'nothumb',
-               '/default.jpg',
-               'logo.png'
-           ]])
+    return new_highlight
 
 
 def delete_highlight(highlight_model):

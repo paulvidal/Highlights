@@ -2,7 +2,7 @@ from django.contrib import admin
 from fb_highlights.models import User, RegistrationTeam, LatestHighlight, FootballTeam, NewFootballRegistration, \
     HighlightStat, \
     HighlightNotificationStat, RegistrationCompetition, FootballCompetition, ScrappingStatus, ScraperApiKey, \
-    BlockedNotification, Recommendation, FootballTeamMapping, FootballCompetitionMapping
+    BlockedNotification, Recommendation, FootballTeamMapping, FootballCompetitionMapping, HighlightImage
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -105,6 +105,13 @@ class FootballCompetitionMappingAdmin(admin.ModelAdmin):
     ordering = 'competition',
 
 
+class HighlightImageAdmin(admin.ModelAdmin):
+    list_display = HighlightImage.to_list_display()
+    list_filter = HighlightImage.to_list_filter()
+    search_fields = HighlightImage.search_fields()
+    ordering = '-match_id',
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(RegistrationTeam, RegistrationTeamAdmin)
 admin.site.register(RegistrationCompetition, RegistrationCompetitionAdmin)
@@ -120,3 +127,4 @@ admin.site.register(BlockedNotification, BlockedNotificationAdmin)
 admin.site.register(Recommendation, RecommendationAdmin)
 admin.site.register(FootballTeamMapping, FootballTeamMappingAdmin)
 admin.site.register(FootballCompetitionMapping, FootballCompetitionMappingAdmin)
+admin.site.register(HighlightImage, HighlightImageAdmin)

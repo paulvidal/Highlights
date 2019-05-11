@@ -7,7 +7,7 @@ from fb_bot.messages import HIDE_BUTTON, CANCEL_BUTTON, EMOJI_HEART
 from fb_bot.model_managers import user_manager
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
-from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER
+from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER, DEFAULT_TEST_IMAGE
 from highlights import settings
 
 
@@ -431,7 +431,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
+                                    'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
                                         'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -500,7 +500,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
+                                    'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
                                         'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -550,7 +550,7 @@ class MessengerBotTestCase(TestCase):
                             'template_type': 'generic',
                             'elements': [
                                 {
-                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
+                                    'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
                                         'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
@@ -745,7 +745,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'title': 'Chelsea - Barcelona',
                                     'subtitle': 'Champions League',
-                                    'image_url': 'http://hoofoot/img/chelsea-barcelona',
+                                    'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
                                         'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',

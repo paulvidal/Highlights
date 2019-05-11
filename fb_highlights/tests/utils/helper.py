@@ -2,8 +2,9 @@ from fb_bot.logger import logger
 from fb_bot.messenger_manager import sender
 from fb_bot.model_managers import football_team_manager, football_competition_manager, latest_highlight_manager, \
     context_manager
-from fb_highlights.models import User
-from fb_highlights.tests.utils.test_highlights import TEST_HIGHLIGHTS, SENT_HIGHLIGHTS, INCREMENT_CLICK_COUNT, TEST_HIGHLIGHTS_2
+from fb_highlights.models import User, HighlightImage
+from fb_highlights.tests.utils.test_highlights import TEST_HIGHLIGHTS, SENT_HIGHLIGHTS, INCREMENT_CLICK_COUNT, \
+    TEST_HIGHLIGHTS_2, TEST_IMAGE, TEST_UPLOADED_IMAGE
 
 TEST_USER_ID = 1119096411506599
 
@@ -60,6 +61,13 @@ def init_db(test_user_id):
     football_competition_manager.add_football_competition('premier league')
     football_competition_manager.add_football_competition('la liga')
     football_competition_manager.add_football_competition('nations league')
+
+    # Create image mappings
+    for match_id in [17, 18, 19, 20]:
+        HighlightImage.objects.update_or_create(match_id=match_id,
+                                                img_link=TEST_IMAGE,
+                                                img_uploaded_link=TEST_UPLOADED_IMAGE,
+                                                source='ourmatch')
 
 
 # Modify elements in database

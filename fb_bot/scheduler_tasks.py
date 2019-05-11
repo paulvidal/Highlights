@@ -2,15 +2,14 @@ from datetime import datetime, timedelta
 
 import requests
 
-from fb_bot.highlight_fetchers.info.sources import OUR_MATCH
 from fb_bot.messenger_manager import manager_scheduler
 from fb_bot import streamable_converter, ressource_checker
 from fb_bot.highlight_fetchers import fetcher
 from fb_bot.highlight_fetchers.info import sources, providers
 from fb_bot.logger import logger
-from fb_bot.messenger_manager.sender import CLIENT
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
-    registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager
+    registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager, \
+    highlight_image_manager
 from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
 from fb_bot.highlight_info_fetchers import info_fetcher
 
@@ -40,7 +39,36 @@ def fetch_highlights(site):
         if latest_highlight_manager.get_same_highlights_sent(highlight):
             sent = True
 
-        latest_highlight_manager.add_highlight(highlight, sent=sent)
+        new_highlight = latest_highlight_manager.add_highlight(highlight, sent=sent)
+
+        # No highlight has been created
+        if not new_highlight:
+            continue
+
+        logger.info("Highlight added: " + new_highlight.link, extra={
+            'link': new_highlight.link,
+            'img_link': new_highlight.img_link,
+            'category': new_highlight.category.name,
+            'time_since_added': new_highlight.time_since_added,
+            'team1': new_highlight.team1.name,
+            'score1': new_highlight.score1,
+            'team2': new_highlight.team2.name,
+            'score2': new_highlight.score2,
+            'source': new_highlight.source,
+            'goal_data': new_highlight.goal_data,
+        })
+
+        # Add the image for this new inserted highlight
+        highlight_image_manager.add_image_for_highlight(new_highlight)
+
+        # Set to all highlights the best image
+        same_highlights = latest_highlight_manager.get_same_highlights(new_highlight)
+        best_image_link = highlight_image_manager.fetch_best_image_for_highlight(new_highlight)
+
+        for h in same_highlights:
+            latest_highlight_manager.set_img_link(h, best_image_link)
+
+        # TODO: could do the same that we did for image to goal info HERE
 
 
 def send_most_recent_highlights():
@@ -50,10 +78,6 @@ def send_most_recent_highlights():
 
         if not reference_highlight:
             continue
-
-        # Do not override if default image for reference highlight
-        if not latest_highlight_manager.is_default_highlight_img(reference_highlight.img_link):
-            latest_highlight_manager.set_img_link(h, reference_highlight.img_link)
 
         latest_highlight_manager.set_goal_data(h, reference_highlight.goal_data)
         latest_highlight_manager.set_score(h, reference_highlight.score1, reference_highlight.score2)
@@ -85,11 +109,16 @@ def send_most_recent_highlights():
             for h in similar_highlights:
                 latest_highlight_manager.set_sent(h)
 
-            # Log highlights sent
-            logger.log("Highlight sent: " + highlight.get_match_name(), forward=True)
+            logger.info("Highlight preparing to be sent: " + highlight.get_match_name(), extra={
+                'match': highlight.get_match_name(),
+            })
 
             # Send highlight to users
             _send_highlight_to_users(highlight)
+
+            logger.info("Highlight sent: " + highlight.get_match_name(), extra={
+                'match': highlight.get_match_name(),
+            })
 
     # Delete old highlights
     # FIXME: try to find a way to keep old highlights
@@ -108,29 +137,21 @@ def _should_send_highlight(time_now, highlight):
     - match highlight is older than MIN_MINUTES_TO_SEND_HIGHLIGHTS and younger than 30 hours
     - match has a priority set on it
     - no goals have been scored in the last 10 minutes of the game (otherwise we might miss a goal on the highlight)
+        and we have a valid image for the match
 
     Requirements to send:
     - not footyroom video with unknown duration (as footyroom often puts old youtube videos, which can be send)
-    - not a default image if less than MIN_MINUTES_TO_SEND_HIGHLIGHTS
+    TODO: this is a bad heuristic to prevent old footyroom videos from being sent bug, TEMPORARY fix, replace when check if match existed
     """
     time_since_added = highlight.get_parsed_time_since_added()
 
-    # TODO: bad heuristic to prevent old footyroom videos from being sent bug, TEMPORARY fix, replace when check if match existed
-    # FIXME: remove ourmatch when finish using their images - should use footballHighlights images or footyroom
     return (
             timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30)
             or highlight.priority_short > 0
-            or _has_all_goal_data(highlight)
+            or (_has_all_goal_data(highlight) and highlight_image_manager.has_images_for_highlight(highlight))
         ) and not (
             (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
             or (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)
-            or (
-                    (
-                            latest_highlight_manager.is_default_highlight_img(highlight.img_link)
-                            or OUR_MATCH in highlight.img_link
-                    )
-                    and abs(time_now - time_since_added) < timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS)
-                )
     )
 
 
@@ -168,7 +189,6 @@ def _check_validity(highlights):
                 latest_highlight_manager.set_invalid(h)
 
         except:
-            print(h.link)
             logger.error("Failed to validate link: {}".format(h.link))
 
 

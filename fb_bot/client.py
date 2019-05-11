@@ -30,7 +30,19 @@ class Client:
     def send_fb_message(self, url, message):
         if self.client_send:
             try:
-                return requests.post(url, headers={"Content-Type": "application/json"}, data=message)
+                response = requests.post(url, headers={"Content-Type": "application/json"}, data=message)
+
+                if response.status_code != 200:
+                    logger.error("Facebook message sending error", extra={
+                        'content': response.content,
+                        'response_code': response.status_code
+                    })
+                else:
+                    logger.error("Facebook message sending success", extra={
+                        'content': response.content,
+                        'response_code': response.status_code
+                    })
+
             except Timeout:
                 logger.error("Facebook message sending timed out", extra={
                     'url': url,

@@ -62,8 +62,6 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/img/burnley-barcelona',
-                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     def test_scheduler_does_not_send_highlight_message_for_subscribed_team_when_too_recent(self):
@@ -83,8 +81,6 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=1,
                 competition='Champions League',
-                image_url='http://hoofoot/img/barcelona-liverpool',
-                time=TIME_NOW
             ), messages)
 
     def test_scheduler_sends_highlight_message_for_subscribed_team_when_too_recent_but_priority_is_set(self):
@@ -107,8 +103,6 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=1,
                 competition='Champions League',
-                image_url='http://hoofoot/img/barcelona-liverpool',
-                time=TIME_NOW
             ), messages)
 
         # Set back old properties
@@ -132,8 +126,6 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=4,
                 competition='Premier League',
-                image_url='http://hoofoot/img/arsenal-liverpool',
-                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     def test_scheduler_send_highlight_goals(self):
@@ -200,8 +192,6 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/img/burnley-barcelona',
-                time=TIME_40_MINUTES_EARLIER,
                 score_hidden=True
             ), messages)
 
@@ -239,8 +229,6 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=2,
                 competition='Champions League',
-                image_url='http://hoofoot/img/chelsea-barcelona2',
-                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     def test_scheduler_sends_highlights_straight_if_no_goals_scored_in_last_minutes_of_match(self):
@@ -260,8 +248,7 @@ class SchedulerTestCase(TestCase):
                 team2='England',
                 score2=0,
                 competition='Nations League',
-                image_url='http://footyroom/img/liverpool-england',
-                time=TIME_NOW
+                img_link=TEST_UPLOADED_IMAGE
             ), messages)
 
     def test_scheduler_does_not_send_highlights_straight_if_goals_scored_in_last_minutes_of_match(self):
@@ -281,71 +268,7 @@ class SchedulerTestCase(TestCase):
                 team2='France',
                 score2=0,
                 competition='Nations League',
-                image_url='http://footyroom/img/liverpool-france',
-                time=TIME_NOW
-            ), messages)
-
-    def test_scheduler_does_not_send_highlight_if_highlight_inverted_home_and_away_teams(self):
-        # Given
-
-        # When
-        self.send_most_recent_highlights()
-
-        # Then
-        messages = [json.loads(m) for m in sender.CLIENT.messages]
-
-        assert_highlight_not_in(
-            create_formatted_highlight_response(
-                id=9,
-                team1='Barcelona',
-                score1=2,
-                team2='Chelsea',
-                score2=0,
-                competition='Champions League',
-                image_url='http://hoofoot/img/chelsea-barcelona3',
-                time=TIME_40_MINUTES_EARLIER
-            ), messages)
-
-    def test_scheduler_overrides_picture_and_goals_for_highlights(self):
-        # Given
-
-        # When
-        self.send_most_recent_highlights()
-
-        # Then
-        messages = [json.loads(m) for m in sender.CLIENT.messages]
-
-        assert_highlight_in(
-            create_formatted_highlight_response(
-                id=10,
-                team1='Manchester City',
-                score1=0,
-                team2='Tottenham',
-                score2=0,
-                competition='Premier League',
-                image_url='http://footyroom/img/manchester_city-tottenham',
-                time=TIME_1_DAY_EARLIER
-            ), messages)
-
-    def test_scheduler_does_not_send_highlight_with_incomplete_data(self):
-        # Given
-
-        # When
-        self.send_most_recent_highlights()
-
-        # Then
-        messages = [json.loads(m) for m in sender.CLIENT.messages]
-
-        assert_highlight_not_in(
-            create_formatted_highlight_response(
-                id=9,
-                team1='Marseille',
-                score1=-1,
-                team2='Monaco',
-                score2=-1,
-                competition='Ligue 1',
-                image_url='http://sportyhl/img/marseille-monaco',
-                time=TIME_40_MINUTES_EARLIER
+                img_link=TEST_UPLOADED_IMAGE
             ), messages)
 
     def test_scheduler_does_not_send_highlight_when_no_goals_info_before_30_minutes(self):
@@ -365,8 +288,7 @@ class SchedulerTestCase(TestCase):
                 team2='Liverpool',
                 score2=0,
                 competition='Nations League',
-                image_url='http://footyroom/img/belgium-liverpool',
-                time=TIME_NOW
+                img_link=TEST_UPLOADED_IMAGE
             ), messages)
 
     def test_scheduler_should_send_highlight_when_no_goal_info_but_no_goals_in_match(self):
@@ -386,8 +308,64 @@ class SchedulerTestCase(TestCase):
                 team2='England',
                 score2=0,
                 competition='Nations League',
-                image_url='http://footyroom/img/belgium-england',
-                time=TIME_NOW
+                img_link=TEST_UPLOADED_IMAGE
+            ), messages)
+
+    def test_scheduler_does_not_send_highlight_if_highlight_inverted_home_and_away_teams(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_not_in(
+            create_formatted_highlight_response(
+                id=9,
+                team1='Barcelona',
+                score1=2,
+                team2='Chelsea',
+                score2=0,
+                competition='Champions League',
+            ), messages)
+
+    def test_scheduler_overrides_picture_and_goals_for_highlights(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_in(
+            create_formatted_highlight_response(
+                id=10,
+                team1='Manchester City',
+                score1=0,
+                team2='Tottenham',
+                score2=0,
+                competition='Premier League',
+            ), messages)
+
+    def test_scheduler_does_not_send_highlight_with_incomplete_data(self):
+        # Given
+
+        # When
+        self.send_most_recent_highlights()
+
+        # Then
+        messages = [json.loads(m) for m in sender.CLIENT.messages]
+
+        assert_highlight_not_in(
+            create_formatted_highlight_response(
+                id=9,
+                team1='Marseille',
+                score1=-1,
+                team2='Monaco',
+                score2=-1,
+                competition='Ligue 1',
             ), messages)
 
     def test_scheduler_does_not_send_highlight_when_date_too_old(self):
@@ -407,8 +385,6 @@ class SchedulerTestCase(TestCase):
                 team2='Barcelona',
                 score2=3,
                 competition='Champions League',
-                image_url='http://footyroom/img/swansea-barcelona',
-                time=TIME_4_DAYS_EARLIER
             ), messages)
 
     def test_highlights_not_blocked_when_competition_not_flagged_in_blocked_notification(self):
@@ -428,8 +404,6 @@ class SchedulerTestCase(TestCase):
                 team2='Belgium',
                 score2=0,
                 competition='Nations League',
-                image_url='http://hoofoot/img/france-belgium',
-                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     def test_highlights_blocked_when_competition_flagged_in_blocked_notification(self):
@@ -449,8 +423,6 @@ class SchedulerTestCase(TestCase):
                 team2='England',
                 score2=0,
                 competition='Nations League',
-                image_url='http://hoofoot/img/france-england',
-                time=TIME_40_MINUTES_EARLIER
             ), messages)
 
     # TODO: fix problem for qualifying rounds of champions league
@@ -470,6 +442,4 @@ class SchedulerTestCase(TestCase):
     #             team2='Liverpool',
     #             score2=0,
     #             competition='Europa League',
-    #             image_url='http://hoofoot/img/swansea-liverpool',
-    #             time=TIME_40_MINUTES_EARLIER
     #         ), messages)

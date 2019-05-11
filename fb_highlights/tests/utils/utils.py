@@ -1,9 +1,10 @@
 from fb_highlights.tests.utils.helper import TEST_USER_ID
+from fb_highlights.tests.utils.test_highlights import DEFAULT_TEST_IMAGE
 
 from highlights import settings
 
 
-def create_formatted_highlight_response(id, team1, score1, team2, score2, competition, image_url, time, score_hidden=False):
+def create_formatted_highlight_response(id, team1, score1, team2, score2, competition, score_hidden=False, img_link=DEFAULT_TEST_IMAGE):
 
     title = '{}{} - {}{}'.format(
         team1,
@@ -29,7 +30,7 @@ def create_formatted_highlight_response(id, team1, score1, team2, score2, compet
                             {
                                 "title": title,
                                 "subtitle": competition.title(),
-                                "image_url": image_url,
+                                "image_url": img_link,
                                 "default_action": {
                                     "type": "web_url",
                                     "messenger_extensions": "false",

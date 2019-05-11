@@ -5,6 +5,7 @@ from raven.contrib.django.raven_compat.models import client
 from fb_bot.highlight_fetchers import fetcher_footyroom, fetcher_sportyhl, fetcher_highlightsfootball, fetcher_hoofoot, \
     fetcher_our_match, fetcher_youtube
 from fb_bot.highlight_fetchers.info import sources
+from fb_bot.logger import logger
 from fb_bot.model_managers import scrapping_status_manager
 from fb_highlights.tests.utils import helper
 from highlights import settings
@@ -77,6 +78,7 @@ def fetch(site):
 
     try:
         highlights += fetcher['fetch'](num_pagelet=num_pagelet, max_days_ago=max_days_ago)
+
     except:
         # Say which fetcher failed and the prod status
         client.user_context({
@@ -85,6 +87,8 @@ def fetch(site):
         })
         # Report to sentry problem detected
         client.captureException()
+
+        logger.error("Error while fetching for " + str(site))
 
     # Update scrapping status in database
     scrapping_status_manager.update_scrapping_status(site, bool(highlights))

@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from django.db.models import Q, Min, Sum
 
 from fb_bot.highlight_fetchers.info import sources, providers
+from fb_bot.highlight_fetchers.utils import mapping_football_team, mapping_football_competition
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 from highlights import settings
@@ -283,10 +284,17 @@ def add_highlight(highlight, sent=False):
         add_new_competition_to_db(highlight)
         return
 
-    team1 = football_team_manager.get_football_team(highlight.team1)
-    team2 = football_team_manager.get_football_team(highlight.team2)
+    # Run mapping for football team names as team can be named differently
+    mapped_team1 = mapping_football_team.get_exact_name(highlight.team1)
+    mapped_team2 = mapping_football_team.get_exact_name(highlight.team2)
 
-    category = football_competition_manager.get_football_competition(highlight.category)
+    team1 = football_team_manager.get_football_team(mapped_team1)
+    team2 = football_team_manager.get_football_team(mapped_team2)
+
+    # Run mapping for football competition/category names as they can be named differently
+    mapped_competition = mapping_football_competition.get_exact_name(highlight.category)
+
+    category = football_competition_manager.get_football_competition(mapped_competition)
 
     img_link = highlight.img_link if not is_default_highlight_img(highlight.img_link) else settings.STATIC_URL + "img/logo.png"
 

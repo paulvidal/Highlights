@@ -1,20 +1,22 @@
 import time
-
 import dateparser
 import re
-from bs4 import BeautifulSoup
+import requests
 
+from bs4 import BeautifulSoup
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.proxy import proxy
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, \
-    format_matchat_link
+from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, \
+    format_matchat_link, format_ok_ru_link
+from fb_bot.highlight_fetchers.proxy import proxy
 
 ROOT_URL = 'https://hoofoot.com/'
 PAGELET_EXTENSION = '?page='
 
 POST_URL = 'https://hoofoot.com/videosx.php'
+
+PROXY = proxy
 
 
 class HoofootHighlight(Highlight):
@@ -61,7 +63,7 @@ def fetch_highlights(num_pagelet=4, max_days_ago=7):
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
-    page = proxy.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
+    page = PROXY.get(ROOT_URL + PAGELET_EXTENSION + str(pagelet_num))
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Extract videos
@@ -152,7 +154,7 @@ def _form_full_link(link):
 def _get_video_links(full_link):
     video_links = []
 
-    page = proxy.get(full_link)
+    page = PROXY.get(full_link)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Get all video types
@@ -180,7 +182,7 @@ def _get_video_links(full_link):
 
             id = search_result.groups()[0]
 
-            page = proxy.post(POST_URL, data={
+            page = PROXY.post(POST_URL, data={
                 'rr': str(id)
             })
             soup = BeautifulSoup(page.content, 'html.parser')
@@ -200,6 +202,11 @@ def _get_video_links(full_link):
             if providers.DAILYMOTION in src:
                 video_links.append(
                     (types[i], format_dailymotion_link(src))
+                )
+
+            elif providers.OK_RU in src:
+                video_links.append(
+                    (types[i], format_ok_ru_link(src))
                 )
 
             elif providers.STREAMABLE in src:
@@ -230,7 +237,7 @@ def get_type(type):
 
     if 'extended' == type:
         return 'extended'
-    elif [w for w in ['en', 'en+', 'ru', 'es'] if w == type]:
+    elif [w for w in ['en', 'en+', 'ru', 'es', 'fr'] if w == type]:
         return 'normal'
     else:
         return None

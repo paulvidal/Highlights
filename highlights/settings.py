@@ -211,7 +211,7 @@ LOGGING = {
     'loggers': {
         'ddtrace': {
             'handlers': ['console'],
-            'level': 'WARNING',
+            'level': 'INFO',
         },
     },
 }

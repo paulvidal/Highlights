@@ -13,4 +13,4 @@ logs:
       path: /var/log/postgresql/pg.log
       source: postgresql
       sourcecategory: database
-      service: my_database
+      service: postgresql

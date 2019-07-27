@@ -182,24 +182,29 @@ def _get_video_links_for_page(soup):
         src = iframe.get("src")
 
         # Only pick video urls coming from the following websites
-        if src:
-            if providers.DAILYMOTION in src:
-                links.append(format_dailymotion_link(src))
+        if not src:
+            continue
 
-            if providers.STREAMABLE in src:
-                links.append(format_streamable_link(src))
+        if providers.DAILYMOTION in src:
+            links.append(format_dailymotion_link(src))
 
-            if providers.OK_RU in src:
-                links.append(format_ok_ru_link(src))
+        elif providers.STREAMABLE in src:
+            links.append(format_streamable_link(src))
 
-            if providers.MATCHAT_ONLINE in src:
-                links.append(format_matchat_link(src))
+        elif providers.OK_RU in src:
+            links.append(format_ok_ru_link(src))
 
-            if providers.VIDEO_STREAMLET in src:
-                links.append(format_matchat_link(src))
+        elif providers.MATCHAT_ONLINE in src:
+            links.append(format_matchat_link(src))
 
-            if providers.VEUCLIPS in src:
-                links.append(format_matchat_link(src))
+        elif providers.VIDEO_STREAMLET in src:
+            links.append(format_matchat_link(src))
+
+        elif providers.VEUCLIPS in src:
+            links.append(format_matchat_link(src))
+
+        elif providers.VIUCLIPS in src:
+            links.append(format_matchat_link(src))
 
     return links
 

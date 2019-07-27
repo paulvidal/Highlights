@@ -14,7 +14,8 @@ def get_video_info(link):
     if not providers.MATCHAT_ONLINE in link \
             and not providers.CONTENT_VENTURES in link \
             and not providers.VIDEO_STREAMLET in link \
-            and not providers.VEUCLIPS in link:
+            and not providers.VEUCLIPS in link\
+            and not providers.VIUCLIPS in link:
         return None
 
     # Disable temporarily matchat.online as not working anymore

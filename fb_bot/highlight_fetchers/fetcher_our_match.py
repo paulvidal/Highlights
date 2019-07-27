@@ -187,8 +187,13 @@ def _get_video_links(soup):
         script_text = script.text
 
         if 'var video_contents =' in script_text:
-            regex = "src=\"(.*?)\""
+            regex = "href=\"(.*?)\""
             videos = re.compile(regex, 0).findall(script_text)
+            regex = "src=\"(.*?)\""
+            videos += re.compile(regex, 0).findall(script_text)
+
+            # we filter if the link contains the image word
+            videos = [v for v in videos if not 'image' in v]
 
             regex = "\'type\':\'(.*?)\'"
             types = re.compile(regex, 0).findall(script_text)
@@ -241,6 +246,9 @@ def _get_video_links(soup):
                             video_link = format_matchat_link(video)
 
                         elif providers.VEUCLIPS in video:
+                            video_link = format_matchat_link(video)
+
+                        elif providers.VIUCLIPS in video:
                             video_link = format_matchat_link(video)
 
                         # Add link if known provider

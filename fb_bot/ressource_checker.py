@@ -25,12 +25,15 @@ def check(link):
 
     elif providers.CONTENT_VENTURES in link \
             or providers.VIDEO_STREAMLET in link:
-        page = requests.get(link).text
-        return 'Blocked Video' not in page
+        page = requests.get(link).text.lower()
+        return 'blocked Video' not in page
 
-    elif providers.VEUCLIPS in link:
-        page = requests.get(link).text
-        return not ('removed due to a copyright claim' in page or 'video has been deleted' in page)
+    elif providers.VEUCLIPS in link \
+            or providers.VIUCLIPS in link:
+        page = requests.get(link).text.lower()
+        return not ('removed due to a copyright claim' in page
+                    or 'video has been deleted' in page
+                    or 'blocked Video' in page)
 
     # For all other content provider, return True by default
     return True
@@ -41,22 +44,7 @@ if __name__ == "__main__":
     print("\nHighlights check ------------------------------ \n")
 
     start_time = time.time()
-    highlights = ['https://streamable.com/e/n3bpf', # True
-                  'https://streamable.com/e/sstxd', # False
-                  'https://www.dailymotion.com/embed/video/x6icolk	', # True
-                  'http://www.dailymotion.com/embed/video/x6bm57o?start=18', # False
-                  'http://www.dailymotion.com/embed/video/x6fnbfs', # False
-                  'https://ok.ru/videoembed/87798dafad', # False
-                  'https://ok.ru/videoembed/877984746086', # False
-                  'https://ok.ru/videoembed/703334517448', # True
-                  'https://ok.ru/videoembed/871972342374',  # True
-                  'https://hfoot.matchat.online/player/49500354',  # False
-                  'https://hfoot.matchat.online/player/49422',  # True
-                  'https://footy1.matchat.online/player/49639',  # True
-                  'https://oms.veuclips.com/embed/F1VwPzibOr',  # False
-                  'https://hofoot.veuclips.com/embed/dlFtGhhRYg',  # False
-                  'https://footy11.veuclips.com/embed/LUPjgkJtZE', # False
-                  'https://footy11.veuclips.com/embed/saA1N6177U' # True
+    highlights = ['https://footy11.viuclips.net/embed/e5yXsPftKy'
                   ]
 
     for highlight in highlights:

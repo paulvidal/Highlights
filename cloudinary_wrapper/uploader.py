@@ -19,8 +19,8 @@ def upload_image(url, public_id=None, overwrite=False):
         'access_mode': 'public',
         'async': False,
         'overwrite': overwrite,
-        'api_key': '618388125585167',
-        'api_secret': 'zjJha4vr1rOuFLuIyeqFDyT_qRw',
+        'api_key': API_KEY,
+        'api_secret': API_SECRET,
         'cloud_name': 'highlightsbot'
     }
 

@@ -32,7 +32,7 @@ class LatestHighlightAdmin(admin.ModelAdmin):
 
     def goal_data_formatted(self, instance):
         goal_data = sorted(instance.goal_data, key=lambda d: d['elapsed'])
-        return '__'.join([g['player'] for g in goal_data]).replace(' ', '_')
+        return '__'.join([str(g['player']) for g in goal_data]).replace(' ', '_')
 
 
 class FootballTeamAdmin(admin.ModelAdmin):

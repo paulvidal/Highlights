@@ -53,6 +53,10 @@ def _extract_goals(match_data):
                 'goal_type': goal_type
             })
 
+            if not (player and elapsed and goal_type):
+                from fb_bot.logger import logger
+                logger.warning('Failed to load goal infos (footyroom) - player {}, elapsed {}, goal type {}'.format(player, elapsed, goal_type))
+
         i += 1
 
     return goals

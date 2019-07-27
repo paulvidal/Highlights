@@ -29,7 +29,7 @@ def _extract_goals(goal_section, home):
         if goal_list_item.find(class_="match-head-red-card"):
             continue
 
-        goal_scorer = goal[:goal.index('(')]
+        player = goal[:goal.index('(')]
 
         regex = "\((.*?)\)"
         search_result = re.compile(regex, 0).search(goal)
@@ -50,12 +50,18 @@ def _extract_goals(goal_section, home):
                 split = g.split('+')
                 g = int(split[0]) + int(split[1])
 
+            elapsed = int(g)
+
             goals.append({
                 'team': 1 if home else 2,
-                'player': goal_scorer,
-                'elapsed': int(g),
+                'player': player,
+                'elapsed': elapsed,
                 'goal_type': goal_type
             })
+
+            if not (player and elapsed and goal_type):
+                from fb_bot.logger import logger
+                logger.warning('Failed to load goal infos (ourmatch) - player {}, elapsed {}, goal type {}'.format(player, elapsed, goal_type))
 
     return goals
 

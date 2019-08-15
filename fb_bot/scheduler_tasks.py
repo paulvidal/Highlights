@@ -10,7 +10,7 @@ from fb_bot.logger import logger
 from fb_bot.model_managers import latest_highlight_manager, context_manager, highlight_notification_stat_manager, \
     registration_team_manager, registration_competition_manager, user_manager, blocked_notification_manager, \
     highlight_image_manager
-from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS
+from fb_bot.model_managers.latest_highlight_manager import MIN_MINUTES_TO_SEND_HIGHLIGHTS, MIN_MINUTES_TO_SEND_HIGHLIGHTS_IF_NO_GOALS_AT_END
 from fb_bot.highlight_info_fetchers import info_fetcher
 
 
@@ -148,7 +148,11 @@ def _should_send_highlight(time_now, highlight):
     return (
             timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS) < abs(time_now - time_since_added) < timedelta(hours=30)
             or highlight.priority_short > 0
-            or (_has_all_goal_data(highlight) and highlight_image_manager.has_images_for_highlight(highlight))
+            or (
+                    _has_all_goal_data(highlight)
+                    and timedelta(minutes=MIN_MINUTES_TO_SEND_HIGHLIGHTS_IF_NO_GOALS_AT_END) < abs(time_now - time_since_added)
+                    and highlight_image_manager.has_images_for_highlight(highlight)
+            )
         ) and not (
             (highlight.source == sources.FOOTYROOM and highlight.video_duration == -1)
             or (highlight.source == sources.FOOTYROOM_VIDEOS and highlight.video_duration == -1)

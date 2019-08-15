@@ -8,6 +8,7 @@ from fb_bot.model_managers import football_team_manager, new_football_registrati
 from fb_highlights.models import LatestHighlight
 
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
+MIN_MINUTES_TO_SEND_HIGHLIGHTS_IF_NO_GOALS_AT_END = 10
 
 
 def get_highlight(link):

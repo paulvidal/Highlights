@@ -7,6 +7,9 @@ from fb_bot.highlight_fetchers.utils import mapping_football_team, mapping_footb
 from fb_bot.model_managers import football_team_manager, new_football_registration_manager, football_competition_manager
 from fb_highlights.models import LatestHighlight
 
+
+MAX_TIME_BETWEEN_2_MATCHES = timedelta(days=2)
+
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 MIN_MINUTES_TO_SEND_HIGHLIGHTS_IF_NO_GOALS_AT_END = 10
 
@@ -120,8 +123,8 @@ def get_highlights(team1, score1, team2, score2, date):
                                           valid=True,
                                           ready=True,
                                           source__in=sources.get_available_sources(),
-                                          time_since_added__gt=date - timedelta(days=3),
-                                          time_since_added__lt=date + timedelta(days=3))
+                                          time_since_added__gt=date - MAX_TIME_BETWEEN_2_MATCHES,
+                                          time_since_added__lt=date + MAX_TIME_BETWEEN_2_MATCHES)
 
 
 # searching highlight to show using id
@@ -187,8 +190,8 @@ def get_inverted_teams_highlights(highlight):
 
     return LatestHighlight.objects.filter(team1=team2,
                                           team2=team1,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=3),
-                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=3))
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)
 
 
 def get_same_highlights(highlight):
@@ -201,8 +204,8 @@ def get_same_highlights(highlight):
 
     return LatestHighlight.objects.filter(team1=team1,
                                           team2=team2,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=3),
-                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=3))
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)
 
 
 def get_oldest_same_highlight(highlight):
@@ -215,8 +218,8 @@ def get_oldest_same_highlight(highlight):
 
     highlight_models = LatestHighlight.objects.filter(team1=team1,
                                                       team2=team2,
-                                                      time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=3),
-                                                      time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=3))\
+                                                      time_since_added__gt=highlight.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
+                                                      time_since_added__lt=highlight.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)\
         .order_by('time_since_added')
 
     return highlight_models[0] if highlight_models else None
@@ -233,8 +236,8 @@ def get_same_highlights_sent(highlight):
     return LatestHighlight.objects.filter(team1=team1,
                                           team2=team2,
                                           sent=True,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - timedelta(days=3),
-                                          time_since_added__lt=highlight.get_parsed_time_since_added() + timedelta(days=3))
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)
 
 
 def get_valid_not_sent_highlights(available_sources):
@@ -259,8 +262,8 @@ def get_same_highlight_from_sources(highlight_model, sources):
         highlights = LatestHighlight.objects.filter(team1=highlight_model.team1,
                                                     team2=highlight_model.team2,
                                                     source=source,
-                                                    time_since_added__gt=highlight_model.get_parsed_time_since_added() - timedelta(days=3),
-                                                    time_since_added__lt=highlight_model.get_parsed_time_since_added() + timedelta(days=3))
+                                                    time_since_added__gt=highlight_model.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
+                                                    time_since_added__lt=highlight_model.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)
 
         if highlights:
             return highlights[0]
@@ -476,7 +479,7 @@ def get_similar_highlights(highlight, highlight_models):
 
 def is_same_match_highlight(h1, h2):
     return h1.team1 == h2.team1 and h1.team2 == h2.team2 \
-           and abs(h1.get_parsed_time_since_added() - h2.get_parsed_time_since_added()) < timedelta(days=3)
+           and abs(h1.get_parsed_time_since_added() - h2.get_parsed_time_since_added()) < MAX_TIME_BETWEEN_2_MATCHES
 
 
 def get_best_highlight(highlight_models, extended=False):

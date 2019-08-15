@@ -6,6 +6,7 @@ from fb_bot.highlight_fetchers.fetcher_our_match import OurMatchHighlight
 from fb_bot.highlight_fetchers.fetcher_sportyhl import SportyHLHighlight
 
 TIME_NOW = datetime.now()
+TIME_10_MINUTES_EARLIER = datetime.now() - timedelta(minutes=10)
 TIME_40_MINUTES_EARLIER = datetime.now() - timedelta(minutes=40)
 TIME_1_DAY_EARLIER = datetime.now() - timedelta(hours=24)
 TIME_4_DAYS_EARLIER = datetime.now() - timedelta(hours=96)
@@ -275,7 +276,7 @@ TEST_HIGHLIGHTS = [
         TEST_IMAGE,
         0,
         'Nations League',
-        TIME_NOW,
+        TIME_10_MINUTES_EARLIER,
         goal_data=[
             {
                 'team': 1,
@@ -325,7 +326,7 @@ TEST_HIGHLIGHTS = [
         TEST_IMAGE,
         0,
         'Nations League',
-        TIME_NOW,
+        TIME_10_MINUTES_EARLIER,
         goal_data=[]
     )
 ]

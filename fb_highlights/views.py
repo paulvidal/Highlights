@@ -27,6 +27,7 @@ from fb_bot.recomendations import recommendation_engine
 from fb_highlights import view_message_helper
 from fb_highlights.view_message_helper import accepted_messages
 from highlights import settings
+from monitoring import metrics
 
 
 class DebugPageView(LoginRequiredMixin, TemplateView):
@@ -125,6 +126,8 @@ class HighlightsBotView(generic.View):
                     'full_msg': message
                 })
 
+                metric_tags = []
+
                 # Events
                 if 'message' in message:
 
@@ -135,10 +138,12 @@ class HighlightsBotView(generic.View):
                         'full_msg': message,
                         'msg_type': 'message'
                     })
+                    metric_tags.append('type:message')
 
                     # Do not respond in those cases
                     if 'no' == message or 'nothing' == message or 'ok' == message or 'shut up' in message or message == '':
                         logger.log_for_user('No response', sender_id)
+                        metric_tags.append('action:nothing')
                         continue
 
                     # Send typing event - so user is aware received message
@@ -174,6 +179,7 @@ class HighlightsBotView(generic.View):
                     # Cancel quick reply
                     elif 'cancel' in message:
                         logger.log_for_user("CANCEL", sender_id)
+                        metric_tags.append('action:cancel')
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -183,6 +189,7 @@ class HighlightsBotView(generic.View):
                     # Done quick reply
                     elif 'done' in message:
                         logger.log_for_user("DONE", sender_id)
+                        metric_tags.append('action:done')
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -192,6 +199,7 @@ class HighlightsBotView(generic.View):
                     # HELP
                     elif 'help' in message:
                         logger.log_for_user("HELP", sender_id)
+                        metric_tags.append('action:help')
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -201,6 +209,7 @@ class HighlightsBotView(generic.View):
                     elif accepted_messages(message, ['thank you', 'thanks', 'cheers', 'merci', 'cimer',
                                                      'good job', 'good bot']):
                         logger.log_for_user("THANK YOU MESSAGE", sender_id)
+                        metric_tags.append('action:thank_you')
 
                         context_manager.set_default_context(sender_id)
                         response_msg.append(
@@ -212,6 +221,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("TUTORIAL ADD REGISTRATION", sender_id, extra={
                             'action': 'tutorial'
                         })
+                        metric_tags.append('action:tutorial')
 
                         message = message
 
@@ -286,6 +296,7 @@ class HighlightsBotView(generic.View):
                     # SEE RESULT CHANGE SETTING
                     elif context_manager.is_see_result_setting_context(sender_id):
                         logger.log_for_user("SEE RESULT CHANGE SETTING", sender_id)
+                        metric_tags.append('action:change_setting_see_result')
 
                         if text in [SHOW_BUTTON, HIDE_BUTTON]:
                             user_manager.set_see_result_setting(sender_id, text == SHOW_BUTTON)
@@ -308,6 +319,7 @@ class HighlightsBotView(generic.View):
                     # ADD REGISTRATION SETTING
                     elif accepted_messages(message, ['add']) and context_manager.is_notifications_setting_context(sender_id):
                         logger.log_for_user("ADD REGISTRATION SETTING", sender_id)
+                        metric_tags.append('action:add_registration')
 
                         context_manager.update_context(sender_id, ContextType.ADDING_REGISTRATION)
 
@@ -318,6 +330,7 @@ class HighlightsBotView(generic.View):
                     # REMOVE REGISTRATION SETTING
                     elif accepted_messages(message, ['remove']) and context_manager.is_notifications_setting_context(sender_id):
                         logger.log_for_user("REMOVE REGISTRATION SETTING", sender_id)
+                        metric_tags.append('action:remove_registration')
 
                         context_manager.update_context(sender_id, ContextType.REMOVE_REGISTRATION)
 
@@ -331,6 +344,7 @@ class HighlightsBotView(generic.View):
                     elif context_manager.is_adding_registration_context(sender_id) \
                             or context_manager.is_notifications_setting_context(sender_id):
                         logger.log_for_user("ADDING REGISTRATION", sender_id)
+                        metric_tags.append('action:adding_registration')
 
                         message = message
 
@@ -403,6 +417,7 @@ class HighlightsBotView(generic.View):
                     # REMOVING REGISTRATION
                     elif context_manager.is_deleting_team_context(sender_id):
                         logger.log_for_user("REMOVING REGISTRATION", sender_id)
+                        metric_tags.append('action:removing_registration')
                         registration_to_delete = message.lower()
 
                         if football_team_manager.has_football_team(registration_to_delete):
@@ -444,6 +459,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SUBSCRIPTION SETTING", sender_id, extra={
                             'action': 'subscriptions'
                         })
+                        metric_tags.append('action:see_subscriptions')
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
@@ -455,6 +471,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SEE RESULT SETTING", sender_id, extra={
                             'action': 'settings'
                         })
+                        metric_tags.append('action:see_result_setting')
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)
@@ -465,6 +482,8 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SHARE", sender_id, extra={
                             'action': 'share'
                         })
+                        metric_tags.append('action:share')
+                        metric_tags.append('user_id:{}'.format(sender_id))
 
                         response_msg.append(
                             manager_share.send_share_introduction_message(sender_id)
@@ -478,6 +497,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SEARCH HIGHLIGHTS", sender_id, extra={
                             'action': 'search'
                         })
+                        metric_tags.append('action:search')
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -488,6 +508,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SEARCHING HIGHLIGHTS", sender_id, extra={
                             'action': 'searching'
                         })
+                        metric_tags.append('action:searching')
 
                         team_or_competition = message
 
@@ -539,11 +560,13 @@ class HighlightsBotView(generic.View):
                         'full_msg': message,
                         'msg_type': 'postback'
                     })
+                    metric_tags.append('type:postback')
 
                     if postback == 'get_started':
                         logger.log_for_user("GET STARTED POSTBACK", sender_id, extra={
                             'action': 'start'
                         })
+                        metric_tags.append('action:get_started')
 
                         response_msg.append(
                             manager_response.send_getting_started_message(sender_id, user.first_name)
@@ -560,6 +583,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SEARCH HIGHLIGHTS POSTBACK", sender_id, extra={
                             'action': 'search'
                         })
+                        metric_tags.append('action:search')
 
                         response_msg.append(
                             view_message_helper.search_highlights(sender_id)
@@ -570,6 +594,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SUBSCRIPTION SETTING POSTBACK", sender_id, extra={
                             'action': 'subscriptions'
                         })
+                        metric_tags.append('action:see_subscriptions')
 
                         response_msg.append(
                             view_message_helper.send_subscriptions_settings(sender_id)
@@ -580,6 +605,7 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SHARE POSTBACK", sender_id, extra={
                             'action': 'share'
                         })
+                        metric_tags.append('action:share')
 
                         response_msg.append(
                             manager_share.send_share_introduction_message(sender_id)
@@ -593,10 +619,14 @@ class HighlightsBotView(generic.View):
                         logger.log_for_user("SEE RESULT SETTING POSTBACK", sender_id, extra={
                             'action': 'settings'
                         })
+                        metric_tags.append('action:see_result_setting')
 
                         response_msg.append(
                             view_message_helper.send_send_see_result_settings(sender_id)
                         )
+
+                # Send the metrics about user interaction
+                metrics.send_metric("user.action.message", tags=metric_tags)
 
                 # Log the responses
                 for msg in response_msg:
@@ -647,15 +677,21 @@ class HighlightView(TemplateView):
 
         user_id = request.COOKIES.get('user_id') if request.COOKIES.get('user_id') else 0
 
+        is_recommendation = request.GET.get('recommendation')
+        highlight_models = latest_highlight_manager.get_highlights_by_id(id)
+
         # user tracking recording if user clicked on link
         user_manager.increment_user_highlight_click_count(user_id)
-
-        highlight_models = latest_highlight_manager.get_highlights_by_id(id)
+        metrics.send_metric("user.action.highlight_view", tags=[
+            'highlight-type:{}'.format('extended' if extended else 'normal'),
+            'recommendation:{}'.format('true' if is_recommendation else 'false'),
+            'valid:{}'.format('true' if highlight_models else 'false')
+        ])
 
         if not highlight_models:
             return HttpResponseBadRequest('<h1>Invalid link</h1>')
 
-        if request.GET.get('recommendation'):
+        if is_recommendation:
             recommendation_manager.add_recommendation(user_id, highlight_models[0])
 
         highlight_to_send = latest_highlight_manager.get_best_highlight(highlight_models, extended=extended)

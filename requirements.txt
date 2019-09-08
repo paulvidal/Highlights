@@ -4,12 +4,15 @@ certifi==2017.4.17
 chardet==3.0.4
 cloudinary==1.15.0
 contextlib2==0.5.5
+datadog==0.29.3
 dateparser==0.6.0
 DateTime==4.2
 ddtrace==0.25.0
+decorator==4.4.0
 dj-database-url==0.4.2
 Django==2.2.1
 django-webpack-loader==0.6.0
+elasticsearch==7.0.0
 emoji==0.4.5
 gunicorn==19.7.1
 html5lib==1.0.1

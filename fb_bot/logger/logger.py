@@ -49,10 +49,6 @@ class LoggerWrapper:
 
         self.logger.log(level, message, exc_info=exc_info, extra=extra)
 
-        # Show in debug the params
-        if settings.DEBUG:
-            self.logger.log(level, '{} [{}] {}'.format(level_name, time, str(extra)))
-
     def is_enabled(self):
         return self.enabled
 

@@ -194,24 +194,25 @@ DATADOG_TRACE = {
     'ANALYTICS_ENABLED': True  # Enable trace analytics
 }
 
-LOGGING = {
-    'version': 1,
-    'formatters': {
-        'simple': {
-            'format': '%(levelname)s %(message)s'
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'formatters': {
+            'simple': {
+                'format': '%(levelname)s %(message)s'
+            },
         },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'simple'
+            },
         },
-    },
-    'loggers': {
-        'ddtrace': {
-            'handlers': ['console'],
-            'level': 'INFO',
+        'loggers': {
+            'ddtrace': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
         },
-    },
-}
+    }

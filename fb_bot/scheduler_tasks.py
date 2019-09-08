@@ -269,11 +269,7 @@ def _send_highlight_to_users(highlight):
     user_ids_team2 = registration_team_manager.get_users_for_team(team2)
     user_ids_competition = registration_competition_manager.get_users_for_competition(competition)
 
-    # FIXME: stop sending champions league, europa league temporary
-    # if (competition == 'europa league' or competition == 'champions league') and datetime.now() < datetime(2018, 9, 1):
-    #     user_ids_competition = []
-
-    # Verify sending highlight for this team and competition has not been blocked
+    # Verify sending highlight for this team and competition that we are not blocking notifications
     if blocked_notification_manager.is_highlight_for_competition_blocked(highlight):
         user_ids_competition = []
 

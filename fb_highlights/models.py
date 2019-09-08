@@ -365,7 +365,7 @@ class ScraperApiKey(models.Model):
 
 
 class BlockedNotification(models.Model):
-    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE)
+    team = models.ForeignKey(FootballTeam, on_delete=models.CASCADE, blank=True, null=True, default=None)
     competition = models.ForeignKey(FootballCompetition, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     class Meta:

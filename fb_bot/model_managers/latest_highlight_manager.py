@@ -9,6 +9,7 @@ from fb_highlights.models import LatestHighlight
 
 
 MAX_TIME_BETWEEN_2_MATCHES = timedelta(days=2)
+MAX_TIME_BETWEEN_2_MATCHES_YOUTUBE = timedelta(days=7)
 
 MIN_MINUTES_TO_SEND_HIGHLIGHTS = 20
 MIN_MINUTES_TO_SEND_HIGHLIGHTS_IF_NO_GOALS_AT_END = 10
@@ -233,11 +234,15 @@ def get_same_highlights_sent(highlight):
     team1 = football_team_manager.get_football_team(highlight.team1)
     team2 = football_team_manager.get_football_team(highlight.team2)
 
+    time_between_matches = MAX_TIME_BETWEEN_2_MATCHES \
+        if not highlight.source == sources.YOUTUBE \
+        else MAX_TIME_BETWEEN_2_MATCHES_YOUTUBE
+
     return LatestHighlight.objects.filter(team1=team1,
                                           team2=team2,
                                           sent=True,
-                                          time_since_added__gt=highlight.get_parsed_time_since_added() - MAX_TIME_BETWEEN_2_MATCHES,
-                                          time_since_added__lt=highlight.get_parsed_time_since_added() + MAX_TIME_BETWEEN_2_MATCHES)
+                                          time_since_added__gt=highlight.get_parsed_time_since_added() - time_between_matches,
+                                          time_since_added__lt=highlight.get_parsed_time_since_added() + time_between_matches)
 
 
 def get_valid_not_sent_highlights(available_sources):

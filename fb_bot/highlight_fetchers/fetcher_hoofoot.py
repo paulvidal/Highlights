@@ -229,6 +229,11 @@ def _get_video_links(full_link):
                     (types[i], format_matchat_link(src))
                 )
 
+            elif providers.VIDSTREAM in src:
+                video_links.append(
+                    (types[i], format_matchat_link(src))
+                )
+
             elif providers.VIUCLIPS in src:
                 video_links.append(
                     (types[i], format_matchat_link(src))

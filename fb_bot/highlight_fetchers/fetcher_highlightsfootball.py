@@ -147,7 +147,7 @@ def _get_video_links(full_link):
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Get all video types
-    types = soup.find_all(class_='acp_title')
+    types = soup.find(class_='td-ss-main-content').find_all(class_='nav-link')
     types = [_get_type(t.get_text()) for t in types]
 
     for i in range(len(types)):
@@ -178,9 +178,17 @@ def _get_video_links(full_link):
 def _get_video_links_for_page(soup):
     links = []
 
-    for iframe in soup.find_all("iframe"):
-        src = iframe.get("src")
+    srcs = []
 
+    for iframe in soup.find_all("iframe"):
+        srcs.append(iframe.get("src"))
+
+    for box in soup.find_all(class_="hf-video-box"):
+        a = box.find('a')
+        if a:
+            srcs.append(a.get("href"))
+
+    for src in srcs:
         # Only pick video urls coming from the following websites
         if not src:
             continue
@@ -203,6 +211,9 @@ def _get_video_links_for_page(soup):
         elif providers.VEUCLIPS in src:
             links.append(format_matchat_link(src))
 
+        elif providers.VIDSTREAM in src:
+            links.append(format_matchat_link(src))
+
         elif providers.VIUCLIPS in src:
             links.append(format_matchat_link(src))
 
@@ -215,7 +226,7 @@ def _get_type(type):
 
     if [w for w in ['extended hl'] if w == type]:
         return 'extended'
-    elif [w for w in [] if w == type]:
+    elif [w for w in ['highlights', 'hl'] if w == type]:
         return 'normal'
     elif [w for w in ['short hl'] if w == type]:
         return 'short'

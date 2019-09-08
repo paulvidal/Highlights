@@ -29,7 +29,8 @@ def check(link):
         return 'blocked Video' not in page
 
     elif providers.VEUCLIPS in link \
-            or providers.VIUCLIPS in link:
+            or providers.VIUCLIPS in link \
+            or providers.VIDSTREAM in link:
         page = requests.get(link).text.lower()
         return not ('removed due to a copyright claim' in page
                     or 'video has been deleted' in page

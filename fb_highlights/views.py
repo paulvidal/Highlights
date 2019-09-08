@@ -677,6 +677,7 @@ class HighlightView(TemplateView):
             providers.VIDEO_STREAMLET,
             providers.VEUCLIPS,
             providers.VIUCLIPS,
+            providers.VIDSTREAM,
         ]
 
         # recommendations

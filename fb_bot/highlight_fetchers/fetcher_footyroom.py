@@ -13,7 +13,7 @@ from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_li
     format_ok_ru_link, format_matchat_link
 from fb_bot.highlight_score_fetcher import fetcher_score_footyroom
 
-ROOT_URL = 'https://footyroom.com/'
+ROOT_URL = 'https://footyroom.co/'
 PAGELET_EXTENSION = 'posts-pagelet?page='
 
 
@@ -145,8 +145,8 @@ def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
         if vid_time_added is None:
             continue
 
-        time_since_added = str(vid_time_added.get_text())
-        time_since_added_date = dateparser.parse(time_since_added)
+        time_since_added = str(vid_time_added.get("date"))
+        time_since_added_date = dateparser.parse(time_since_added).replace(tzinfo=None)
 
         # If error occur while parsing date, skip
         # TODO: handle case where date malformed (special string field)
@@ -236,7 +236,7 @@ def _get_video_link(soup):
             elif providers.VEUCLIPS in link:
                 return format_matchat_link(link)
 
-            elif providers.VIUCLIPS in link:
+            elif providers.VIDSTREAM in link:
                 return format_matchat_link(link)
 
             elif 'youtube' in link:

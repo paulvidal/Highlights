@@ -18,8 +18,7 @@ def get(url, render=False):
         )
 
         if response.status_code == requests.codes.unauthorized:
-            logger.log('Scrapper API key invalid - removing: ' + key.code, forward=True)
-            # scraper_api_key_manager.remove_key(key)
+            logger.log('Scrapper API key invalid - you should remove it: ' + key.code, forward=True)
             continue
 
         if response.status_code == requests.codes.forbidden:
@@ -42,8 +41,7 @@ def post(url, data):
         )
 
         if response.status_code == requests.codes.unauthorized:
-            logger.log('Scrapper API key invalid - removing: ' + key.code, forward=True)
-            scraper_api_key_manager.remove_key(key)
+            logger.log('Scrapper API key invalid - you should remove it: ' + key.code, forward=True)
             continue
 
         if response.status_code == requests.codes.forbidden:

@@ -251,6 +251,9 @@ def _get_video_links(soup):
                         elif providers.VIDSTREAM in video:
                             video_link = format_matchat_link(video)
 
+                        elif providers.TOCLIPIT in video:
+                            video_link = format_matchat_link(video)
+
                         elif providers.VIUCLIPS in video:
                             video_link = format_matchat_link(video)
 

@@ -17,6 +17,7 @@ def get_video_info(link):
             and not providers.VEUCLIPS in link \
             and not providers.VIUCLIPS in link \
             and not providers.VIDSTREAM in link \
+            and not providers.CLIPVENTURES in link \
             and not providers.TOCLIPIT in link:
         return None
 

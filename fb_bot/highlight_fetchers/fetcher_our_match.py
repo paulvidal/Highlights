@@ -254,6 +254,9 @@ def _get_video_links(soup):
                         elif providers.TOCLIPIT in video:
                             video_link = format_matchat_link(video)
 
+                        elif providers.CLIPVENTURES in video:
+                            video_link = format_matchat_link(video)
+
                         elif providers.VIUCLIPS in video:
                             video_link = format_matchat_link(video)
 

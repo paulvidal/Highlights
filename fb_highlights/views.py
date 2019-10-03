@@ -715,6 +715,7 @@ class HighlightView(TemplateView):
             providers.VIUCLIPS,
             providers.VIDSTREAM,
             providers.TOCLIPIT,
+            providers.CLIPVENTURES,
         ]
 
         # recommendations

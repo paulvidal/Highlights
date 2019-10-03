@@ -242,6 +242,9 @@ def _get_video_link(soup):
             elif providers.TOCLIPIT in link:
                 return format_matchat_link(link)
 
+            elif providers.CLIPVENTURES in link:
+                return format_matchat_link(link)
+
             elif 'youtube' in link:
                 return format_link(link)
 

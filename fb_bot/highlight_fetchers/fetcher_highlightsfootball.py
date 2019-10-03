@@ -10,8 +10,11 @@ from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, format_ok_ru_link, format_matchat_link
+from fb_bot.highlight_fetchers.proxy import proxy
 
 ROOT_URL = 'https://highlightsfootball.com'
+
+PROXY = proxy
 
 
 class HighlightsFootballHighlight(Highlight):
@@ -60,7 +63,7 @@ def fetch_highlights(num_pagelet=4, max_days_ago=7):
 def _fetch_pagelet_highlights(pagelet_num, max_days_ago):
     highlights = []
 
-    page = requests.get(ROOT_URL)
+    page = PROXY.get(ROOT_URL)
     soup = BeautifulSoup(page.text, 'html.parser')
 
     # Extract videos
@@ -143,7 +146,7 @@ def _is_valid_link(link):
 def _get_video_links(full_link):
     video_links = []
 
-    page = requests.get(full_link)
+    page = PROXY.get(full_link)
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Get all video types
@@ -165,7 +168,7 @@ def _get_video_links(full_link):
         if i == 0:
             links += _get_video_links_for_page(soup)
         else:
-            page = requests.get(full_link + '{}/'.format(i+1))
+            page = PROXY.get(full_link + '{}/'.format(i+1))
             soup = BeautifulSoup(page.content, 'html.parser')
             links += _get_video_links_for_page(soup)
 

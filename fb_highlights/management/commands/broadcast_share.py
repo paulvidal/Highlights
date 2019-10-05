@@ -2,7 +2,7 @@ from fb_bot.messages import *
 from fb_bot.model_managers import user_manager
 from fb_highlights.management.commands.CustomCommand import CustomCommand
 from fb_bot.messenger_manager import formatter, sender
-from highlights import settings
+from highlights import env
 
 
 class Command(CustomCommand):
@@ -17,7 +17,7 @@ class Command(CustomCommand):
             {
                 "title": "Don’t be selfish...",
                 "subtitle": "Your friends also deserve to see the goals! " + EMOJI_WINK,
-                "image_url": settings.BASE_URL + "/static/img/share_world_cup_meme.png",
+                "image_url": env.BASE_URL + "/static/img/share_world_cup_meme.png",
                 "buttons": [
                     {
                         "type": "element_share",
@@ -25,7 +25,7 @@ class Command(CustomCommand):
                             {
                                 "title": "Don't miss the World Cup!",
                                 "subtitle": "I will send you World Cup highlight videos for your favourite teams ASAP",
-                                "image_url": settings.BASE_URL + "/static/img/logo_share.png",
+                                "image_url": env.BASE_URL + "/static/img/logo_share.png",
                                 "default_action": {
                                     "type": "web_url",
                                     "url": "https://m.me/highlightsSportBot/"

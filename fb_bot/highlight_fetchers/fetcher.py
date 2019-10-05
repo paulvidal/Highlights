@@ -8,7 +8,7 @@ from fb_bot.highlight_fetchers.info import sources
 from fb_bot.logger import logger
 from fb_bot.model_managers import scrapping_status_manager
 from fb_highlights.tests.utils import helper
-from highlights import settings
+from highlights import env
 
 FETCHERS = {
     sources.FOOTYROOM: {
@@ -85,7 +85,7 @@ def fetch(site):
     except:
         # Say which fetcher failed and the prod status
         client.user_context({
-            'prod_status': settings.PROD_STATUS,
+            'prod_status': env.PROD_STATUS,
             'highlights_fetcher': site
         })
         # Report to sentry problem detected

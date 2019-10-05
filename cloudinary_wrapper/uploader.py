@@ -4,7 +4,7 @@ import cloudinary.uploader
 import cloudinary.api
 
 from highlights import settings
-from highlights.settings import PROD_STATUS
+from highlights.env import PROD_STATUS
 
 CLOUD_NAME = 'highlightsbot'
 API_KEY = '618388125585167'

@@ -5,11 +5,13 @@ from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 
 from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER, DEFAULT_TEST_IMAGE
-from highlights import settings
+from highlights import env
 
 
 class WebsiteTestCase(TestCase):
     maxDiff = None
+    
+    BASE_URL = env.BASE_URL
 
     @classmethod
     def setUpClass(cls):
@@ -54,8 +56,8 @@ class WebsiteTestCase(TestCase):
                     'score1': 4,
                     'team2': 'arsenal',
                     'score2': 0,
-                    'link': settings.BASE_URL + '/highlight/7',
-                    'link_extended': settings.BASE_URL + '/highlight/7/extended',
+                    'link': self.BASE_URL + '/highlight/7',
+                    'link_extended': self.BASE_URL + '/highlight/7/extended',
                     'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime(
                         "%Y-%m-%dT%H:%M:%S"),
@@ -68,8 +70,8 @@ class WebsiteTestCase(TestCase):
                     'score1': 2,
                     'team2': 'liverpool',
                     'score2': 0,
-                    'link': settings.BASE_URL + '/highlight/14',
-                    'link_extended': settings.BASE_URL + '/highlight/14/extended',
+                    'link': self.BASE_URL + '/highlight/14',
+                    'link_extended': self.BASE_URL + '/highlight/14/extended',
                     'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }
@@ -94,8 +96,8 @@ class WebsiteTestCase(TestCase):
                     'score1': 0,
                     'team2': 'barcelona',
                     'score2': 2,
-                    'link': settings.BASE_URL + '/highlight/1',
-                    'link_extended': settings.BASE_URL + '/highlight/1/extended',
+                    'link': self.BASE_URL + '/highlight/1',
+                    'link_extended': self.BASE_URL + '/highlight/1/extended',
                     'img_link': DEFAULT_TEST_IMAGE,
                     'match_time': TIME_40_MINUTES_EARLIER.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT%H:%M:%S"),
                 }

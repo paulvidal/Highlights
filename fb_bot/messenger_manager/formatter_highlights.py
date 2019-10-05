@@ -1,5 +1,5 @@
 from fb_bot.highlight_fetchers.info.sources import OUR_MATCH, HOOFOOT
-from highlights import settings
+from highlights import env
 
 
 def highlights_to_json(fb_id, highlight_models, see_result=True):
@@ -52,7 +52,7 @@ def create_link_from_model(fb_id, highlight_model, extended=False):
 
 def create_link(id, extended=False, fb_id=None, recommendation=False):
     # Form correct url to redirect to server
-    tracking_link = settings.BASE_URL + "/highlight/" + str(id)
+    tracking_link = env.BASE_URL + "/highlight/" + str(id)
 
     if extended:
         tracking_link += '/extended'

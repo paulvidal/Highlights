@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import dj_database_url
 
+from highlights import env
+
 
 # Get environment variable
 def get_env_var(var_name):
@@ -32,18 +34,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_env_var('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = "TRUE" == get_env_var('DEBUG_ENABLE')
-
-# GET BASE URL OF SERVER
-BASE_URL = get_env_var('BASE_URL')
-
-# STATUS OF SERVER - either "test | staging | prod"
-PROD_STATUS = get_env_var('PROD_STATUS')
-
 
 def is_prod():
-    return PROD_STATUS == 'prod'
+    return env.PROD_STATUS == 'prod'
 
 
 ALLOWED_HOSTS = ['*']
@@ -73,10 +66,10 @@ MIDDLEWARE = [
 ]
 
 # Tell user which mode
-print("Starting server in DEBUG MODE: " + str(DEBUG))
+print("Starting server in DEBUG MODE: " + str(env.DEBUG))
 
 # Disable SENTRY in debug mode
-if not DEBUG:
+if not env.DEBUG:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
     MIDDLEWARE.append('fb_bot.middleware.messenger_middleware.MessengerMiddleware')
 
@@ -158,7 +151,7 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', BASE_URL)
+STATIC_HOST = os.environ.get('DJANGO_STATIC_HOST', env.BASE_URL)
 STATIC_URL = STATIC_HOST + '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = (
@@ -181,8 +174,8 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'build/' if DEBUG else 'dist/',
-        'STATS_FILE': os.path.join(BASE_DIR, 'static/webpack-stats-dev.json' if DEBUG else 'static/webpack-stats-prod.json'),
+        'BUNDLE_DIR_NAME': 'build/' if env.DEBUG else 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'static/webpack-stats-dev.json' if env.DEBUG else 'static/webpack-stats-prod.json'),
     }
 }
 
@@ -190,11 +183,11 @@ WEBPACK_LOADER = {
 
 DATADOG_TRACE = {
     'DEFAULT_SERVICE': 'django',
-    'TAGS': {'env': PROD_STATUS},
+    'TAGS': {'env': env.PROD_STATUS},
     'ANALYTICS_ENABLED': True  # Enable trace analytics
 }
 
-if not DEBUG:
+if not env.DEBUG:
     LOGGING = {
         'version': 1,
         'formatters': {

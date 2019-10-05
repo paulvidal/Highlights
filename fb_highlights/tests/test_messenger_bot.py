@@ -8,11 +8,13 @@ from fb_bot.model_managers import user_manager
 from fb_highlights.tests.utils import helper
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 from fb_highlights.tests.utils.test_highlights import TIME_40_MINUTES_EARLIER, DEFAULT_TEST_IMAGE
-from highlights import settings
+from highlights import env
 
 
 class MessengerBotTestCase(TestCase):
     maxDiff = None
+    
+    BASE_URL = env.BASE_URL
 
     @classmethod
     def setUpClass(cls):
@@ -433,7 +435,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
-                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -443,12 +445,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            "url": settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            "url": self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            "url": settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            "url": self.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -502,7 +504,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
-                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -512,12 +514,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -552,7 +554,7 @@ class MessengerBotTestCase(TestCase):
                                 {
                                     'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
-                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -562,12 +564,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -747,7 +749,7 @@ class MessengerBotTestCase(TestCase):
                                     'subtitle': 'Champions League',
                                     'image_url': DEFAULT_TEST_IMAGE,
                                     'default_action': {
-                                        'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                        'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                         'webview_height_ratio': 'full',
                                         'type': 'web_url',
                                         'messenger_extensions': 'false'
@@ -755,12 +757,12 @@ class MessengerBotTestCase(TestCase):
                                     "buttons": [
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1?user_id=' + str(TEST_USER_ID),
                                             "title": "Short highlights",
                                         },
                                         {
                                             "type": "web_url",
-                                            'url': settings.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
+                                            'url': self.BASE_URL + '/highlight/1/extended?user_id=' + str(TEST_USER_ID),
                                             "title": "Extended highlights",
                                         }
                                     ]
@@ -841,7 +843,7 @@ class MessengerBotTestCase(TestCase):
                         "elements": [{
                             "title": "Start a conversation with me!",
                             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                            "image_url": settings.BASE_URL + "/static/img/share.png",
+                            "image_url": self.BASE_URL + "/static/img/share.png",
                             "buttons": [
                                 {
                                     "type": "element_share",
@@ -853,7 +855,7 @@ class MessengerBotTestCase(TestCase):
                                                 "elements": [{
                                                     "title": "Start a conversation with me!",
                                                     "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                                                    "image_url": settings.BASE_URL + "/static/img/share.png",
+                                                    "image_url": self.BASE_URL + "/static/img/share.png",
                                                     "default_action": {
                                                         "type": "web_url",
                                                         "url": "https://m.me/highlightsSportBot/"

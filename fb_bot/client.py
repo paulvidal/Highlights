@@ -4,13 +4,13 @@ import requests
 from requests import Timeout
 
 from fb_bot.logger import logger
-from highlights import settings
+from highlights import env
 
 
 class Client:
 
     def __init__(self):
-        self.client_send = not settings.DEBUG
+        self.client_send = not env.DEBUG
         self.messages = []
 
     def disable(self):

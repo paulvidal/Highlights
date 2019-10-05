@@ -10,11 +10,12 @@ from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, format_ok_ru_link, format_matchat_link
-from fb_bot.highlight_fetchers.proxy import proxy
+# from fb_bot.highlight_fetchers.proxy import proxy
+from fb_bot.logger import logger
 
 ROOT_URL = 'https://highlightsfootball.com'
 
-PROXY = proxy
+PROXY = requests
 
 
 class HighlightsFootballHighlight(Highlight):

@@ -1,14 +1,14 @@
 from cloudinary_wrapper import uploader
 from fb_bot.logger import logger
 from fb_highlights.models import HighlightImage
-from highlights import settings
+from highlights import env, settings
 
 
 def add_image_for_highlight(highlight):
     img_link = highlight.img_link
 
     # No need to upload in debug mode
-    if settings.DEBUG:
+    if env.DEBUG:
         return
 
     # No need to upload default images

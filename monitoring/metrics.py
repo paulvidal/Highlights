@@ -1,5 +1,5 @@
 from datadog import initialize
-from highlights import settings
+from highlights import settings, env
 from fb_bot.logger import logger
 
 options = {
@@ -15,10 +15,10 @@ from datadog import api
 # Set tags
 service = 'test'
 
-if settings.PROD_STATUS == 'prod':
+if env.PROD_STATUS == 'prod':
     service = 'highlights-bot'
 
-elif settings.PROD_STATUS == 'staging':
+elif env.PROD_STATUS == 'staging':
     service = 'highlights-bot-beta'
 
 TAGS = ['service:{}'.format(service)]
@@ -26,7 +26,7 @@ TAGS = ['service:{}'.format(service)]
 
 def send_metric(name, tags=[], error=False, success=False):
     # Do not send metrics in debug mode
-    if settings.DEBUG:
+    if env.DEBUG:
         return
 
     full_name = 'custom.{}'.format(name)

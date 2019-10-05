@@ -26,7 +26,7 @@ from fb_bot.model_managers.context_manager import ContextType
 from fb_bot.recomendations import recommendation_engine
 from fb_highlights import view_message_helper
 from fb_highlights.view_message_helper import accepted_messages
-from highlights import settings
+from highlights import env
 from monitoring import metrics
 
 
@@ -636,7 +636,7 @@ class HighlightsBotView(generic.View):
                     })
                 HighlightsBotView.LATEST_SENDER_ID = 0
 
-        if not settings.DEBUG:
+        if not env.DEBUG:
             return HttpResponse()
 
         else:

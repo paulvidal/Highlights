@@ -1,7 +1,7 @@
 from fb_bot.messages import SHARE_INTRODUCTION_MESSAGE, EMOJI_HEART
 from fb_bot.messenger_manager.formatter import create_message, create_generic_attachment
 from fb_bot.messenger_manager.sender import send_facebook_message
-from highlights import settings
+from highlights import env
 
 
 def send_share_introduction_message(fb_id):
@@ -17,7 +17,7 @@ def create_share_message():
         {
             "title": "Start a conversation with me!",
             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-            "image_url": settings.BASE_URL + "/static/img/share.png",
+            "image_url": env.BASE_URL + "/static/img/share.png",
             "buttons": [
                 {
                     "type": "element_share",
@@ -25,7 +25,7 @@ def create_share_message():
                         {
                             "title": "Start a conversation with me!",
                             "subtitle": "I will send you the highlight videos for your teams as soon as matches occur.",
-                            "image_url": settings.BASE_URL + "/static/img/share.png",
+                            "image_url": env.BASE_URL + "/static/img/share.png",
                             "default_action": {
                                 "type": "web_url",
                                 "url": "https://m.me/highlightsSportBot/"

@@ -1,7 +1,7 @@
 from fb_highlights.tests.utils.helper import TEST_USER_ID
 from fb_highlights.tests.utils.test_highlights import DEFAULT_TEST_IMAGE
 
-from highlights import settings
+from highlights import env
 
 
 def create_formatted_highlight_response(id, team1, score1, team2, score2, competition, score_hidden=False, img_link=DEFAULT_TEST_IMAGE):
@@ -13,7 +13,7 @@ def create_formatted_highlight_response(id, team1, score1, team2, score2, compet
         team2
     )
 
-    url_start = settings.BASE_URL + "/highlight/{}".format(id)
+    url_start = env.BASE_URL + "/highlight/{}".format(id)
 
     return {
             'recipient': {

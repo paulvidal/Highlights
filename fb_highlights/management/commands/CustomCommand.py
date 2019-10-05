@@ -4,7 +4,7 @@ import time
 from django.core.management import BaseCommand
 from raven.contrib.django.raven_compat.models import client
 from fb_bot.logger import logger
-from highlights import settings
+from highlights import env
 from monitoring import metrics
 
 
@@ -31,9 +31,9 @@ class CustomCommand(BaseCommand):
         except Exception as error:
             metrics.send_metric("scheduler.task", tags=["task:{}".format(task_name)], error=True)
 
-            if not settings.DEBUG:
+            if not env.DEBUG:
                 # Say if PROD or PRE-PROD and report to sentry a problem has been detected
-                client.user_context({ 'prod_status': settings.PROD_STATUS })
+                client.user_context({ 'prod_status': env.PROD_STATUS })
                 client.captureException()
 
                 # Log the error

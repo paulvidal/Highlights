@@ -4,7 +4,7 @@ import logging
 import json_log_formatter
 
 from datetime import datetime
-from highlights import settings
+from highlights import env
 
 
 class LoggerWrapper:
@@ -16,7 +16,7 @@ class LoggerWrapper:
         formatter = json_log_formatter.JSONFormatter()
         stream_handler = logging.StreamHandler(sys.stdout)
 
-        if not settings.DEBUG:
+        if not env.DEBUG:
             stream_handler.setFormatter(formatter)
 
         self.logger.addHandler(stream_handler)

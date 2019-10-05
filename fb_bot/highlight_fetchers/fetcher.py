@@ -79,6 +79,9 @@ def fetch(site):
     try:
         highlights += fetcher['fetch'](num_pagelet=num_pagelet, max_days_ago=max_days_ago)
 
+        if len(highlights) == 0:
+            logger.error("Found 0 highlights for " + str(site))
+
     except:
         # Say which fetcher failed and the prod status
         client.user_context({

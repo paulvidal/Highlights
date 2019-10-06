@@ -116,7 +116,7 @@ def send_facebook_message(fb_id, message):
             "message": message
         })
 
-    CLIENT.send_fb_message(GRAPH_URL, response_msg)
+    CLIENT.send_fb_message(GRAPH_URL, response_msg, fb_id=fb_id)
 
     if not settings.is_prod():
         logger.log(response_msg)
@@ -134,6 +134,6 @@ def send_typing(fb_id):
             "sender_action": "typing_on"
         })
 
-    CLIENT.send_fb_message(GRAPH_URL, response_msg)
+    CLIENT.send_fb_message(GRAPH_URL, response_msg, fb_id=fb_id)
 
 

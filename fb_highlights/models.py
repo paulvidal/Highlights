@@ -356,10 +356,12 @@ class ScraperApiKey(models.Model):
     code = models.TextField(unique=True, primary_key=True)
     last_invalid_try = models.DateTimeField(default=datetime.now)
     valid = models.BooleanField(default=True)
+    mail = models.TextField(blank=True, null=True, default=None)
+    password = models.TextField(blank=True, null=True, default=None)
 
     @staticmethod
     def to_list_display():
-        return ['code', 'last_invalid_try', 'valid']
+        return ['code', 'last_invalid_try', 'valid', 'mail', 'password']
 
     @staticmethod
     def to_list_filter():
@@ -367,7 +369,7 @@ class ScraperApiKey(models.Model):
 
     @staticmethod
     def search_fields():
-        return ['code']
+        return ['code', 'mail']
 
 
 class BlockedNotification(models.Model):

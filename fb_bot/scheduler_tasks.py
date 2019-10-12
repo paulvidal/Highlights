@@ -193,7 +193,7 @@ def _check_validity(highlights):
                 latest_highlight_manager.set_invalid(h)
 
         except:
-            logger.error("Failed to validate link: {}".format(h.link))
+            logger.warning("Failed to validate link: {}".format(h.link))
 
 
 # Add the video info such as duration

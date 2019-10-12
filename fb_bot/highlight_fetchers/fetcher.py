@@ -9,6 +9,7 @@ from fb_bot.logger import logger
 from fb_bot.model_managers import scrapping_status_manager
 from fb_highlights.tests.utils import helper
 from highlights import env
+from monitoring import metrics
 
 FETCHERS = {
     sources.FOOTYROOM: {
@@ -78,6 +79,9 @@ def fetch(site):
 
     try:
         highlights += fetcher['fetch'](num_pagelet=num_pagelet, max_days_ago=max_days_ago)
+
+        # Send metrics on number of highlights fetched
+        metrics.send_metric("fetcher.highlights_fetch", tags=['site:{}'.format(site)], count=len(highlights))
 
         if len(highlights) == 0:
             logger.error("Found 0 highlights for {}".format(site))

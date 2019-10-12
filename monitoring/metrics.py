@@ -24,7 +24,7 @@ elif env.PROD_STATUS == 'staging':
 TAGS = ['service:{}'.format(service)]
 
 
-def send_metric(name, tags=[], error=False, success=False):
+def send_metric(name, tags=[], error=False, success=False, count=1):
     # Do not send metrics in debug mode
     if env.DEBUG:
         return
@@ -34,7 +34,7 @@ def send_metric(name, tags=[], error=False, success=False):
     all_tags = TAGS + tags + ['alert_type:{}'.format(alert_type)]
 
     try:
-        r = api.Metric.send(metric=full_name, points=1, tags=all_tags)
+        r = api.Metric.send(metric=full_name, points=count, tags=all_tags)
 
         if r.get('status') and r.get('status') != 'ok':
             logger.error("Not ok status while sending metric {} with tags [{}]".format(

@@ -3,6 +3,8 @@ DAILYMOTION = 'dailymotion.com'
 OK_RU = 'ok.ru'
 FOOYTROOM = 'footyroom.com'
 YOUTUBE = 'youtube.com'
+RUTUBE = 'rutube.ru'
+MLSOCCER = 'mlssoccer.com'
 
 # Similar format, different hosting platform
 CONTENT_VENTURES = 'content-ventures.com'
@@ -13,3 +15,4 @@ VIUCLIPS = 'viuclips.net'
 VIDSTREAM = 'vidstreamup.com'
 TOCLIPIT = 'toclipit.com'
 CLIPVENTURES = 'clipventures.com'
+TO_STREAMIT = 'tostreamit.com'

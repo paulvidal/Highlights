@@ -8,6 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.utils import provider_link_formatter
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, \
     format_ok_ru_link, format_matchat_link
@@ -218,41 +219,7 @@ def _get_video_link(soup):
 
             link = search_result.groups()[0].replace('\\', '')
 
-            if providers.DAILYMOTION in link:
-                return format_dailymotion_link(link)
-
-            elif providers.STREAMABLE in link:
-                return format_streamable_link(link)
-
-            elif providers.OK_RU in link:
-                return format_ok_ru_link(link)
-
-            elif providers.MATCHAT_ONLINE in link:
-                return format_matchat_link(link)
-
-            elif providers.VIDEO_STREAMLET in link:
-                return format_matchat_link(link)
-
-            elif providers.VEUCLIPS in link:
-                return format_matchat_link(link)
-
-            elif providers.VIDSTREAM in link:
-                return format_matchat_link(link)
-
-            elif providers.TOCLIPIT in link:
-                return format_matchat_link(link)
-
-            elif providers.CLIPVENTURES in link:
-                return format_matchat_link(link)
-
-            elif 'youtube' in link:
-                return format_link(link)
-
-            elif 'rutube.ru' in link:
-                return format_link(link)
-
-            elif 'mlssoccer.com' in link:
-                return format_link(link)
+            return provider_link_formatter.format_link(link)
 
     return None
 

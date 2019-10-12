@@ -18,7 +18,8 @@ def get_video_info(link):
             and not providers.VIUCLIPS in link \
             and not providers.VIDSTREAM in link \
             and not providers.CLIPVENTURES in link \
-            and not providers.TOCLIPIT in link:
+            and not providers.TOCLIPIT in link \
+            and not providers.TO_STREAMIT in link:
         return None
 
     # Disable temporarily matchat.online as not working anymore

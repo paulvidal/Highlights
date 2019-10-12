@@ -7,15 +7,14 @@ import requests
 from bs4 import BeautifulSoup
 
 from fb_bot.highlight_fetchers import fetcher_footyroom
-from fb_bot.highlight_fetchers.info import providers, sources
+from fb_bot.highlight_fetchers.info import sources
+from fb_bot.highlight_fetchers.utils import provider_link_formatter
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, format_link, format_ok_ru_link, format_matchat_link
-# from fb_bot.highlight_fetchers.proxy import proxy
-from fb_bot.logger import logger
+from fb_bot.highlight_fetchers.proxy import proxy
 
 ROOT_URL = 'https://highlightsfootball.com'
 
-PROXY = requests
+PROXY = proxy
 
 
 class HighlightsFootballHighlight(Highlight):
@@ -151,97 +150,52 @@ def _get_video_links(full_link):
     soup = BeautifulSoup(page.content, 'html.parser')
 
     # Get all video types
-    types = soup.find(class_='td-ss-main-content').find_all(class_='nav-link')
-    types = [_get_type(t.get_text()) for t in types]
+    boxes = soup.find(class_='hf-video-boxes')
 
-    for i in range(len(types)):
-        j = 1
-        while i-j >= 0 and types[i] == 'alt player':
-            types[i] = types[i-j]
-            j += 1
+    if boxes is None:
+        # only 1 video case
+        link = soup.find(class_="player-external").get("href")
+        link = provider_link_formatter.format_link(link)
 
-    for i in range(len(types)):
-        if not types[i]:
-            continue
+        link_type = soup.find(class_="player-external").find("img").get("alt")
+        link_type = _get_type(link_type)
 
-        links = []
+        video_links.append(
+            (link_type, link)
+        )
 
-        if i == 0:
-            links += _get_video_links_for_page(soup)
-        else:
-            page = PROXY.get(full_link + '{}/'.format(i+1))
-            soup = BeautifulSoup(page.content, 'html.parser')
-            links += _get_video_links_for_page(soup)
+    else:
+        # multiple videos
+        box_list = boxes.find_all(class_='hf-video-box')
 
-        if links:
-            [video_links.append((types[i], link)) for link in links]
+        for box in box_list:
+            link = box.find('a').get("href")
+            link = provider_link_formatter.format_link(link)
+
+            link_type = box.find(class_='hf-video-title').get_text()
+            link_type = _get_type(link_type)
+
+            # Only pick video urls coming from the following websites
+            if not link or not link_type:
+                continue
+
+            video_links.append(
+                (link_type, link)
+            )
 
     return video_links
-
-
-def _get_video_links_for_page(soup):
-    links = []
-
-    srcs = []
-
-    for iframe in soup.find_all("iframe"):
-        srcs.append(iframe.get("src"))
-
-    for box in soup.find_all(class_="hf-video-box"):
-        a = box.find('a')
-        if a:
-            srcs.append(a.get("href"))
-
-    for src in srcs:
-        # Only pick video urls coming from the following websites
-        if not src:
-            continue
-
-        if providers.DAILYMOTION in src:
-            links.append(format_dailymotion_link(src))
-
-        elif providers.STREAMABLE in src:
-            links.append(format_streamable_link(src))
-
-        elif providers.OK_RU in src:
-            links.append(format_ok_ru_link(src))
-
-        elif providers.MATCHAT_ONLINE in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.VIDEO_STREAMLET in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.VEUCLIPS in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.VIDSTREAM in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.TOCLIPIT in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.CLIPVENTURES in src:
-            links.append(format_matchat_link(src))
-
-        elif providers.VIUCLIPS in src:
-            links.append(format_matchat_link(src))
-
-    return links
 
 
 def _get_type(type):
     type = type.strip().lower()
     type = type.replace('(hd)', '')
 
-    if [w for w in ['extended hl'] if w == type]:
+    if [w for w in ['extended hl', 'extended highlights'] if w == type]:
         return 'extended'
     elif [w for w in ['highlights', 'hl'] if w == type]:
         return 'normal'
-    elif [w for w in ['short hl'] if w == type]:
+    elif [w for w in ['short hl', 'short highlights'] if w == type]:
         return 'short'
-    elif [w for w in ['alt player'] if w == type]:
-        return 'alt player'
     else:
         return None
 

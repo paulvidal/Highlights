@@ -223,6 +223,9 @@ class LatestHighlight(models.Model):
         elif providers.CLIPVENTURES in self.link:
             priority = 4
 
+        elif providers.TO_STREAMIT in self.link:
+            priority = 4
+
         elif providers.VIDEO_STREAMLET in self.link:
             priority = 4
 

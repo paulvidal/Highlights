@@ -11,7 +11,8 @@ def get_video_info(link):
 
     if not providers.CLIPVENTURES in link \
             and not providers.TOCLIPIT in link\
-            and not providers.UPCLIPS in link:
+            and not providers.UPCLIPS in link \
+            and not providers.TO_STREAMIT in link:
         return None
 
     try:

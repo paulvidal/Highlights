@@ -45,13 +45,13 @@ def format_link(link_to_format):
         link = link_formatter.format_matchat_link(link)
 
     elif providers.YOUTUBE in link:
-        link = link_formatter.format_link(link)
+        link = link_formatter._format_link(link)
 
     elif providers.RUTUBE in link:
-        link = link_formatter.format_link(link)
+        link = link_formatter._format_link(link)
 
     elif providers.MLSOCCER in link:
-        link = link_formatter.format_link(link)
+        link = link_formatter._format_link(link)
 
     else:
         # Not found case

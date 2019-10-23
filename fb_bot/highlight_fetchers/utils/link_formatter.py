@@ -1,5 +1,5 @@
 def format_dailymotion_link(link):
-    link = format_link(link)
+    link = _format_link(link)
 
     # add the embed option
     if not '/embed/' in link:
@@ -9,7 +9,7 @@ def format_dailymotion_link(link):
 
 
 def format_streamable_link(link):
-    link = format_link(link)
+    link = _format_link(link)
 
     if '/s/' in link:
         resource_id = link.split('/s/')[1].split('/')[0]
@@ -23,7 +23,7 @@ def format_streamable_link(link):
 
 
 def format_matchat_link(link):
-    link = format_link(link)
+    link = _format_link(link)
     link = link.split('?')[0]
     return link \
         .replace('/html/', '/') \
@@ -32,12 +32,12 @@ def format_matchat_link(link):
 
 
 def format_ok_ru_link(link):
-    link = format_link(link)
+    link = _format_link(link)
     return link \
         .replace('/video/', '/videoembed/')
 
 
-def format_link(link):
+def _format_link(link):
     link = link \
         .replace("\"", "") \
         .replace("\\", "")

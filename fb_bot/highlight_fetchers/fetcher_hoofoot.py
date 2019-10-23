@@ -8,7 +8,7 @@ from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.info import providers, sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
 from fb_bot.highlight_fetchers.utils.link_formatter import format_dailymotion_link, format_streamable_link, \
-    format_matchat_link, format_ok_ru_link
+    format_matchat_link, format_ok_ru_link, format_link
 from fb_bot.highlight_fetchers.proxy import proxy
 
 ROOT_URL = 'https://hoofoot.com/'
@@ -198,56 +198,12 @@ def _get_video_links(full_link):
             if not src:
                 continue
 
-            # Only pick video urls coming from the following websites
-            if providers.DAILYMOTION in src:
-                video_links.append(
-                    (types[i], format_dailymotion_link(src))
-                )
+            type = types[i]
+            link = format_link(src)
 
-            elif providers.OK_RU in src:
-                video_links.append(
-                    (types[i], format_ok_ru_link(src))
-                )
-
-            elif providers.STREAMABLE in src:
-                video_links.append(
-                    (types[i], format_streamable_link(src))
-                )
-
-            elif providers.MATCHAT_ONLINE in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.VIDEO_STREAMLET in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.VEUCLIPS in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.VIDSTREAM in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.VIUCLIPS in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.TOCLIPIT in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
-
-            elif providers.CLIPVENTURES in src:
-                video_links.append(
-                    (types[i], format_matchat_link(src))
-                )
+            video_links.append(
+                (type, link)
+            )
 
     return video_links
 

@@ -225,40 +225,7 @@ def _get_video_links(soup):
 
                         # Get the video link
                         video = videos[i]
-                        video_link = ''
-
-                        if providers.DAILYMOTION in video:
-                            video_link = format_dailymotion_link(video)
-
-                        elif providers.STREAMABLE in video:
-                            video_link = format_streamable_link(video)
-
-                        elif providers.OK_RU in video:
-                            video_link = format_ok_ru_link(video)
-
-                        elif providers.MATCHAT_ONLINE in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.CONTENT_VENTURES in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.VIDEO_STREAMLET in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.VEUCLIPS in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.VIDSTREAM in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.TOCLIPIT in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.CLIPVENTURES in video:
-                            video_link = format_matchat_link(video)
-
-                        elif providers.VIUCLIPS in video:
-                            video_link = format_matchat_link(video)
+                        video_link = format_link(video)
 
                         # Add link if known provider
                         if video_link:

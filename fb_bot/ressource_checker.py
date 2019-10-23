@@ -33,7 +33,9 @@ def check(link):
             or providers.VIDSTREAM in link \
             or providers.CLIPVENTURES in link \
             or providers.TOCLIPIT in link \
-            or providers.TO_STREAMIT in link:
+            or providers.TO_STREAMIT in link \
+            or providers.UPCLIPS in link:
+
         page = requests.get(link).text.lower()
         return not ('removed due to a copyright claim' in page
                     or 'video has been deleted' in page

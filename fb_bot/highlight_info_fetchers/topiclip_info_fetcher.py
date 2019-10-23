@@ -10,7 +10,8 @@ from fb_bot.logger import logger
 def get_video_info(link):
 
     if not providers.CLIPVENTURES in link \
-            and not providers.TOCLIPIT in link:
+            and not providers.TOCLIPIT in link\
+            and not providers.UPCLIPS in link:
         return None
 
     try:
@@ -51,3 +52,4 @@ def get_video_info(link):
 if __name__ == '__main__':
     get_video_info('https://footy11.clipventures.com/embed/rGcLFVx5l3')
     get_video_info('https://hofoot.toclipit.com/embed/D5ayRenIHS')
+    get_video_info('https://oms.upclips.online/embed/pAFPCGQYYF')

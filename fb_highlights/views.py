@@ -717,6 +717,7 @@ class HighlightView(TemplateView):
             providers.TOCLIPIT,
             providers.CLIPVENTURES,
             providers.TO_STREAMIT,
+            providers.UPCLIPS,
         ]
 
         # recommendations

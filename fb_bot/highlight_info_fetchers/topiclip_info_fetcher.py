@@ -15,42 +15,48 @@ def get_video_info(link):
             and not providers.TO_STREAMIT in link:
         return None
 
-    try:
-        page = requests.get(link)
+    for regex in [
+        "src: \'(.*?0.m3u8)\'",
+        "hlsSource:\"(.*?0.m3u8)\""
+    ]:
 
-        regex = "src: \'(.*?0.m3u8)\'"
-        streaming_link_search_result = re.compile(regex, 0).search(page.text)
+        try:
+            page = requests.get(link)
 
-        streaming_link = 'https://' + streaming_link_search_result.groups()[0].replace('//', '').replace('0.m3u8',
-                                                                                                         '360p.m3u8')
+            streaming_link_search_result = re.compile(regex, 0).search(page.text).groups()[0]
 
-        text = requests.get(streaming_link).text
+            streaming_link = 'https://' + streaming_link_search_result.replace('//', '').replace('0.m3u8', '360p.m3u8')
 
-        regex = "#EXTINF:(.*?),"
-        durations_search_result = re.findall(regex, text)
+            text = requests.get(streaming_link).text
 
-        duration = int(sum([float(d) for d in durations_search_result]))
+            regex = "#EXTINF:(.*?),"
+            durations_search_result = re.findall(regex, text)
 
-        info = {
-            'duration': duration,
-            'video_url': None
-        }
+            duration = int(sum([float(d) for d in durations_search_result]))
 
-        logger.info('topiclip SUCCESS | url: ' + link + ' | duration: ' + str(duration))
+            info = {
+                'duration': duration,
+                'video_url': None
+            }
 
-        return info
+            logger.info('topiclip SUCCESS | url: ' + link + ' | duration: ' + str(duration))
 
-    except:
-        client.captureException()
-        logger.error("Failed to fetch info for link {}".format(link))
+            return info
 
-        return {
-            'duration': 0,  # Allow for retries if link is valid but scrapping not working
-            'video_url': None
-        }
+        except:
+            client.captureException()
+
+    # We haven't found a matching regex
+    logger.warning("Failed to fetch info for link {}".format(link))
+
+    return {
+        'duration': 0,  # Allow for retries if link is valid but scrapping not working
+        'video_url': None
+    }
 
 
 if __name__ == '__main__':
     get_video_info('https://footy11.clipventures.com/embed/rGcLFVx5l3')
     get_video_info('https://hofoot.toclipit.com/embed/D5ayRenIHS')
     get_video_info('https://oms.upclips.online/embed/pAFPCGQYYF')
+    get_video_info('https://footy11.clipventures.com/embed/2Ao90oZVHo')

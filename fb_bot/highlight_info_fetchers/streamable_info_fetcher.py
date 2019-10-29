@@ -47,6 +47,13 @@ def get_video_info(link):
     if requests.head(video_url).status_code != requests.codes.ok:
         video_url = None
 
+    # check if we have a duration for the video
+    if not json.get('duration'):
+        logger.error('No duration could be retrieved for link {}'.format(link), extra={
+            'json': json
+        })
+        return None
+
     info = {
         'duration': int(json['duration']),
         'video_url': video_url

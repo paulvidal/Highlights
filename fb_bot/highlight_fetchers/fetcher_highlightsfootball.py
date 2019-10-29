@@ -10,11 +10,12 @@ from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.highlight_fetchers.utils import provider_link_formatter
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-from fb_bot.highlight_fetchers.proxy import proxy
+# from fb_bot.highlight_fetchers.proxy import proxy
+from fb_bot.logger import logger
 
 ROOT_URL = 'https://highlightsfootball.com'
 
-PROXY = proxy
+PROXY = requests
 
 
 class HighlightsFootballHighlight(Highlight):
@@ -160,6 +161,10 @@ def _get_video_links(full_link):
         link_type = soup.find(class_="player-external").find("img").get("alt")
         link_type = _get_type(link_type)
 
+        # Only pick video urls coming from the following websites
+        if not link or not link_type:
+            return []
+
         video_links.append(
             (link_type, link)
         )
@@ -169,6 +174,13 @@ def _get_video_links(full_link):
         box_list = boxes.find_all(class_='hf-video-box')
 
         for box in box_list:
+
+            if not box.find('a'):
+                logger.error("No link found for highlightsfootball", extra={
+                    'box': box
+                })
+                continue
+
             link = box.find('a').get("href")
             link = provider_link_formatter.format_link(link)
 
@@ -192,7 +204,7 @@ def _get_type(type):
 
     if [w for w in ['extended hl', 'extended highlights'] if w == type]:
         return 'extended'
-    elif [w for w in ['highlights', 'hl'] if w == type]:
+    elif [w for w in ['motd highlights', 'highlights', 'hl'] if w == type]:
         return 'normal'
     elif [w for w in ['short hl', 'short highlights'] if w == type]:
         return 'short'

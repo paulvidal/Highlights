@@ -47,6 +47,9 @@ def format_link(link_to_format):
     elif providers.VIDSFORU in link:
         link = link_formatter.format_matchat_link(link)
 
+    elif providers.VSTREAMEU in link:
+        link = link_formatter.format_matchat_link(link)
+
     elif providers.YOUTUBE in link:
         link = link_formatter._format_link(link)
 

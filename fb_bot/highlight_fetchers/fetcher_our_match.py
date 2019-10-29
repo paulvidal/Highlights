@@ -227,10 +227,12 @@ def _get_video_links(soup):
                         video_link = provider_link_formatter.format_link(video)
 
                         # Add link if known provider
-                        if video_link:
-                            video_links.append(
-                                (type, video_link)
-                            )
+                        if not video_link:
+                            continue
+
+                        video_links.append(
+                            (type, video_link)
+                        )
 
     return video_links
 

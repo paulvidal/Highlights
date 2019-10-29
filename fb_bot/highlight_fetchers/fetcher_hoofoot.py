@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from fb_bot.highlight_fetchers import fetcher_footyroom
 from fb_bot.highlight_fetchers.info import sources
 from fb_bot.highlight_fetchers.utils.Highlight import Highlight
-# from fb_bot.highlight_fetchers.proxy import proxy
+from fb_bot.highlight_fetchers.proxy import proxy
 from fb_bot.highlight_fetchers.utils.provider_link_formatter import format_link
 
 ROOT_URL = 'https://hoofoot.com/'
@@ -15,7 +15,7 @@ PAGELET_EXTENSION = '?page='
 
 POST_URL = 'https://hoofoot.com/videosx.php'
 
-PROXY = requests
+PROXY = proxy
 
 
 class HoofootHighlight(Highlight):

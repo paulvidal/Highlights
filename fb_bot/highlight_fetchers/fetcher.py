@@ -99,6 +99,9 @@ def fetch(site):
 
         logger.error("Error while fetching for " + str(site))
 
+        # Send metrics to say no metric fetched
+        metrics.send_metric("fetcher.highlights_fetch", tags=['site:{}'.format(site)], count=0)
+
     # Update scrapping status in database
     scrapping_status_manager.update_scrapping_status(site, bool(highlights))
 

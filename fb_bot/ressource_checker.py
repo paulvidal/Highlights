@@ -36,7 +36,9 @@ def check(link):
             or providers.TO_STREAMIT in link \
             or providers.UPCLIPS in link\
             or providers.VIDSFORU in link\
-            or providers.VSTREAMEU in link:
+            or providers.VSTREAMEU in link\
+            or providers.FORSTREAM in link\
+            or providers.MYVIDONLINE in link:
 
         page = requests.get(link).text.lower()
         return not ('removed due to a copyright claim' in page

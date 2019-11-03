@@ -720,6 +720,8 @@ class HighlightView(TemplateView):
             providers.UPCLIPS,
             providers.VIDSFORU,
             providers.VSTREAMEU,
+            providers.FORSTREAM,
+            providers.MYVIDONLINE,
         ]
 
         # recommendations

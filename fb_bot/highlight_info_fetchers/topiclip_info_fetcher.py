@@ -15,7 +15,6 @@ def get_video_info(link):
             and not providers.TO_STREAMIT in link\
             and not providers.VIDSFORU in link \
             and not providers.FORSTREAM in link \
-            and not providers.MYVIDONLINE in link \
             and not providers.VSTREAMEU in link:
         return None
 

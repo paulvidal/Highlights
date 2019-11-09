@@ -2,10 +2,8 @@ import re
 import requests
 from raven.contrib.django.models import client
 
-from fb_bot import ressource_checker
 from fb_bot.highlight_fetchers.info import providers
 from fb_bot.logger import logger
-from fb_bot.model_managers import scrapping_status_manager
 
 
 def get_video_info(link):
@@ -16,7 +14,8 @@ def get_video_info(link):
             and not providers.VIDEO_STREAMLET in link \
             and not providers.VEUCLIPS in link \
             and not providers.VIUCLIPS in link \
-            and not providers.VIDSTREAM in link:
+            and not providers.VIDSTREAM in link\
+            and not providers.MYVIDONLINE in link:
         return None
 
     # Disable temporarily matchat.online as not working anymore
@@ -43,7 +42,7 @@ def get_video_info(link):
             'video_url': None
         }
 
-        scrapping_status_manager.update_scrapping_status('m3u8', True)
+        # scrapping_status_manager.update_scrapping_status('m3u8', True)
         logger.info('matchat.online SUCCESS | url: ' + link + ' | duration: ' + str(duration))
 
         return info
@@ -52,24 +51,6 @@ def get_video_info(link):
         client.captureException()
         logger.error("Failed to fetch info for link {}".format(link))
 
-        try:
-            if ressource_checker.check(link):
-                scrapping_status_manager.update_scrapping_status('m3u8', False)
-                logger.error('matchat.online FAILURE | url: ' + link)
 
-                return {
-                    'duration': 0,  # Allow for retries if link is valid but scrapping not working
-                    'video_url': None
-                }
-
-            else:
-                return None
-
-        except:
-            client.captureException()
-            logger.error("Failed to fetch info for link {} and resource check failed".format(link))
-
-            return {
-                'duration': 0,  # Allow for retries if link is valid but scrapping not working
-                'video_url': None
-            }
+if __name__ == '__main__':
+    print(get_video_info('https://footy11.myvidonline.com/embed/xIxJtf2iy8'))

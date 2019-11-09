@@ -218,8 +218,10 @@ def _get_video_link(soup):
                 return None
 
             link = search_result.groups()[0].replace('\\', '')
+            link = provider_link_formatter.format_link(link)
 
-            return provider_link_formatter.format_link(link)
+            if link:
+                return link
 
     return None
 

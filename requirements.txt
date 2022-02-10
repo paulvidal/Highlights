@@ -10,7 +10,7 @@ DateTime==4.2
 ddtrace==0.25.0
 decorator==4.4.0
 dj-database-url==0.4.2
-Django==2.2.1
+Django==2.2.27
 django-webpack-loader==0.6.0
 elasticsearch==7.0.0
 emoji==0.4.5
